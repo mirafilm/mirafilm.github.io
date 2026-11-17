@@ -290,11 +290,12 @@ function datForm(info){
   $('app').innerHTML=h;
 }
 function phongDI(i){return DI.phong.filter(function(x){return x.i===i})[0]}
+function cocP(i){var p=phongDI(i);return p&&/self-booth/i.test(p.ten||'')?150000:80000}
 function dChonPhong(i){
   D.p=i;D.phut=0;D.gio='';
   [].forEach.call(document.querySelectorAll('.room'),function(e){e.classList.toggle('on',+e.dataset.p===i)});veAnh('anhD',i);
-  var h='<h3>2. Chọn gói</h3><div class="chips">';
-  phongDI(i).goi.forEach(function(g,k){h+='<div class="chip" data-v="'+k+'" onclick="dChonGoi('+k+')">'+(g[2]?esc(g[2]):g[0]+' phút')+' · '+tien(g[1])+' <small>(cọc '+tien(Math.ceil(g[0]/10)*80000)+')</small>'+'</div>'});
+  var h='<h3>2. Chọn gói</h3><div class="lbl" style="margin:-4px 0 8px">Cọc giữ lịch: <b>'+tien(cocP(i))+'</b> (mọi gói). Tới tiệm vẫn đổi gói, in thêm được.</div><div class="chips">';
+  phongDI(i).goi.forEach(function(g,k){h+='<div class="chip" data-v="'+k+'" onclick="dChonGoi('+k+')">'+(g[2]?esc(g[2]):g[0]+' phút')+' · '+tien(g[1])+'</div>'});
   $('dGoi').innerHTML=h+'</div>';$('dNgay').innerHTML='';$('dGio').innerHTML='';$('dTT').innerHTML='';
 }
 function dChonGoi(v){
@@ -323,7 +324,7 @@ function dChonGio(g){
   if($('dTen'))return;
   $('dTT').innerHTML='<h3>5. Thông tin của bạn</h3><label>Họ và tên</label><input id="dTen" autocomplete="name" maxlength="40" placeholder="VD: Nguyễn Minh Anh">'+
     '<label>Số điện thoại</label><input id="dSdt" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" placeholder="09xxxxxxxx">'+
-    '<ul class="pol"><li>Đặt cọc <b>80.000đ cho mỗi 10 phút</b> chụp bằng chuyển khoản để giữ lịch'+(D.phut?' (gói này: <b>'+tien(Math.ceil(D.phut/10)*80000)+'</b>)':'')+'. Lịch được giữ '+DI.giu+' phút chờ chuyển khoản; nếu đặt ngoài giờ làm việc, tiệm xác nhận sau khi mở cửa.</li><li>Phần còn lại của gói và phụ thu (thêm người, in thêm…) thanh toán tại quầy.</li><li>Được dời lịch tối đa '+DI.doiMax+' lần, trước giờ chụp ít nhất '+(DI.dong/60)+' tiếng.</li><li>Vui lòng có mặt trước giờ hẹn 5–10 phút.</li></ul>'+
+    '<ul class="pol"><li>Đặt cọc <b>'+(D.p?tien(cocP(D.p)):'80.000đ (photobooth) / 150.000đ (self-booth)')+'</b> bằng chuyển khoản để giữ lịch. Lịch được giữ '+DI.giu+' phút chờ chuyển khoản; nếu đặt ngoài giờ làm việc, tiệm xác nhận sau khi mở cửa.</li><li>Tới tiệm bạn vẫn có thể đổi gói, thêm người, in thêm – phần còn lại thanh toán tại quầy.</li><li>Được dời lịch tối đa '+DI.doiMax+' lần, trước giờ chụp ít nhất '+(DI.dong/60)+' tiếng.</li><li>Vui lòng có mặt trước giờ hẹn 5–10 phút.</li></ul>'+
     '<div class="khoan">⚠️ TIỀN CỌC KHÔNG ĐƯỢC HOÀN LẠI<span>trong mọi trường hợp (huỷ lịch, không đến, đến trễ). Bạn vẫn có thể dời lịch theo quy định trên.</span></div>'+
     '<label class="chk chk2"><input type="checkbox" id="dOk"> <b>Tôi đã hiểu và đồng ý: tiền cọc không được hoàn lại</b></label>'+
     '<div class="err" id="err"></div><button class="b1" id="btn" onclick="datGui()">Đặt lịch & đặt cọc</button>';
@@ -362,7 +363,7 @@ function veDat(v){
   }
   h+='<div class="err" id="err"></div>';
   if(v.duocDoi)h+='<button class="b2" onclick="doiMo()">Dời lịch (còn '+(v.doiMax-v.doi)+' lần)</button><div id="doi"></div>';
-  if(v.tt==='cho_ck')h+='<div style="margin-top:10px"><button class="b3" onclick="hai(this,datHuy)">Huỷ giữ chỗ</button></div>';
+  if(v.tt==='cho_ck')h+='<div style="margin-top:10px"><button class="b2" style="background:#fff;color:#a50e0e;border:2px solid #a50e0e;font-weight:700" onclick="hai(this,datHuy)">Huỷ giữ chỗ</button></div>';
   if(['huy','het_han','xong','khong_den'].indexOf(v.tt)>=0)h+='<button class="b1" style="margin-top:10px" onclick="datMoi()">Đặt lịch mới</button>';
   h+='</div>';
   $('app').innerHTML=h;DOI=v;if(v.qrData&&$('qrck'))new QRCode($('qrck'),{text:v.qrData,width:220,height:220,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
