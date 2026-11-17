@@ -133,7 +133,7 @@ function trangChu(){clearTimeout(TIMER);$('app').innerHTML=LOGO+'<div class="car
     $('app').innerHTML=h+'</div>';
   });
 }
-function chonCN(view){api('dlChiNhanh',[],function(ds){
+function nvChonCN(view){api('dlChiNhanh',[],function(ds){
   var h=LOGO+'<div class="sub">Màn hình nhân viên – chọn chi nhánh</div><div class="card">';
   ds.forEach(function(c){h+='<button class="b2" style="margin-top:8px" onclick="diToi(\'?view='+view+'&cn='+c.cn+'\')">'+esc(c.ten)+'</button>'});
   $('app').innerHTML=h+'</div>';
@@ -146,7 +146,7 @@ function hai(btn,fn){if(btn.dataset.ok){fn();return}btn.dataset.ok=1;var t=btn.t
 
 google.script.url.getLocation(function(loc){
   P=loc.parameter||{};CN=P.cn||'CN2';K=P.k||'';
-  if(P.view==='nv'&&!P.cn)return chonCN('nv');if(P.view==='nv')return nvVao();
+  if(P.view==='nv'&&!P.cn)return nvChonCN('nv');if(P.view==='nv')return nvVao();
   if(P.view==='dat')return datVao();if(!P.cn&&!P.t&&!P.view)return trangChu();
   MAS=dsMa();if(P.t&&MAS.indexOf(P.t)<0)MAS.push(P.t);if(!K)K=ls('bs_k_'+CN+'_'+hom())||'';
   if(MAS.length)return xemVe();
