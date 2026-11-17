@@ -53,7 +53,7 @@ input.code{font-size:28px;letter-spacing:.4em;text-align:center;font-weight:800;
 .room small{display:block;font-weight:400;color:var(--mo);margin-top:4px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips.sb{gap:12px}
-.coc{border:2px solid var(--nau);border-radius:12px;padding:10px 14px;margin:0 0 12px;font-weight:800;font-size:16px;color:var(--nau);background:#fff}
+.coc{border-left:4px solid var(--nau);border-radius:4px 10px 10px 4px;padding:10px 14px;margin:0 0 12px;font-weight:700;font-size:15px;color:var(--nau);background:#f1e4cf}
 .coc small{display:block;font-weight:500;font-size:13px;color:var(--mo);margin-top:2px}
 .gia{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;font-size:14px}
 .gia td{padding:10px 14px;border-bottom:1px solid var(--vien)}
@@ -89,12 +89,17 @@ button:disabled{opacity:.5}
 .tk.sap{background:#fff1dc;box-shadow:0 0 0 3px var(--cam)}
 .tk.den{background:#dff3e5;box-shadow:0 0 0 3px var(--xanh);animation:nhay 1s infinite}
 @keyframes nhay{50%{box-shadow:0 0 0 9px var(--xanh)}}
-.note{font-size:12px;color:var(--mo);text-align:center;margin-top:10px}
+.note{font-size:13px;color:var(--mo);text-align:center;margin-top:10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .list{font-size:13px;margin-top:10px;border-top:1px solid #eee5d6;padding-top:8px;max-height:300px;overflow:auto}
-.li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px dashed #eee5d6}
+.li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-bottom:1px dashed #e2d6c3}
+.li .inf{flex:1;min-width:0;line-height:1.5}
+.li .l1{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.li .l2{color:var(--mo);font-size:13px;margin-top:2px}
+.li .bt .lbl{font-size:12px;white-space:nowrap;margin-right:4px}
+@media(max-width:640px){.li{flex-direction:column;align-items:stretch;gap:8px}.li .bt{justify-content:flex-start}}
 .li>span{min-width:0}
-.li .bt{display:flex;gap:6px;flex-shrink:0}
+.li .bt{display:flex;gap:8px;flex-shrink:0;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .mini{width:auto;padding:6px 10px;font-size:12px}
 .hdr{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
 .mq{text-align:center;background:var(--nau);color:#fff;border-radius:12px;padding:8px 16px}
@@ -273,10 +278,10 @@ function chonCN(c){CN=c;api('dlThongTin',[CN],datForm)}
 var ANH=null;
 function taiAnh(){ANH=null;try{api('bsAnh',[CN],function(a){ANH=a},function(){})}catch(e){}}
 function anhUrl(id,w){return 'https://lh3.googleusercontent.com/d/'+id+'=w'+w}
-function veAnh(id,p){var x=$(id);if(!x)return;var a=(ANH&&ANH[p-1])||[];if(!a.length){x.innerHTML='';return}var h='<div class="anh">';a.forEach(function(z,i){h+='<img loading="lazy" alt="Ảnh mẫu" src="'+anhUrl(z,400)+'" onclick="moAnh('+p+','+i+')">'});x.innerHTML=h+'</div><div class="note" style="text-align:left;margin-top:4px">Chạm vào ảnh để xem lớn</div>'}
+function veAnh(id,p){var x=$(id);if(!x)return;var a=(ANH&&ANH[p-1])||[];if(!a.length){x.innerHTML='';return}var h='<div class="anh">';a.forEach(function(z,i){h+='<img loading="lazy" alt="Ảnh mẫu" src="'+anhUrl(z,400)+'" onclick="moAnh('+p+','+i+')">'});x.innerHTML=h+'</div><div class="note" style="text-align:left;margin-top:4px">Nhấn vào từng ảnh để phóng to</div>'}
 function dongAnh(){var d=$('anhM');if(d)d.innerHTML=''}
 function moAnh(p,i){var a=ANH[p-1],n=a.length,k=((i%n)+n)%n,d=$('anhM');if(!d){d=document.createElement('div');d.id='anhM';document.body.appendChild(d)}
-  d.innerHTML='<div class="modal" style="touch-action:none" onclick="if(event.target===this)dongAnh()"><div style="max-width:560px;width:100%"><div style="overflow:hidden;border-radius:12px;background:#000;touch-action:none"><img class="zimg" src="'+anhUrl(a[k],1600)+'" style="width:100%;max-height:72vh;object-fit:contain;display:block;touch-action:none;transform-origin:center center;transition:transform .05s"></div><div class="lbl" style="color:#e6d3c3;margin-top:6px">Chụm 2 ngón để phóng to · chạm 2 lần để phóng nhanh</div><div class="row" style="margin-top:8px">'+(n>1?'<button class="b2" onclick="moAnh('+p+','+(k-1)+')">‹ Trước</button><button class="b2" onclick="moAnh('+p+','+(k+1)+')">Sau ›</button>':'')+'<button class="b1" onclick="dongAnh()">Đóng</button></div><div class="lbl" style="color:#e6d3c3;margin-top:6px">'+(k+1)+' / '+n+'</div></div></div>';
+  d.innerHTML='<div class="modal" style="touch-action:none" onclick="if(event.target===this)dongAnh()"><div style="max-width:560px;width:100%"><div style="overflow:hidden;border-radius:12px;background:#000;touch-action:none"><img class="zimg" src="'+anhUrl(a[k],1600)+'" style="width:100%;max-height:72vh;object-fit:contain;display:block;touch-action:none;transform-origin:center center;transition:transform .05s"></div><div class="row" style="margin-top:8px">'+(n>1?'<button class="b2" onclick="moAnh('+p+','+(k-1)+')">‹ Trước</button><button class="b2" onclick="moAnh('+p+','+(k+1)+')">Sau ›</button>':'')+'<button class="b1" onclick="dongAnh()">Đóng</button></div><div class="lbl" style="color:#e6d3c3;margin-top:6px">'+(k+1)+' / '+n+'</div></div></div>';
   var m=d.querySelector('.modal');['gesturestart','gesturechange','gestureend'].forEach(function(t){m.addEventListener(t,function(e){e.preventDefault()},{passive:false})});
   m.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});
   zoomAnh(d.querySelector('.zimg'))}
@@ -424,7 +429,7 @@ function dlDong(x,p,ht){
   if(x.tt==='da_xn'||x.tt==='khong_den')b+='<button class="b2 mini" onclick="nvDoi(\''+x.ma+'\')">Dời giờ</button>';
   if(x.tt==='checkin'||x.tt==='goi'||x.tt==='xong')b+='<button class="bx mini" onclick="nvThu(\''+x.ma+'\','+(x.tq||0)+',\''+(x.ht||'TM')+'\')">'+(x.tq?'Sửa thu thêm':'Thu thêm')+'</button>';
   if(x.tt==='da_xn'||x.tt==='checkin'||x.tt==='khong_den')b+='<button class="b2 mini" title="Bấm nhầm? Đưa đơn về bước trước" onclick="hai(this,function(){lenh(\'boxn\','+p+',\''+x.ma+'\')})">'+(x.tt==='da_xn'?'Bỏ xác nhận':'Hoàn tác')+'</button>';
-  return '<div class="li"><span><b>'+esc(ht)+'</b> '+esc(x.ten)+' · '+esc(x.sdt)+' <span class="tag '+x.tt+'">'+esc(x.ttNhan)+'</span> <small>cọc '+tien(x.tien)+(x.gia?' · gói '+esc(x.gia):'')+'</small>'+(x.tq?' <b class="thu">đã thu thêm '+tien(x.tq)+' '+esc(x.ht)+'</b>':'')+(x.tre?' <span class="tre">trễ</span>':'')+'</span><span class="bt">'+b+'</span></div>';
+  return '<div class="li"><div class="inf"><div class="l1"><b>'+esc(ht)+'</b><span class="tag '+x.tt+'">'+esc(x.ttNhan)+'</span>'+(x.tre?'<span class="tre">trễ</span>':'')+'</div><div class="l2">'+esc(x.ten)+' · '+esc(x.sdt)+' · cọc '+tien(x.tien)+(x.gia?' · gói '+esc(x.gia):'')+(x.tq?' · <b class="thu">đã thu thêm '+tien(x.tq)+' '+esc(x.ht)+'</b>':'')+'</div></div><div class="bt">'+b+'</div></div>';
 }
 function nvVe(d){
   ls('bs_pin',PIN);NV=d;
@@ -436,7 +441,7 @@ function nvVe(d){
   $('nvt').textContent=d.ten+' · '+d.ngay+' · cập nhật '+d.gio;$('mq').textContent=d.maQuay;
   var c='';
   if(d.choCK.length){c='<div class="card" style="box-shadow:0 0 0 2px var(--cam)"><h2>💳 Chờ chuyển khoản ('+d.choCK.length+')</h2><div class="lbl" style="text-align:left">Tiền về đúng số + có SĐT → hệ thống TỰ XÁC NHẬN (≤5 phút). CK khớp số tiền nhưng thiếu SĐT (vd. MoMo) → hiện nút "Xác nhận theo CK": kiểm tra đúng khách rồi bấm. Trường hợp khác (sai số tiền…) → báo quản lý.</div><div class="list" style="max-height:none">';
-    d.choCK.forEach(function(x){c+=dlDong(x,0,x.gio+' '+x.ngayNhan+' · '+x.phong.replace(/ \(.*\)/,'')+' · '+x.phut+'′ · '+tien(x.tien))});c+='</div></div>'}
+    d.choCK.forEach(function(x){c+=dlDong(x,0,x.gio+' '+x.ngayNhan+' · '+x.phong.replace(/ \(.*\)/,'')+' · '+x.phut+'′')});c+='</div></div>'}
   $('ck').innerHTML=c;
   var h='';
   d.phong.forEach(function(p){
