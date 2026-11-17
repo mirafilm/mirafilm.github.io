@@ -52,6 +52,13 @@ input.code{font-size:28px;letter-spacing:.4em;text-align:center;font-weight:800;
 .room.on{border-color:var(--nau);background:var(--be)}
 .room small{display:block;font-weight:400;color:var(--mo);margin-top:4px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips.sb{gap:12px}
+.coc{border:2px solid var(--nau);border-radius:12px;padding:10px 14px;margin:0 0 12px;font-weight:800;font-size:16px;color:var(--nau);background:#fff}
+.coc small{display:block;font-weight:500;font-size:13px;color:var(--mo);margin-top:2px}
+.gia{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;font-size:14px}
+.gia td{padding:10px 14px;border-bottom:1px solid var(--vien)}
+.gia tr:last-child td{border-bottom:0}
+.gia td:last-child{text-align:right;font-weight:700;white-space:nowrap}
 .chip{border:1.5px solid var(--vien);background:#fff;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer;width:auto}
 .chip.on{background:var(--nau);border-color:var(--nau);color:#fff}
 .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
@@ -294,9 +301,18 @@ function cocP(i){var p=phongDI(i);return p&&/self-booth/i.test(p.ten||'')?150000
 function dChonPhong(i){
   D.p=i;D.phut=0;D.gio='';
   [].forEach.call(document.querySelectorAll('.room'),function(e){e.classList.toggle('on',+e.dataset.p===i)});veAnh('anhD',i);
-  var h='<h3>2. Chọn gói</h3><div class="lbl" style="margin:-4px 0 8px">Cọc giữ lịch: <b>'+tien(cocP(i))+'</b> (mọi gói). Tới tiệm vẫn đổi gói, in thêm được.</div><div class="chips">';
-  phongDI(i).goi.forEach(function(g,k){h+='<div class="chip" data-v="'+k+'" onclick="dChonGoi('+k+')">'+(g[2]?esc(g[2]):g[0]+' phút')+' · '+tien(g[1])+'</div>'});
-  $('dGoi').innerHTML=h+'</div>';$('dNgay').innerHTML='';$('dGio').innerHTML='';$('dTT').innerHTML='';
+  var P=phongDI(i),sb=/self-booth/i.test(P.ten||''),h;
+  if(sb){
+    h='<h3>2. Chọn gói</h3><div class="coc">Cọc giữ lịch: '+tien(cocP(i))+' (mọi gói)<small>Tới tiệm vẫn đổi gói, in thêm được – phần còn lại trả tại quầy</small></div><div class="chips sb">';
+    P.goi.forEach(function(g,k){h+='<div class="chip" data-v="'+k+'" onclick="dChonGoi('+k+')">'+(g[2]?esc(g[2]):g[0]+' phút')+' · '+tien(g[1])+'</div>'});
+    h+='</div>';
+  }else{
+    h='<h3>2. Bảng giá</h3><div class="coc">Cọc giữ lịch: '+tien(cocP(i))+'<small>Chọn ảnh, in thêm tại tiệm – phần còn lại trả tại quầy</small></div><table class="gia">';
+    P.goi.forEach(function(g){h+='<tr><td>'+esc(String(g[2]||(g[0]+' phút')).replace(/\s*\(.*\)/,''))+'</td><td>'+tien(g[1])+'</td></tr>'});
+    h+='<tr><td>In thêm (2 ảnh nhỏ hoặc 1 ảnh lớn)</td><td>'+tien(40000)+'</td></tr></table>';
+  }
+  $('dGoi').innerHTML=h;$('dNgay').innerHTML='';$('dGio').innerHTML='';$('dTT').innerHTML='';
+  if(!sb)dChonGoi(0);
 }
 function dChonGoi(v){
   D.goi=v;D.phut=phongDI(D.p).goi[v][0];D.gio='';
@@ -402,7 +418,7 @@ function nvTai(){api('bsNhanVien',[CN,PIN],nvVe,function(e){var m=String(e.messa
 var NV=null;
 function dlDong(x,p,ht){
   var b='';
-  if(x.tt==='cho_ck'||x.tt==='het_han')b='<button class="bx mini" onclick="lenh(\'xn\',0,\''+x.ma+'\')">Đã nhận tiền</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'huydl\',0,\''+x.ma+'\')})">Huỷ</button>';
+  if(x.tt==='cho_ck'||x.tt==='het_han')b=(x.gy?'<button class="bx mini" onclick="hai(this,function(){lenh(\'xn\',0,\''+x.ma+'\')})">Xác nhận theo CK '+x.gy+'</button>':'<span class="lbl">⏳ Chờ tiền về – tự xác nhận</span>')+'<button class="b2 mini" onclick="nvQL(\''+x.ma+'\')">QL xác nhận</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'huydl\',0,\''+x.ma+'\')})">Huỷ</button>';
   else if(x.tt==='da_xn')b='<button class="b2 mini" onclick="lenh(\'checkin\','+p+',\''+x.ma+'\')">Khách đến</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'khongden\','+p+',\''+x.ma+'\')})">Vắng</button>';
   else if(x.tt==='checkin')b=x.xh?'<span class="tre">trễ >15′ – đã xếp số cuối hàng</span>':'<button class="b1 mini" onclick="lenh(\'goidl\','+p+',\''+x.ma+'\')">Mời vào</button>';
   if(x.tt==='da_xn'||x.tt==='khong_den')b+='<button class="b2 mini" onclick="nvDoi(\''+x.ma+'\')">Dời giờ</button>';
@@ -419,7 +435,7 @@ function nvVe(d){
   $('err').textContent='';
   $('nvt').textContent=d.ten+' · '+d.ngay+' · cập nhật '+d.gio;$('mq').textContent=d.maQuay;
   var c='';
-  if(d.choCK.length){c='<div class="card" style="box-shadow:0 0 0 2px var(--cam)"><h2>💳 Chờ chuyển khoản ('+d.choCK.length+')</h2><div class="lbl" style="text-align:left">Tiền về đúng số + có SĐT → hệ thống TỰ XÁC NHẬN (≤5 phút). Chỉ bấm Đã nhận tiền khi Lark báo 🔎/⚠️ và đã kiểm tra đúng khách.</div><div class="list" style="max-height:none">';
+  if(d.choCK.length){c='<div class="card" style="box-shadow:0 0 0 2px var(--cam)"><h2>💳 Chờ chuyển khoản ('+d.choCK.length+')</h2><div class="lbl" style="text-align:left">Tiền về đúng số + có SĐT → hệ thống TỰ XÁC NHẬN (≤5 phút). CK khớp số tiền nhưng thiếu SĐT (vd. MoMo) → hiện nút "Xác nhận theo CK": kiểm tra đúng khách rồi bấm. Trường hợp khác (sai số tiền…) → báo quản lý.</div><div class="list" style="max-height:none">';
     d.choCK.forEach(function(x){c+=dlDong(x,0,x.gio+' '+x.ngayNhan+' · '+x.phong.replace(/ \(.*\)/,'')+' · '+x.phut+'′ · '+tien(x.tien))});c+='</div></div>'}
   $('ck').innerHTML=c;
   var h='';
@@ -446,6 +462,9 @@ function nvThu(ma,tq,ht){clearTimeout(TIMER);
   $('qr').innerHTML='<div class="modal" onclick="nvDoiDong()"><div class="card" style="text-align:left" onclick="event.stopPropagation()"><h3 style="margin:0 0 6px">Thu thêm tại quầy – '+esc(ma)+'</h3><div class="lbl">Phần còn lại của gói + phụ thu (thêm người, in thêm…). Thu xong bấm voucher cho cả lượt chụp. Tiền mặt bỏ vào két – hệ thống tự cộng vào Chốt ca, KHÔNG ghi tay.</div><label>Số tiền đã thu</label><input id="tqTien" type="number" inputmode="numeric" value="'+(tq||'')+'" placeholder="VD: 30000"><div style="display:flex;gap:16px;margin:10px 0;flex-wrap:wrap"><label class="chk"><input type="radio" name="tqHt" value="TM" '+(ht!=='CK'?'checked':'')+'> Tiền mặt</label><label class="chk"><input type="radio" name="tqHt" value="CK" '+(ht==='CK'?'checked':'')+'> Chuyển khoản</label></div><div class="err" id="tqErr"></div><div style="display:flex;gap:8px"><button class="b2" onclick="nvDoiDong()">Đóng</button><button class="b1" id="tqOk" onclick="nvThuLuu(\''+ma+'\')">Lưu</button></div></div></div>';
 }
 function nvThuLuu(ma){var t=$('tqTien').value,h=(document.querySelector('input[name=tqHt]:checked')||{}).value||'TM';$('tqOk').disabled=true;$('tqErr').textContent='';api('bsThuThem',[CN,PIN,ma,t,h],function(d){$('qr').innerHTML='';nvVe(d)},function(e){$('tqErr').textContent=e.message||e;$('tqOk').disabled=false})}
+function nvQL(ma){clearTimeout(TIMER);
+  $('qr').innerHTML='<div class="modal" onclick="nvDoiDong()"><div class="card" style="text-align:left" onclick="event.stopPropagation()"><h3 style="margin:0 0 6px">Quản lý xác nhận – '+esc(ma)+'</h3><div class="lbl">Chỉ dùng khi quản lý đã thấy tiền về TK công ty nhưng hệ thống không tự khớp (sai số tiền, nội dung lạ…). Nhân viên không tự bấm.</div><label>Mã quản lý</label><input id="qlPin" type="password" inputmode="numeric" autocomplete="off"><div style="display:flex;gap:8px;margin-top:12px"><button class="b2" onclick="nvDoiDong()">Đóng</button><button class="bx" onclick="nvQLGui(\''+ma+'\')">Xác nhận</button></div></div></div>'}
+function nvQLGui(ma){var p=$('qlPin').value;if(!p)return;$('qr').innerHTML='';lenh('xnql',0,ma,p)}
 function nvDoiDong(){$('qr').innerHTML='';nvTai()}
 function nvDoi(ma){clearTimeout(TIMER);DNV={ma:ma,ngay:'',gio:''};
   $('qr').innerHTML='<div class="modal" onclick="nvDoiDong()"><div class="card" style="text-align:left;max-height:90vh;overflow:auto" onclick="event.stopPropagation()" id="dnv">Đang tải…</div></div>';
@@ -465,7 +484,7 @@ function nvDoiNgay(d){DNV.ngay=d;DNV.gio='';$('dnvOk').disabled=true;
 }
 function nvDoiGio(g){DNV.gio=g;[].forEach.call(document.querySelectorAll('#dnvG .chip'),function(c){c.classList.toggle('on',c.dataset.v===g)});$('dnvOk').disabled=false}
 function nvDoiLuu(){$('dnvOk').disabled=true;$('dnvErr').textContent='';api('bsDoiDL',[CN,PIN,DNV.ma,DNV.ngay,DNV.gio],function(d){$('qr').innerHTML='';nvVe(d)},function(e){$('dnvErr').textContent=e.message||e;$('dnvOk').disabled=false})}
-function lenh(l,p,ma){$('err').textContent='';[].forEach.call(document.querySelectorAll('#nv button,#ck button'),function(b){b.disabled=true});api('bsLenh',[CN,PIN,l,p,ma||''],nvVe,function(e){$('err').textContent=e.message||e;nvTai()})}
+function lenh(l,p,ma,x){$('err').textContent='';[].forEach.call(document.querySelectorAll('#nv button,#ck button'),function(b){b.disabled=true});api('bsLenh',[CN,PIN,l,p,ma||'',x||''],nvVe,function(e){$('err').textContent=e.message||e;nvTai()})}
 function hienQR(){
   var url=NV.site||(NV.url+'?cn='+encodeURIComponent(CN));
   $('qr').innerHTML='<div class="modal" onclick="$(\'qr\').innerHTML=\'\'"><div class="card qrbox">'+LOGO+'<b>Quét mã để lấy số thứ tự</b><div id="qrc"></div><div class="lbl">Mã quầy hôm nay</div><div class="big" style="font-size:52px;letter-spacing:.2em">'+esc(NV.maQuay)+'</div><div class="lbl">Chạm để đóng</div></div></div>';
