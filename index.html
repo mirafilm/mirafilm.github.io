@@ -123,6 +123,21 @@ function dau(t,cn){return '<div class="tit'+(cn?'':' solo')+'">'+t+'</div>'+(cn?
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
 var BOOT=null;
+function diToi(q){location.href=location.pathname+q}
+function trangChu(){clearTimeout(TIMER);$('app').innerHTML=LOGO+'<div class="card"><div class="state">Đang tải…</div></div>';
+  api('dlChiNhanh',[],function(ds){
+    var h=LOGO+'<div class="tit solo">Mirafilm Photobooth</div>'+
+      '<div class="card"><h2>Đặt lịch chụp online</h2><div class="lbl" style="margin-bottom:12px">Chọn chi nhánh, phòng và giờ – chuyển khoản trước để giữ chỗ.</div><button class="b1" onclick="diToi(\'?view=dat\')">Đặt lịch ngay →</button></div>'+
+      '<div class="card"><h2>Lấy số thứ tự</h2><div class="lbl" style="margin-bottom:4px">Đang ở tiệm? Chọn chi nhánh để bốc số chờ (cần mã quầy 4 số tại tiệm).</div>';
+    ds.forEach(function(c){h+='<button class="b2" style="margin-top:8px" onclick="diToi(\'?cn='+c.cn+'\')">'+esc(c.ten)+'</button>'});
+    $('app').innerHTML=h+'</div>';
+  });
+}
+function chonCN(view){api('dlChiNhanh',[],function(ds){
+  var h=LOGO+'<div class="sub">Màn hình nhân viên – chọn chi nhánh</div><div class="card">';
+  ds.forEach(function(c){h+='<button class="b2" style="margin-top:8px" onclick="diToi(\'?view='+view+'&cn='+c.cn+'\')">'+esc(c.ten)+'</button>'});
+  $('app').innerHTML=h+'</div>';
+})}
 function api(fn,args,ok,fail){var r=google.script.run.withSuccessHandler(ok).withFailureHandler(fail||function(e){var x=$('err');if(x)x.textContent=e.message||e});r[fn].apply(r,args)}
 function hom(){var d=new Date();d=new Date(d.getTime()+(d.getTimezoneOffset()+420)*60000);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
 function tien(n){return Number(n||0).toLocaleString('vi-VN')+'đ'}
@@ -131,8 +146,8 @@ function hai(btn,fn){if(btn.dataset.ok){fn();return}btn.dataset.ok=1;var t=btn.t
 
 google.script.url.getLocation(function(loc){
   P=loc.parameter||{};CN=P.cn||'CN2';K=P.k||'';
-  if(P.view==='nv')return nvVao();
-  if(P.view==='dat')return datVao();
+  if(P.view==='nv'&&!P.cn)return chonCN('nv');if(P.view==='nv')return nvVao();
+  if(P.view==='dat')return datVao();if(!P.cn&&!P.t&&!P.view)return trangChu();
   MAS=dsMa();if(P.t&&MAS.indexOf(P.t)<0)MAS.push(P.t);if(!K)K=ls('bs_k_'+CN+'_'+hom())||'';
   if(MAS.length)return xemVe();
   moForm();
