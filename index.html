@@ -444,7 +444,6 @@ function dlDong(x,p,ht){
   else if(x.tt==='da_xn')b='<button class="b2 mini" onclick="lenh(\'checkin\','+p+',\''+x.ma+'\')">Khách đến</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'khongden\','+p+',\''+x.ma+'\')})">Vắng</button>';
   else if(x.tt==='checkin')b=x.xh?'<span class="tre">trễ >15′ – đã xếp số cuối hàng</span>':'<button class="b1 mini" onclick="lenh(\'goidl\','+p+',\''+x.ma+'\')">Mời vào</button>';
   if(x.tt==='da_xn'||x.tt==='khong_den')b+='<button class="b2 mini" onclick="nvDoi(\''+x.ma+'\')">Dời giờ</button>';
-  if(x.tt==='checkin'||x.tt==='goi'||x.tt==='xong')b+='<button class="bx mini" onclick="nvThu(\''+x.ma+'\','+(x.tq||0)+',\''+(x.ht||'TM')+'\')">'+(x.tq?'Sửa thu thêm':'Thu thêm')+'</button>';
   if(x.tt==='da_xn'||x.tt==='checkin'||x.tt==='khong_den')b+='<button class="b2 mini" title="Bấm nhầm? Đưa đơn về bước trước" onclick="hai(this,function(){lenh(\'boxn\','+p+',\''+x.ma+'\')})">'+(x.tt==='da_xn'?'Bỏ xác nhận':'Hoàn tác')+'</button>';
   return '<div class="li"><div class="inf"><div class="l1"><b>'+esc(ht)+'</b><span class="tag '+x.tt+'">'+esc(x.ttNhan)+'</span>'+(x.tre?'<span class="tre">trễ</span>':'')+'</div><div class="l2">'+esc(x.ten)+' · '+esc(x.sdt)+' · cọc '+tien(x.tien)+(x.gia?' · gói '+esc(x.gia):'')+(x.tq?' · <b class="thu">đã thu thêm '+tien(x.tq)+' '+esc(x.ht)+'</b>':'')+'</div></div><div class="bt">'+b+'</div></div>';
 }
