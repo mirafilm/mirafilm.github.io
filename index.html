@@ -408,20 +408,23 @@ function datTim(){
   },function(e){$('err2').textContent=e.message||e});
 }
 function datXem(){api('dlXem',[TOK],veDat,function(e){$('app').innerHTML=LOGO+'<div class="card"><div class="state">Mất kết nối</div><button class="b2" onclick="datXem()">Thử lại</button></div>'})}
+var TT0='';
 function veDat(v){
   clearTimeout(TIMER);
+  var moiXN=(TT0==='cho_ck'||TT0==='het_han')&&v.tt==='da_xn';TT0=v.tt;if(moiXN){try{navigator.vibrate&&navigator.vibrate([150,80,150])}catch(e){}}
   if(v.tt==='khong'){ls('dl_tok_'+CN,null);TOK='';datBatDau();return}CN=v.cn||CN;
   var h=LOGO+dau('Lịch đặt của bạn',v.tenCN)+'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-size:15px">'+esc(v.ma)+'</b><span class="tag '+v.tt+'">'+esc(v.ttNhan)+'</span></div>'+
     '<div class="kv"><span>Phòng</span><b>'+esc(v.phong)+'</b><span>Thời gian</span><b>'+esc(v.gio)+' · '+esc(v.ngayNhan)+' · '+v.phut+' phút</b><span>Khách</span><b>'+esc(v.ten)+' · '+esc(v.sdt)+'</b>'+(v.goi?'<span>Gói</span><b>'+esc(v.goi)+'</b>':'')+'<span>Tiền cọc</span><b>'+tien(v.tien)+'</b>'+(v.gia?'<span>Giá gói</span><b>'+esc(v.gia)+'</b>':'')+'<span>Tại quầy</span><b>Phần còn lại + phụ thu (nếu có)</b><span></span><b style="color:#a50e0e">Tiền cọc không hoàn lại</b>'+(v.doi?'<span>Đã dời</span><b>'+v.doi+'/'+v.doiMax+' lần</b>':'')+'</div>';
   if(v.tt==='cho_ck'){
-    h+='<div class="ck"><b>Chuyển khoản cọc '+tien(v.tien)+'</b><div class="lbl" style="margin:4px 0 10px">'+(v.ngoaiGio?'Tiệm đang ngoài giờ làm việc. Bạn cứ chuyển khoản, nhân viên sẽ xác nhận sau khi tiệm mở cửa lúc <b>'+esc(v.moLuc)+'</b>. Chỗ được giữ đến <b>'+esc(v.hanGiu)+'</b>.':'Giữ chỗ đến <b>'+esc(v.hanGiu)+'</b>. Nhân viên sẽ xác nhận khi nhận được tiền.')+'</div>'+
+    h+='<div class="ck"><b>Chuyển khoản cọc '+tien(v.tien)+'</b><div class="lbl" style="margin:4px 0 10px">'+(v.ngoaiGio?'Tiệm đang ngoài giờ làm việc. Bạn cứ chuyển khoản, nhân viên sẽ xác nhận sau khi tiệm mở cửa lúc <b>'+esc(v.moLuc)+'</b>. Chỗ được giữ đến <b>'+esc(v.hanGiu)+'</b>.':'Giữ chỗ đến <b>'+esc(v.hanGiu)+'</b>. Chuyển khoản xong, lịch <b>tự xác nhận trong khoảng 1–2 phút</b> – trang tự cập nhật, bạn không cần tải lại.')+'</div>'+
       (v.qrData?'<div id="qrck" style="display:inline-block;background:#fff;padding:10px;border-radius:10px"></div><div class="lbl" style="margin-top:6px">Quét bằng app ngân hàng – số tiền và nội dung đã điền sẵn</div>':v.qr?'<img src="'+esc(v.qr)+'" alt="Mã QR chuyển khoản">':'<div class="lbl">Mã QR chuyển khoản đang được cập nhật – vui lòng liên hệ fanpage Mirafilm.</div>')+
       '<div class="lbl" style="margin-top:10px">Nội dung chuyển khoản</div><div class="copy"><code id="nd">'+esc(v.noiDung)+'</code><button class="b2 mini" onclick="sao($(\'nd\').textContent,this)">Chép</button></div></div>';
-    TIMER=setTimeout(datXem,15000);
+    TIMER=setTimeout(datXem,10000);
   }else if(v.tt==='da_xn'){
-    h+='<div class="ck" style="background:#eef8f1;border-color:var(--xanh)"><b>Lịch đã được xác nhận ✓</b><div class="lbl" style="margin-top:4px">Đến tiệm, báo nhân viên mã <b>'+esc(v.ma)+'</b> hoặc số điện thoại.</div></div>';
+    h+='<div class="ck" style="background:#eef8f1;border-color:var(--xanh)">'+(moiXN?'<div style="font-size:30px;line-height:1.2">🎉</div><b style="color:var(--xanh)">Đã nhận tiền cọc!</b><br>':'')+'<b>Lịch đã được xác nhận ✓</b><div class="lbl" style="margin-top:4px">Đến tiệm, báo nhân viên mã <b>'+esc(v.ma)+'</b> hoặc số điện thoại.</div></div>';
   }else if(v.tt==='het_han'){
     h+='<div class="ck"><b>Đã hết thời gian giữ chỗ</b><div class="lbl" style="margin-top:4px">Nếu bạn đã chuyển khoản, đừng lo – nhân viên sẽ đối soát và xác nhận lại.</div></div>';
+    TIMER=setTimeout(datXem,30000);
   }
   h+='<div class="err" id="err"></div>';
   if(v.duocDoi)h+='<button class="b2" onclick="doiMo()">Dời lịch (còn '+(v.doiMax-v.doi)+' lần)</button><div id="doi"></div>';
