@@ -228,7 +228,8 @@ function laySo(){
   if(!PHONG){$('err').textContent='Vui lòng chọn phòng';return}
   $('btn').disabled=true;$('btn').textContent='Đang lấy số…';
   K=$('k').value.trim();var ten=$('ten').value,sdt=$('sdt').value;
-  api('bsLaySo',[CN,K,PHONG,ten,sdt],function(r){
+  var DV=ls('bs_dev');if(!DV){DV=Date.now().toString(36)+Math.random().toString(36).slice(2,10);ls('bs_dev',DV)}
+  api('bsLaySo',[CN,K,PHONG,ten,sdt,DV],function(r){
     if(MAS.indexOf(r.ma)<0)MAS.push(r.ma);luuMa();ls('bs_k_'+CN+'_'+hom(),K);ls('bs_ten',ten);ls('bs_sdt',sdt);
     xemVe();
   },function(e){$('err').textContent=e.message||e;$('btn').disabled=false;$('btn').textContent='Lấy số thứ tự'});
@@ -472,7 +473,7 @@ function nvVe(d){
   d.phong.forEach(function(p){
     var dg=p.dangGoi[0];
     h+='<div class="card pc"><h2>'+esc(p.ten)+'</h2><div class="st"><div><span>Đang chụp</span><b>'+(dg?esc(dg.nhan):'–')+'</b></div><div><span>Đang chờ</span><b style="color:var(--do)">'+p.cho.length+'</b></div><div><span>Xong</span><b style="color:var(--mo)">'+p.xong+'</b></div></div>'+
-       (dg?'<div class="dgk">'+esc(dg.ten)+' · '+esc(dg.sdt)+(dg.vao?'<br><b class="gio">Vào '+dg.vao+' → xong ~'+dg.ra+'</b>':'')+'</div><div class="tg">'+goiCh(p,dg)+'<button class="b2 mini" onclick="lenh(\'them\','+p.p+',\''+dg.ma+'\',-5)">−5′</button><button class="b2 mini" onclick="lenh(\'them\','+p.p+',\''+dg.ma+'\',5)">+5′</button></div>':'')+
+       (dg?'<div class="dgk">'+esc(dg.ten)+' · '+esc(dg.sdt)+(dg.vao?'<br><b class="gio">Vào '+dg.vao+' → xong ~'+dg.ra+'</b>':'')+'</div><div class="tg">'+goiCh(p,dg)+</div>':'')+
        '<div class="act"><button class="b1" onclick="lenh(\'goi\','+p.p+')">→ Gọi lượt tiếp</button><button class="b2" onclick="lenh(\'boqua\','+p.p+')"'+(dg?'':' disabled')+'>Bỏ qua</button></div>';
     if(p.lich.length){h+='<h3>Lịch đặt hôm nay</h3><div class="list" style="margin-top:0">';p.lich.forEach(function(x){h+=dlDong(x,p.p,x.gio+' ('+x.phut+'′)'+(x.ra&&x.tt!=='xong'&&x.tt!=='khong_den'?' → xong ~'+x.ra:''))});h+='</div>'}
     h+='<h3>Hàng chờ</h3><div class="list" style="margin-top:0">';
