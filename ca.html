@@ -1,5 +1,12 @@
 <!DOCTYPE html><html><head>
-<title>Đăng ký ca – Mirafilm</title>
+<title>Đăng ký ca – Mirafilm Photobooth</title>
+<meta name="description" content="Đặt lịch chụp online và lấy số thứ tự tại Mirafilm Photobooth – 3 chi nhánh tại TP.HCM.">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Mirafilm Photobooth">
+<meta property="og:title" content="Mirafilm Photobooth"><meta property="og:description" content="Đặt lịch chụp online · Lấy số thứ tự – 3 chi nhánh tại TP.HCM">
+<meta property="og:url" content="https://mirafilm.github.io/"><meta property="og:image" content="https://mirafilm.github.io/og2.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/jpeg">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://mirafilm.github.io/og2.jpg">
+<link rel="apple-touch-icon" href="https://mirafilm.github.io/apple-touch-icon.png">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="theme-color" content="#520A0A">
 <script>
 (function(){
@@ -9,7 +16,7 @@ function call(fn,args,ok,fail){
   (function go(){
     fetch(EXEC+'?api=1',{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,args:args}),redirect:'follow'})
     .then(function(r){return r.json()})
-    .then(function(j){if(j.ok){ok&&ok(j.d)}else{fail&&fail(new Error(j.err||'Lỗi'))}})
+    .then(function(j){if(j.ok){ok&&ok(j.d)}else if(/Lock timeout|another process/i.test(j.err||'')&&tries<3){tries++;setTimeout(go,1500*tries)}else{fail&&fail(new Error(/Lock timeout|another process/i.test(j.err||'')?'Hệ thống đang bận, vui lòng bấm lại sau vài giây':(j.err||'Lỗi')))}})
     .catch(function(e){if(++tries<3)return setTimeout(go,800*tries);fail&&fail(new Error('Mất kết nối – vui lòng thử lại'))});
   })();
 }
