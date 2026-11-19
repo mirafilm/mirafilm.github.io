@@ -311,7 +311,7 @@ function datBatDau(){clearTimeout(TIMER);if(BOOT&&BOOT.dat&&BOOT.cn===(P.cn||'')
 function veCN(ds){
   var h=LOGO+'<div class="tit solo">Đặt lịch chụp online</div><div class="card"><h2>Chọn chi nhánh</h2><div style="display:grid;gap:10px">';
   ds.forEach(function(c){h+='<div class="room" style="text-align:left'+(c.mo?'':';opacity:.55;cursor:default')+'"'+(c.mo?' onclick="chonCN(\''+c.cn+'\')"':'')+'>'+esc(c.ten)+(c.mo?'':'<small>Sắp mở đặt online</small>')+'</div>'});
-  h+='</div></div><div class="card"><h2>Đã đặt lịch?</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="Nhập SĐT đã đặt"><button class="b2" style="flex:0 0 auto;width:auto" onclick="datTim()">Tra cứu</button></div><div class="err" id="err2"></div></div>';
+  h+='</div></div><div class="card"><h2>Đã đặt lịch?</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="Nhập SĐT đã đặt"><button class="b2" style="flex:0 0 auto;width:auto" onclick="datTim()">Tra cứu</button></div><div class="err" id="err2"></div><div id="kq2"></div></div>';
   $('app').innerHTML=h;
 }
 function chonCN(c){CN=c;api('dlThongTin',[CN],datForm)}
@@ -339,7 +339,7 @@ function datForm(info){
   var h=LOGO+dau('Đặt lịch chụp online',info.ten)+(P.cn?'':'<div style="text-align:center;margin:-8px 0 10px"><button class="b3" style="width:auto;padding:4px" onclick="datBatDau()">← Đổi chi nhánh</button></div>')+'<div class="card"><h2>1. Chọn phòng</h2><div class="rooms">';
   info.phong.forEach(function(p){h+='<div class="room" data-p="'+p.i+'" onclick="dChonPhong('+p.i+')">'+esc(p.ten)+'<small>từ '+tien(Math.min.apply(null,p.goi.map(function(g){return g[1]})))+'</small></div>'});
   h+='</div><div id="anhD"></div><div id="dGoi"></div><div id="dNgay"></div><div id="dGio"></div><div id="dTT"></div></div>'+
-     '<div class="card"><h2>Đã đặt lịch?</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="Nhập SĐT đã đặt"><button class="b2" style="flex:0 0 auto;width:auto" onclick="datTim()">Tra cứu</button></div><div class="err" id="err2"></div></div>';
+     '<div class="card"><h2>Đã đặt lịch?</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="Nhập SĐT đã đặt"><button class="b2" style="flex:0 0 auto;width:auto" onclick="datTim()">Tra cứu</button></div><div class="err" id="err2"></div><div id="kq2"></div></div>';
   $('app').innerHTML=h;
 }
 function phongDI(i){return DI.phong.filter(function(x){return x.i===i})[0]}
@@ -402,9 +402,10 @@ function datGui(){
 }
 function datTim(){
   $('err2').textContent='';
-  api('dlTim',[P.cn?CN:'',$('sdt2').value],function(t){
-    if(!t){$('err2').textContent='Không thấy lịch sắp tới với SĐT này';return}
-    TOK=t;ls('dl_tok_'+CN,TOK);datXem();
+  $('kq2').innerHTML='';
+  api('dlTim',[P.cn?CN:'',$('sdt2').value],function(ds){
+    if(!ds||!ds.length){$('err2').textContent='Không thấy lịch sắp tới với SĐT này';return}
+    $('kq2').innerHTML='<div class="list" style="max-height:none">'+ds.map(function(v){return '<div class="li"><span><b>'+esc(v.gio+' · '+v.ngayNhan)+'</b><br><small style="color:var(--mo)">'+esc(v.phong+' · '+v.tenCN)+'</small></span><span class="tag '+v.tt+'">'+esc(v.ttNhan)+'</span></div>'}).join('')+'</div><div class="lbl" style="text-align:left;margin-top:8px">Muốn dời hoặc huỷ lịch: mở lại trang đặt lịch trên điện thoại đã dùng để đặt (trang tự lưu lịch của bạn), hoặc nhắn fanpage Mirafilm.</div>';
   },function(e){$('err2').textContent=e.message||e});
 }
 function datXem(){api('dlXem',[TOK],veDat,function(e){$('app').innerHTML=LOGO+'<div class="card"><div class="state">Mất kết nối</div><button class="b2" onclick="datXem()">Thử lại</button></div>'})}
@@ -430,6 +431,7 @@ function veDat(v){
   if(v.duocDoi)h+='<button class="b2" onclick="doiMo()">Dời lịch (còn '+(v.doiMax-v.doi)+' lần)</button><div id="doi"></div>';
   if(v.tt==='cho_ck')h+='<div style="margin-top:10px"><button class="b2" style="background:#fff;color:#a50e0e;border:2px solid #a50e0e;font-weight:700" onclick="hai(this,datHuy)">Huỷ giữ chỗ</button></div>';
   if(['huy','het_han','xong','khong_den'].indexOf(v.tt)>=0)h+='<button class="b1" style="margin-top:10px" onclick="datMoi()">Đặt lịch mới</button>';
+  else h+='<div class="lbl" style="margin-top:14px"><a href="#" style="color:var(--mo)" onclick="hai(this,datMoi);return false">Không phải lịch của bạn? Về trang đặt lịch</a></div>';
   h+='</div>';
   $('app').innerHTML=h;DOI=v;if(v.qrData&&$('qrck'))new QRCode($('qrck'),{text:v.qrData,width:220,height:220,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
 }
@@ -470,7 +472,6 @@ function dlDong(x,p,ht){
   if(x.tt==='cho_ck'||x.tt==='het_han')b=(x.gy?'<button class="bx mini" onclick="hai(this,function(){lenh(\'xn\',0,\''+x.ma+'\')})">Xác nhận theo CK '+x.gy+'</button>':'<span class="lbl">⏳ Chờ tiền về – tự xác nhận</span>')+'<button class="b2 mini" onclick="nvQL(\''+x.ma+'\')">QL xác nhận</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'huydl\',0,\''+x.ma+'\')})">Huỷ</button>';
   else if(x.tt==='da_xn')b='<button class="b2 mini" onclick="lenh(\'checkin\','+p+',\''+x.ma+'\')">Khách đến</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'khongden\','+p+',\''+x.ma+'\')})">Vắng</button>';
   else if(x.tt==='checkin')b=x.xh?'<span class="tre">trễ >15′ – đã xếp số cuối hàng</span>':'<button class="b1 mini" onclick="lenh(\'goidl\','+p+',\''+x.ma+'\')">Mời vào</button>';
-  if(x.tt==='da_xn'||x.tt==='khong_den')b+='<button class="b2 mini" onclick="nvDoi(\''+x.ma+'\')">Dời giờ</button>';
   if(x.tt==='da_xn'||x.tt==='checkin'||x.tt==='khong_den')b+='<button class="b2 mini" title="Bấm nhầm? Đưa đơn về bước trước" onclick="hai(this,function(){lenh(\'boxn\','+p+',\''+x.ma+'\')})">'+(x.tt==='da_xn'?'Bỏ xác nhận':'Hoàn tác')+'</button>';
   return '<div class="li"><div class="inf"><div class="l1"><b>'+esc(ht)+'</b><span class="tag '+x.tt+'">'+esc(x.ttNhan)+'</span>'+(x.tre?'<span class="tre">trễ</span>':'')+'</div><div class="l2">'+esc(x.ten)+' · '+esc(x.sdt)+' · cọc '+tien(x.tien)+(x.gia?' · gói '+esc(x.gia):'')+(x.tq?' · <b class="thu">đã thu thêm '+tien(x.tq)+' '+esc(x.ht)+'</b>':'')+'</div></div><div class="bt">'+b+'</div></div>';
 }
@@ -501,7 +502,7 @@ function nvVe(d){
   });
   $('nv').innerHTML=h;
   var s='';
-  if(d.sap.length){s='<div class="card"><h2>Lịch đã xác nhận các ngày tới ('+d.sap.length+')</h2><div class="list" style="max-height:none">';d.sap.forEach(function(x){s+='<div class="li"><span><b>'+esc(x.ngayNhan+' '+x.gio)+'</b> '+esc(x.phong)+' · '+x.phut+'′ · '+esc(x.ten)+' · '+esc(x.sdt)+'</span><span class="bt"><button class="b2 mini" onclick="nvDoi(\''+x.ma+'\')">Dời giờ</button></span></div>'});s+='</div></div>'}
+  if(d.sap.length){s='<div class="card"><h2>Lịch đã xác nhận các ngày tới ('+d.sap.length+')</h2><div class="list" style="max-height:none">';d.sap.forEach(function(x){s+='<div class="li"><span><b>'+esc(x.ngayNhan+' '+x.gio)+'</b> '+esc(x.phong)+' · '+x.phut+'′ · '+esc(x.ten)+' · '+esc(x.sdt)+'</span></div>'});s+='</div></div>'}
   $('sap').innerHTML=s;
   clearTimeout(TIMER);TIMER=setTimeout(nvTai,6000);
 }
