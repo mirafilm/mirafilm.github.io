@@ -472,6 +472,7 @@ function dlDong(x,p,ht){
   if(x.tt==='cho_ck'||x.tt==='het_han')b=(x.gy?'<button class="bx mini" onclick="hai(this,function(){lenh(\'xn\',0,\''+x.ma+'\')})">Xác nhận theo CK '+x.gy+'</button>':'<span class="lbl">⏳ Chờ tiền về – tự xác nhận</span>')+'<button class="b2 mini" onclick="nvQL(\''+x.ma+'\')">QL xác nhận</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'huydl\',0,\''+x.ma+'\')})">Huỷ</button>';
   else if(x.tt==='da_xn')b='<button class="b2 mini" onclick="lenh(\'checkin\','+p+',\''+x.ma+'\')">Khách đến</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'khongden\','+p+',\''+x.ma+'\')})">Vắng</button>';
   else if(x.tt==='checkin')b=x.xh?'<span class="tre">trễ >15′ – đã xếp số cuối hàng</span>':'<button class="b1 mini" onclick="lenh(\'goidl\','+p+',\''+x.ma+'\')">Mời vào</button>';
+  if(x.tt==='da_xn'||x.tt==='khong_den')b+='<button class="b2 mini" onclick="nvDoi(\''+x.ma+'\')">Dời giờ (QL)</button>';
   if(x.tt==='da_xn'||x.tt==='checkin'||x.tt==='khong_den')b+='<button class="b2 mini" title="Bấm nhầm? Đưa đơn về bước trước" onclick="hai(this,function(){lenh(\'boxn\','+p+',\''+x.ma+'\')})">'+(x.tt==='da_xn'?'Bỏ xác nhận':'Hoàn tác')+'</button>';
   return '<div class="li"><div class="inf"><div class="l1"><b>'+esc(ht)+'</b><span class="tag '+x.tt+'">'+esc(x.ttNhan)+'</span>'+(x.tre?'<span class="tre">trễ</span>':'')+'</div><div class="l2">'+esc(x.ten)+' · '+esc(x.sdt)+' · cọc '+tien(x.tien)+(x.gia?' · gói '+esc(x.gia):'')+(x.tq?' · <b class="thu">đã thu thêm '+tien(x.tq)+' '+esc(x.ht)+'</b>':'')+'</div></div><div class="bt">'+b+'</div></div>';
 }
@@ -502,7 +503,7 @@ function nvVe(d){
   });
   $('nv').innerHTML=h;
   var s='';
-  if(d.sap.length){s='<div class="card"><h2>Lịch đã xác nhận các ngày tới ('+d.sap.length+')</h2><div class="list" style="max-height:none">';d.sap.forEach(function(x){s+='<div class="li"><span><b>'+esc(x.ngayNhan+' '+x.gio)+'</b> '+esc(x.phong)+' · '+x.phut+'′ · '+esc(x.ten)+' · '+esc(x.sdt)+'</span></div>'});s+='</div></div>'}
+  if(d.sap.length){s='<div class="card"><h2>Lịch đã xác nhận các ngày tới ('+d.sap.length+')</h2><div class="list" style="max-height:none">';d.sap.forEach(function(x){s+='<div class="li"><span><b>'+esc(x.ngayNhan+' '+x.gio)+'</b> '+esc(x.phong)+' · '+x.phut+'′ · '+esc(x.ten)+' · '+esc(x.sdt)+'</span><span class="bt"><button class="b2 mini" onclick="nvDoi(\''+x.ma+'\')">Dời giờ (QL)</button></span></div>'});s+='</div></div>'}
   $('sap').innerHTML=s;
   clearTimeout(TIMER);TIMER=setTimeout(nvTai,6000);
 }
@@ -516,9 +517,10 @@ function nvQL(ma){clearTimeout(TIMER);
 function nvQLGui(ma){var p=$('qlPin').value;if(!p)return;$('qr').innerHTML='';lenh('xnql',0,ma,p)}
 function goiCh(p,x){if(!p.sb||!p.sb.length)return '';return p.sb.map(function(n){return '<button class="mini '+(x.p===n?'b1':'b2')+'" onclick="lenh(\'phut\','+p.p+',\''+x.ma+'\','+n+')">'+n+'′</button>'}).join('')}
 function nvDoiDong(){$('qr').innerHTML='';nvTai()}
-function nvDoi(ma){clearTimeout(TIMER);DNV={ma:ma,ngay:'',gio:''};
-  $('qr').innerHTML='<div class="modal" onclick="nvDoiDong()"><div class="card" style="text-align:left;max-height:90vh;overflow:auto" onclick="event.stopPropagation()" id="dnv">Đang tải…</div></div>';
-  api('bsDoiInfo',[CN,PIN,ma],function(d){
+function nvDoi(ma){clearTimeout(TIMER);DNV={ma:ma,ngay:'',gio:'',pq:''};
+  $('qr').innerHTML='<div class="modal" onclick="nvDoiDong()"><div class="card" style="text-align:left;max-height:90vh;overflow:auto" onclick="event.stopPropagation()" id="dnv"><h3 style="margin:0 0 6px">Dời giờ '+esc(ma)+'</h3><div class="lbl">Chỉ quản lý được dời lịch của khách (khách đổi máy, nhắn fanpage…). Nhân viên không tự dời.</div><label>Mã quản lý</label><input id="dnvPin" type="password" inputmode="numeric" autocomplete="off"><div class="err" id="dnvErr"></div><div style="display:flex;gap:8px;margin-top:12px"><button class="b2" onclick="nvDoiDong()">Đóng</button><button class="b1" onclick="nvDoiMo()">Tiếp tục</button></div></div></div>'}
+function nvDoiMo(){var p=$('dnvPin').value;if(!p)return;DNV.pq=p;var ma=DNV.ma;$('dnv').innerHTML='Đang tải…';
+  api('bsDoiInfo',[CN,PIN,ma,DNV.pq],function(d){
     var h='<h3 style="margin:0 0 6px">Dời giờ '+esc(d.ma)+'</h3><div class="lbl">'+esc(d.ten)+' · '+esc(d.phong)+' · đang đặt '+esc(d.gio+' '+d.ngayNhan)+'</div><h4 style="margin:12px 0 6px">Chọn ngày</h4><div class="chips">';
     d.ngay.forEach(function(n){h+='<div class="chip" data-v="'+n.d+'" onclick="nvDoiNgay(\''+n.d+'\')">'+esc(n.nhan)+'</div>'});
     $('dnv').innerHTML=h+'</div><div id="dnvGio"></div><div class="err" id="dnvErr"></div><div style="display:flex;gap:8px;margin-top:12px"><button class="b2" onclick="nvDoiDong()">Đóng</button><button class="b1" id="dnvOk" disabled onclick="nvDoiLuu()">Dời</button></div>';
@@ -527,13 +529,13 @@ function nvDoi(ma){clearTimeout(TIMER);DNV={ma:ma,ngay:'',gio:''};
 function nvDoiNgay(d){DNV.ngay=d;DNV.gio='';$('dnvOk').disabled=true;
   [].forEach.call(document.querySelectorAll('#dnv .chips:first-of-type .chip'),function(c){c.classList.toggle('on',c.dataset.v===d)});
   $('dnvGio').innerHTML='<div class="lbl" style="margin-top:10px">Đang tìm giờ trống…</div>';
-  api('bsDoiSlots',[CN,PIN,DNV.ma,d],function(a){
+  api('bsDoiSlots',[CN,PIN,DNV.ma,d,DNV.pq],function(a){
     if(!a.length){$('dnvGio').innerHTML='<div class="lbl" style="margin-top:10px">Ngày này hết giờ trống</div>';return}
     var h='<h4 style="margin:12px 0 6px">Chọn giờ</h4><div class="chips" id="dnvG">';a.forEach(function(g){h+='<div class="chip" data-v="'+g+'" onclick="nvDoiGio(\''+g+'\')">'+g+'</div>'});$('dnvGio').innerHTML=h+'</div>';
   },function(e){$('dnvGio').innerHTML='<div class="err">'+esc(e.message||e)+'</div>'});
 }
 function nvDoiGio(g){DNV.gio=g;[].forEach.call(document.querySelectorAll('#dnvG .chip'),function(c){c.classList.toggle('on',c.dataset.v===g)});$('dnvOk').disabled=false}
-function nvDoiLuu(){$('dnvOk').disabled=true;$('dnvErr').textContent='';api('bsDoiDL',[CN,PIN,DNV.ma,DNV.ngay,DNV.gio],function(d){$('qr').innerHTML='';nvVe(d)},function(e){$('dnvErr').textContent=e.message||e;$('dnvOk').disabled=false})}
+function nvDoiLuu(){$('dnvOk').disabled=true;$('dnvErr').textContent='';api('bsDoiDL',[CN,PIN,DNV.ma,DNV.ngay,DNV.gio,DNV.pq],function(d){$('qr').innerHTML='';nvVe(d)},function(e){$('dnvErr').textContent=e.message||e;$('dnvOk').disabled=false})}
 function lenh(l,p,ma,x){$('err').textContent='';[].forEach.call(document.querySelectorAll('#nv button,#ck button'),function(b){b.disabled=true});api('bsLenh',[CN,PIN,l,p,ma||'',x||''],nvVe,function(e){$('err').textContent=e.message||e;nvTai()})}
 function hienQR(){
   var url=NV.site||(NV.url+'?cn='+encodeURIComponent(CN));
