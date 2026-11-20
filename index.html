@@ -472,10 +472,10 @@ var NV=null;
 function dlDong(x,p,ht){
   var b='';
   if(x.tt==='cho_ck'||x.tt==='het_han')b=(x.gy?'<button class="bx mini" onclick="nvQL(\''+x.ma+'\',\''+x.gy+'\')">Xác nhận theo CK '+x.gy+' (QL)</button>':'<span class="lbl">⏳ Chờ tiền về – tự xác nhận</span>')+'<button class="b2 mini" onclick="nvQL(\''+x.ma+'\')">QL xác nhận</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'huydl\',0,\''+x.ma+'\')})">Huỷ</button>';
-  else if(x.tt==='da_xn')b='<button class="b2 mini" onclick="lenh(\'checkin\','+p+',\''+x.ma+'\')">Khách đến</button><button class="b2 mini" onclick="hai(this,function(){lenh(\'khongden\','+p+',\''+x.ma+'\')})">Vắng</button>';
+  else if(x.tt==='da_xn')b='<button class="b2 mini" onclick="lenh(\'checkin\','+p+',\''+x.ma+'\')">Khách đến</button>';
   else if(x.tt==='checkin')b=x.xh?'<span class="tre">trễ >15′ – đã xếp số cuối hàng</span>':'<button class="b1 mini" onclick="lenh(\'goidl\','+p+',\''+x.ma+'\')">Mời vào</button>';
   if(x.tt==='da_xn'||x.tt==='khong_den')b+='<button class="b2 mini" onclick="nvDoi(\''+x.ma+'\')">Dời giờ (QL)</button>';
-  if(x.tt==='da_xn'||x.tt==='checkin'||x.tt==='khong_den')b+='<button class="b2 mini" title="Bấm nhầm? Đưa đơn về bước trước" onclick="hai(this,function(){lenh(\'boxn\','+p+',\''+x.ma+'\')})">'+(x.tt==='da_xn'?'Bỏ xác nhận':'Hoàn tác')+'</button>';
+  if(x.tt==='da_xn'||x.tt==='checkin'||x.tt==='khong_den')b+='<button class="b2 mini" onclick="nvBo(\''+x.ma+'\','+p+',\''+(x.tt==='da_xn'?'Bỏ xác nhận':'Hoàn tác')+'\')">'+(x.tt==='da_xn'?'Bỏ xác nhận (QL)':'Hoàn tác (QL)')+'</button>';
   return '<div class="li"><div class="inf"><div class="l1"><b>'+esc(ht)+'</b><span class="tag '+x.tt+'">'+esc(x.ttNhan)+'</span>'+(x.tre?'<span class="tre">trễ</span>':'')+'</div><div class="l2">'+esc(x.ten)+' · '+esc(x.sdt)+' · cọc '+tien(x.tien)+(x.gia?' · gói '+esc(x.gia):'')+(x.tq?' · <b class="thu">đã thu thêm '+tien(x.tq)+' '+esc(x.ht)+'</b>':'')+'</div></div><div class="bt">'+b+'</div></div>';
 }
 function nvVe(d){
@@ -516,6 +516,9 @@ function nvThu(ma,tq,ht){clearTimeout(TIMER);
 function nvThuLuu(ma){var t=$('tqTien').value,h=(document.querySelector('input[name=tqHt]:checked')||{}).value||'TM';$('tqOk').disabled=true;$('tqErr').textContent='';api('bsThuThem',[CN,PIN,ma,t,h],function(d){$('qr').innerHTML='';nvVe(d)},function(e){$('tqErr').textContent=e.message||e;$('tqOk').disabled=false})}
 function nvQL(ma,gy){clearTimeout(TIMER);
   $('qr').innerHTML='<div class="modal" onclick="nvDoiDong()"><div class="card" style="text-align:left" onclick="event.stopPropagation()"><h3 style="margin:0 0 6px">'+(gy?'Xác nhận theo CK '+esc(gy)+' – ':'Quản lý xác nhận – ')+esc(ma)+'</h3><div class="lbl">'+(gy?'Có chuyển khoản lúc '+esc(gy)+' đúng số tiền nhưng thiếu SĐT. Quản lý kiểm tra đúng khách (tên, SĐT, số tiền trên Lark) rồi nhập mã.':'Chỉ dùng khi quản lý đã thấy tiền về TK công ty nhưng hệ thống không tự khớp (sai số tiền, nội dung lạ…).')+' Nhân viên không tự xác nhận.</div><label>Mã quản lý</label><input id="qlPin" type="password" inputmode="numeric" autocomplete="off"><div style="display:flex;gap:8px;margin-top:12px"><button class="b2" onclick="nvDoiDong()">Đóng</button><button class="bx" onclick="nvQLGui(\''+ma+'\','+(gy?'\'xn\'':'\'xnql\'')+')">Xác nhận</button></div></div></div>'}
+function nvBo(ma,p,nhan){clearTimeout(TIMER);
+  $('qr').innerHTML='<div class="modal" onclick="nvDoiDong()"><div class="card" style="text-align:left" onclick="event.stopPropagation()"><h3 style="margin:0 0 6px">'+esc(nhan)+' – '+esc(ma)+'</h3><div class="lbl">Đưa đơn về bước trước (vd. khách bị tự chuyển Vắng nhưng quản lý đồng ý cho vào). Chỉ quản lý được làm.</div><label>Mã quản lý</label><input id="qlPin" type="password" inputmode="numeric" autocomplete="off"><div style="display:flex;gap:8px;margin-top:12px"><button class="b2" onclick="nvDoiDong()">Đóng</button><button class="bx" onclick="nvBoGui(\''+ma+'\','+p+')">Đồng ý</button></div></div></div>'}
+function nvBoGui(ma,p){var q=$('qlPin').value;if(!q)return;$('qr').innerHTML='';lenh('boxn',p,ma,q)}
 function nvQLGui(ma,k){var p=$('qlPin').value;if(!p)return;$('qr').innerHTML='';lenh(k||'xnql',0,ma,p)}
 function goiCh(p,x){if(!p.sb||!p.sb.length)return '';return p.sb.map(function(n){return '<button class="mini '+(x.p===n?'b1':'b2')+'" onclick="lenh(\'phut\','+p.p+',\''+x.ma+'\','+n+')">'+n+'′</button>'}).join('')}
 function nvDoiDong(){$('qr').innerHTML='';nvTai()}
