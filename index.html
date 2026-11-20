@@ -493,10 +493,11 @@ function nvVe(d){
   var h='';
   d.phong.forEach(function(p){
     var dg=p.dangGoi[0];
-    h+='<div class="card pc"><h2>'+esc(p.ten)+'</h2><div class="st"><div><span>Đang chụp</span><b>'+(dg?esc(dg.nhan):'–')+'</b></div><div><span>Đang chờ</span><b style="color:var(--do)">'+p.cho.length+'</b></div><div><span>Xong</span><b style="color:var(--mo)">'+p.xong+'</b></div></div>'+
+    h+='<div class="card pc"><h2>'+esc(p.ten)+'</h2><div class="st"><div><span>Đang chụp</span><b>'+(dg?(/^Đặt /.test(dg.nhan)?'<small style="display:block;font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--mo);line-height:1.2">ĐẶT LỊCH</small>'+esc(dg.nhan.slice(4)):esc(dg.nhan)):'–')+'</b></div><div><span>Đang chờ</span><b style="color:var(--do)">'+p.cho.length+'</b></div><div><span>Xong</span><b style="color:var(--mo)">'+p.xong+'</b></div></div>'+
        (dg?'<div class="dgk">'+esc(dg.ten)+' · '+esc(dg.sdt)+(dg.vao?'<br><b class="gio">Vào '+dg.vao+' → xong ~'+dg.ra+'</b>':'')+'</div><div class="tg">'+goiCh(p,dg)+'</div>':'')+
        '<div class="act"><button class="b1" onclick="lenh(\'goi\','+p.p+')">→ Gọi lượt tiếp</button><button class="b2" onclick="lenh(\'boqua\','+p.p+')"'+(dg?'':' disabled')+'>Bỏ qua</button></div>';
-    if(p.lich.length){h+='<h3>Lịch đặt hôm nay</h3><div class="list" style="margin-top:0">';p.lich.forEach(function(x){h+=dlDong(x,p.p,x.gio+' ('+x.phut+'′)'+(x.ra&&x.tt!=='xong'&&x.tt!=='khong_den'?' → xong ~'+x.ra:''))});h+='</div>'}
+    var lc=p.lich.filter(function(x){return x.tt!=='xong'}),nx=p.lich.length-lc.length;
+    if(lc.length){h+='<h3>Lịch đặt hôm nay'+(nx?' <small style="font-weight:600;text-transform:none;letter-spacing:0">· đã chụp '+nx+'</small>':'')+'</h3><div class="list" style="margin-top:0">';lc.forEach(function(x){h+=dlDong(x,p.p,x.gio+' ('+x.phut+'′)'+(x.ra&&x.tt!=='xong'&&x.tt!=='khong_den'?' → xong ~'+x.ra:''))});h+='</div>'}
     h+='<h3>Hàng chờ</h3><div class="list" style="margin-top:0">';
     if(!p.cho.length&&!p.boQua.length)h+='<div class="lbl">Chưa có khách chờ</div>';
     p.cho.forEach(function(x,i){h+='<div class="li"><span><b>'+esc(x.nhan)+'</b> '+esc(x.ten)+' · '+esc(x.sdt)+' <small style="color:var(--mo)">'+esc(x.bc.slice(0,5))+'</small>'+(x.vao?'<br><small class="gio">Vào ~'+x.vao+' → xong ~'+x.ra+'</small>':'')+'</span><span class="bt">'+goiCh(p,x)+(i?'<button class="b2 mini" onclick="lenh(\'don\','+p.p+',\''+x.ma+'\')">Đôn lên</button>':'')+'</span></div>'});
