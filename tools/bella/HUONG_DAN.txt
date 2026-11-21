@@ -1,0 +1,22 @@
+﻿MIRAFILM - BỘ CÔNG CỤ MÁY BELLA (CN1, CN2)
+==========================================
+
+CÀI ĐẶT (1 lần cho mỗi máy)
+  1. Tải MirafilmBella-CaiDat.zip tại: https://mirafilm.github.io/tools/bella/MirafilmBella-CaiDat.zip
+  2. Giải nén, bấm đúp CaiDat.bat.
+  3. Xong: Desktop có "Bảng điều khiển" (Ctrl+Alt+M) và "Tìm ảnh khách" (Ctrl+Alt+F).
+  Mỗi lần bật máy, công cụ tự tải bản mới nhất (nếu có mạng). Không cần cài lại.
+
+TÌM ẢNH KHÁCH (khi ảnh in ra bị mất mã QR)
+  1. Bấm "Tìm ảnh khách" -> hiện các lượt chụp mới nhất, có giờ chụp.
+  2. Chạm vào ảnh của khách (không thấy thì bấm "Xem thêm lượt cũ hơn").
+  3. Gõ tên khách nếu muốn -> bấm GOM FILE.
+  4. Máy chép ảnh frame + ảnh gốc + video vào thư mục "Gửi khách" trên Desktop
+     (kèm 1 file .zip), rồi tự mở thư mục. Kéo file vào Zalo để gửi khách.
+
+DỌN BỘ NHỚ / TẮT MÁY CUỐI NGÀY
+  - "Tắt máy cuối ngày": tự xoá ảnh/video cũ hơn 30 ngày rồi tắt máy.
+  - "Dọn bộ nhớ": chỉ bấm khi bảng báo chữ đỏ "SẮP ĐẦY".
+  - Không bao giờ xoá: File hình khách, frame, template, ảnh 30 ngày gần nhất.
+
+Nhật ký: C:\MirafilmBella\logs (hoat-dong.log, gom-anh.csv, cap-nhat.log)
