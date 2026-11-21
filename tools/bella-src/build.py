@@ -4,7 +4,7 @@ Dung: python3 build.py <version> <out_dir>"""
 import hashlib, json, os, sys, zipfile
 
 SRC = os.path.dirname(os.path.abspath(__file__))
-UPDATE_FILES = ['BellaTools.ps1', 'BellaScan.ps1', 'Update.ps1', 'HUONG_DAN.txt']
+UPDATE_FILES = ['BellaTools.ps1', 'BellaScan.ps1', 'Update.ps1', 'DriveUpload.ps1', 'HUONG_DAN.txt']
 INSTALL_ONLY = ['Install.ps1', 'CaiDat.bat']
 
 def norm(name):

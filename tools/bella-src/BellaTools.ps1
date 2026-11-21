@@ -1,6 +1,6 @@
-# =====================================================================
+﻿# =====================================================================
 #  MIRAFILM - BANG DIEU KHIEN MAY BELLA (dslrBooth)
-#  Action: Panel (mac dinh) | TimAnh | DonBoNho | TatMay | KiemTra
+#  Action: Panel (mac dinh) | TimAnh | DonBoNho | TatMay | KiemTra | KetNoiDrive
 # =====================================================================
 param([string]$Action = 'Panel', [switch]$NoGui, [switch]$DryRun)
 
@@ -23,12 +23,18 @@ function Write-Log([string]$msg) {
 }
 
 # ---------------------------------------------------------------- config
-$Cfg = [ordered]@{ BoothRoot = 'C:\dslrBooth'; Event = ''; KeepDays = 30; SendFolder = ''; ShowCount = 12; MinFreeGB = 30 }
+$Cfg = [ordered]@{ BoothRoot = 'C:\dslrBooth'; Event = ''; KeepDays = 30; SendFolder = ''; ShowCount = 12; MinFreeGB = 30; Room = ''; DriveUrl = ''; DriveKey = '' }
 $cp = Join-Path $Root 'config.json'
 if (Test-Path $cp) {
     try { $j = Get-Content $cp -Raw -Encoding UTF8 | ConvertFrom-Json; foreach ($p in $j.PSObject.Properties) { $Cfg[$p.Name] = $p.Value } } catch { }
 }
 $script:Dry = [bool]$DryRun
+function Save-Config([hashtable]$changes) {
+    $o = [ordered]@{}
+    if (Test-Path $cp) { try { $j = Get-Content $cp -Raw -Encoding UTF8 | ConvertFrom-Json; foreach ($p in $j.PSObject.Properties) { $o[$p.Name] = $p.Value } } catch { } }
+    foreach ($k in $changes.Keys) { $o[$k] = $changes[$k]; $Cfg[$k] = $changes[$k] }
+    $o | ConvertTo-Json | Set-Content $cp -Encoding UTF8
+}
 $BoothRoot = [string]$Cfg.BoothRoot
 $Skip = @('Frames', 'Settings', 'Shares', 'Templates')
 
@@ -178,6 +184,48 @@ function Show-Progress([string]$title) {
 function Step([string]$t) { if ($script:Prog) { $script:Prog.Label.Text = $t; [System.Windows.Forms.Application]::DoEvents() } }
 function Close-Progress { if ($script:Prog) { $script:Prog.Form.Close(); $script:Prog = $null } }
 
+# ---------------------------------------------------------------- Ket noi Drive
+# Ma ket noi = <URL web app Apps Script>#<KEY>. Luu vao config.json cua may (khong nam tren GitHub).
+function Test-Relay([string]$url, [string]$key) {
+    try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch { }
+    $bytes = [Text.Encoding]::UTF8.GetBytes((@{ a = 'ping'; key = $key } | ConvertTo-Json -Compress))
+    $r = Invoke-RestMethod -Uri $url -Method Post -Body $bytes -ContentType 'text/plain; charset=utf-8' -TimeoutSec 30 -UseBasicParsing
+    if ($r -is [string]) { $r = $r | ConvertFrom-Json }
+    if (-not $r.ok) { throw [string]$r.error }
+}
+function Show-KetNoiDrive {
+    $f = New-Object System.Windows.Forms.Form; $f.Text = 'Mirafilm - Kết nối Drive'; $f.Size = New-Object System.Drawing.Size(640, 330)
+    $f.StartPosition = 'CenterScreen'; $f.TopMost = $true; $f.FormBorderStyle = 'FixedDialog'; $f.MaximizeBox = $false; $f.MinimizeBox = $false
+    $l1 = New-Object System.Windows.Forms.Label; $l1.Font = $FontSmall; $l1.SetBounds(20, 15, 590, 40); $l1.Text = "Máy này chưa kết nối Drive. Dán MÃ KẾT NỐI (quản lý/anh Hào gửi) vào ô dưới. Chỉ làm 1 lần."
+    $t1 = New-Object System.Windows.Forms.TextBox; $t1.Font = $FontSmall; $t1.SetBounds(20, 58, 585, 28)
+    if ($Cfg.DriveUrl) { $t1.Text = [string]$Cfg.DriveUrl + '#' + [string]$Cfg.DriveKey }
+    $l2 = New-Object System.Windows.Forms.Label; $l2.Font = $FontSmall; $l2.SetBounds(20, 100, 590, 24); $l2.Text = 'Tên phòng (hiện trong tên thư mục trên Drive):'
+    $t2 = New-Object System.Windows.Forms.TextBox; $t2.Font = $FontMid; $t2.SetBounds(20, 126, 300, 32); $t2.Text = $(if ($Cfg.Room) { [string]$Cfg.Room } else { $env:COMPUTERNAME })
+    $msg = New-Object System.Windows.Forms.Label; $msg.Font = $FontSmall; $msg.SetBounds(20, 168, 590, 40); $msg.ForeColor = [System.Drawing.Color]::Firebrick
+    $ok = New-Object System.Windows.Forms.Button; $ok.Text = 'Kết nối'; $ok.Font = $FontMid; $ok.SetBounds(20, 215, 160, 55)
+    $ok.BackColor = [System.Drawing.Color]::FromArgb(82, 10, 10); $ok.ForeColor = [System.Drawing.Color]::White; $ok.FlatStyle = 'Flat'
+    $no = New-Object System.Windows.Forms.Button; $no.Text = 'Huỷ'; $no.Font = $FontMid; $no.SetBounds(485, 215, 120, 55)
+    $f.Controls.AddRange(@($l1, $t1, $l2, $t2, $msg, $ok, $no))
+    $script:KN = $false
+    $no.Add_Click({ $f.Close() })
+    $ok.Add_Click({
+        $code = $t1.Text.Trim(); $i = $code.LastIndexOf('#')
+        if ($i -lt 10 -or $code -notmatch '^https://script\.google\.com/') { $msg.Text = 'Mã không đúng dạng (phải bắt đầu bằng https://script.google.com/ và có dấu #).'; return }
+        $url = $code.Substring(0, $i); $key = $code.Substring($i + 1)
+        $msg.ForeColor = [System.Drawing.Color]::DimGray; $msg.Text = 'Đang thử kết nối...'; $ok.Enabled = $false; [System.Windows.Forms.Application]::DoEvents()
+        try {
+            Test-Relay $url $key
+            $room = Safe-Name $t2.Text; if (-not $room) { $room = $env:COMPUTERNAME }
+            Save-Config @{ DriveUrl = $url; DriveKey = $key; Room = $room }
+            Write-Log "Ket noi Drive OK (phong: $room)"
+            $script:KN = $true; $f.Close()
+        } catch { $msg.ForeColor = [System.Drawing.Color]::Firebrick; $msg.Text = "Không kết nối được: $($_.Exception.Message)"; $ok.Enabled = $true }
+    })
+    [void]$f.ShowDialog()
+    return $script:KN
+}
+function Ensure-Drive { if ($Cfg.DriveUrl -and $Cfg.DriveKey) { return $true }; return (Show-KetNoiDrive) }
+
 # ---------------------------------------------------------------- Tim anh khach
 function Show-TimAnh {
     $script:TA = @{ Sel = $null; Items = @{}; Thumbs = @(); Show = [int]$Cfg.ShowCount }
@@ -188,19 +236,21 @@ function Show-TimAnh {
 
     $top = New-Object System.Windows.Forms.Panel; $top.Dock = 'Top'; $top.Height = 60
     $info = New-Object System.Windows.Forms.Label; $info.SetBounds(15, 8, 1500, 48); $info.Font = $FontMid
-    $info.Text = "Lượt mới nhất ở đầu. Chạm vào ảnh của khách rồi bấm GOM FILE: máy chép ảnh frame + ảnh gốc + video vào thư mục '$SendDir'."
-    $top.Controls.Add($info)
+    $info.Text = "Lượt mới nhất ở đầu. Chạm vào ảnh của khách rồi bấm TẠO LINK DRIVE (gửi link cho khách) hoặc GOM FILE (chỉ chép vào '$SendDir')."
+    $selLbl = New-Object System.Windows.Forms.Label; $selLbl.Font = $FontMid; $selLbl.Dock = 'Right'; $selLbl.Width = 430; $selLbl.TextAlign = 'MiddleLeft'
+    $info.Dock = 'Fill'; $info.TextAlign = 'MiddleLeft'
+    $top.Controls.Add($info); $top.Controls.Add($selLbl)
 
     $bot = New-Object System.Windows.Forms.Panel; $bot.Dock = 'Bottom'; $bot.Height = 100; $bot.BackColor = [System.Drawing.Color]::White
     $lblName = New-Object System.Windows.Forms.Label; $lblName.Text = 'Tên khách (không bắt buộc):'; $lblName.Font = $FontSmall; $lblName.SetBounds(15, 12, 260, 22)
     $txtName = New-Object System.Windows.Forms.TextBox; $txtName.Font = $FontMid; $txtName.SetBounds(15, 38, 300, 32)
     $chkZip = New-Object System.Windows.Forms.CheckBox; $chkZip.Text = 'Nén thành 1 file .zip'; $chkZip.Font = $FontSmall; $chkZip.Checked = $true; $chkZip.SetBounds(330, 42, 200, 26)
-    $btnGom = New-Object System.Windows.Forms.Button; $btnGom.Text = 'GOM FILE'; $btnGom.Font = $FontBig; $btnGom.SetBounds(540, 14, 230, 72)
-    $btnGom.BackColor = [System.Drawing.Color]::FromArgb(82, 10, 10); $btnGom.ForeColor = [System.Drawing.Color]::White; $btnGom.FlatStyle = 'Flat'
-    $btnMore = New-Object System.Windows.Forms.Button; $btnMore.Text = 'Xem thêm lượt cũ hơn'; $btnMore.Font = $FontMid; $btnMore.SetBounds(790, 14, 210, 72)
-    $btnClose = New-Object System.Windows.Forms.Button; $btnClose.Text = 'Đóng'; $btnClose.Font = $FontMid; $btnClose.SetBounds(1015, 14, 120, 72)
-    $selLbl = New-Object System.Windows.Forms.Label; $selLbl.Font = $FontMid; $selLbl.SetBounds(1150, 14, 600, 72)
-    $bot.Controls.AddRange(@($lblName, $txtName, $chkZip, $btnGom, $btnMore, $btnClose, $selLbl))
+    $btnDrive = New-Object System.Windows.Forms.Button; $btnDrive.Text = 'TẠO LINK DRIVE'; $btnDrive.Font = $FontBig; $btnDrive.SetBounds(540, 14, 250, 72)
+    $btnDrive.BackColor = [System.Drawing.Color]::FromArgb(82, 10, 10); $btnDrive.ForeColor = [System.Drawing.Color]::White; $btnDrive.FlatStyle = 'Flat'
+    $btnGom = New-Object System.Windows.Forms.Button; $btnGom.Text = 'GOM FILE'; $btnGom.Font = $FontMid; $btnGom.SetBounds(805, 14, 150, 72)
+    $btnMore = New-Object System.Windows.Forms.Button; $btnMore.Text = 'Xem thêm lượt cũ hơn'; $btnMore.Font = $FontMid; $btnMore.SetBounds(970, 14, 200, 72)
+    $btnClose = New-Object System.Windows.Forms.Button; $btnClose.Text = 'Đóng'; $btnClose.Font = $FontMid; $btnClose.SetBounds(1185, 14, 110, 72)
+    $bot.Controls.AddRange(@($lblName, $txtName, $chkZip, $btnDrive, $btnGom, $btnMore, $btnClose))
 
     $flow = New-Object System.Windows.Forms.FlowLayoutPanel; $flow.Dock = 'Fill'; $flow.AutoScroll = $true; $flow.Padding = New-Object System.Windows.Forms.Padding(10)
     $f.Controls.Add($flow); $f.Controls.Add($bot); $f.Controls.Add($top)
@@ -257,6 +307,24 @@ function Show-TimAnh {
         $btnGom.Enabled = $true; $btnGom.Text = 'GOM FILE'
         if ($out -and -not $script:Dry) { Start-Process explorer.exe "/select,`"$out`""; $txtName.Text = '' }
         elseif ($script:Dry) { Say "[CHẠY THỬ] Không chép thật. Xem nhật ký: $LogDir\hoat-dong.log" }
+    })
+    $btnDrive.Add_Click({
+        if (-not $script:TA.Sel) { Say 'Chưa chọn lượt. Chạm vào ảnh của khách trước.'; return }
+        $f.TopMost = $false
+        try { $okDrive = Ensure-Drive } finally { $f.TopMost = $true }
+        if (-not $okDrive) { return }
+        $s = $script:TA.Items[$script:TA.Sel]
+        if (-not (Ask ("Tạo link Drive cho lượt " + $s.Time.ToString('HH:mm dd/MM') + "?`n`n$($s.Frames.Count) ảnh frame, $($s.Shots.Count) ảnh gốc, $($s.Videos.Count) video.`nMáy tải lên Drive trong 1-2 phút, xong sẽ tự chép link."))) { return }
+        $btnDrive.Enabled = $false; $btnDrive.Text = 'Đang gom...'; [System.Windows.Forms.Application]::DoEvents()
+        $label = $txtName.Text
+        try { $dir = Invoke-Gom $s $label } catch { $dir = $null; Say "Có lỗi khi gom file: $($_.Exception.Message)" }
+        $btnDrive.Enabled = $true; $btnDrive.Text = 'TẠO LINK DRIVE'
+        if (-not $dir) { return }
+        if ($script:Dry) { Say "[CHẠY THỬ] Không tải lên Drive."; return }
+        $dname = $s.Time.ToString('yyyy-MM-dd HH.mm') + ' - ' + $(if ($Cfg.Room) { [string]$Cfg.Room } else { $env:COMPUTERNAME }) + $(if ($label) { ' - ' + (Safe-Name $label) } else { '' })
+        $up = Join-Path $Root 'DriveUpload.ps1'
+        Start-Process powershell.exe -WindowStyle Hidden -ArgumentList ('-NoProfile -ExecutionPolicy Bypass -STA -File "{0}" -Dir "{1}" -Name "{2}"' -f $up, $dir, $dname)
+        $txtName.Text = ''
     })
     $f.Add_KeyDown({ param($x, $e) if ($e.KeyCode -eq 'Escape') { $f.Close() } })
     $f.Add_Shown({ & $load })
@@ -331,6 +399,7 @@ try {
         'DonBoNho' { Invoke-DonBoNho }
         'TatMay'   { Invoke-TatMay }
         'KiemTra'  { Invoke-KiemTra }
+        'KetNoiDrive' { [void](Show-KetNoiDrive) }
         default    { Show-Panel }
     }
 } catch {

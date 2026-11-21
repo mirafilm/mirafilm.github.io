@@ -6,7 +6,7 @@ $Src = $PSScriptRoot
 $Dest = 'C:\MirafilmBella'
 New-Item -ItemType Directory -Force -Path $Dest, (Join-Path $Dest 'logs') | Out-Null
 
-$files = 'BellaTools.ps1', 'BellaScan.ps1', 'Update.ps1', 'version.txt', 'HUONG_DAN.txt'
+$files = 'BellaTools.ps1', 'BellaScan.ps1', 'Update.ps1', 'DriveUpload.ps1', 'version.txt', 'HUONG_DAN.txt'
 foreach ($fn in $files) { $p = Join-Path $Src $fn; if ((Test-Path $p) -and ($Src.TrimEnd('\') -ne $Dest)) { Copy-Item $p $Dest -Force } }
 
 # config: giu lai so ngay cu neu da cai truoc do

@@ -10,13 +10,17 @@ CÀI ĐẶT (1 lần cho mỗi máy)
 TÌM ẢNH KHÁCH (khi ảnh in ra bị mất mã QR)
   1. Bấm "Tìm ảnh khách" -> hiện các lượt chụp mới nhất, có giờ chụp.
   2. Chạm vào ảnh của khách (không thấy thì bấm "Xem thêm lượt cũ hơn").
-  3. Gõ tên khách nếu muốn -> bấm GOM FILE.
-  4. Máy chép ảnh frame + ảnh gốc + video vào thư mục "Gửi khách" trên Desktop
-     (kèm 1 file .zip), rồi tự mở thư mục. Kéo file vào Zalo để gửi khách.
+  3. Gõ tên khách nếu muốn, rồi chọn 1 trong 2:
+     - TẠO LINK DRIVE: máy tải ảnh frame + ảnh gốc + video lên Drive Mirafilm
+       (thư mục "File hình PTB (tự động)"), 1-2 phút. Xong máy tự CHÉP LINK:
+       dán (Ctrl+V) vào Zalo cho khách. Trong lúc tải vẫn chụp bình thường.
+     - GOM FILE: chỉ chép vào thư mục "Gửi khách" trên Desktop (kèm .zip).
+  Lần đầu bấm TẠO LINK DRIVE trên 1 máy: dán MÃ KẾT NỐI (anh Hào gửi) + tên phòng.
+  Tải lỗi (mất mạng): bấm "Thử lại", máy tải tiếp các file còn thiếu.
 
 DỌN BỘ NHỚ / TẮT MÁY CUỐI NGÀY
   - "Tắt máy cuối ngày": tự xoá ảnh/video cũ hơn 30 ngày rồi tắt máy.
   - "Dọn bộ nhớ": chỉ bấm khi bảng báo chữ đỏ "SẮP ĐẦY".
   - Không bao giờ xoá: File hình khách, frame, template, ảnh 30 ngày gần nhất.
 
-Nhật ký: C:\MirafilmBella\logs (hoat-dong.log, gom-anh.csv, cap-nhat.log)
+Nhật ký: C:\MirafilmBella\logs (hoat-dong.log, gom-anh.csv, drive-link.csv, cap-nhat.log)
