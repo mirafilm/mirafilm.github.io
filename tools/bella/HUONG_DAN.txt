@@ -14,7 +14,7 @@ TÌM ẢNH KHÁCH (khi ảnh in ra bị mất mã QR)
      - TẠO LINK DRIVE: máy tải ảnh frame + ảnh gốc + video lên Drive Mirafilm
        (thư mục "File hình PTB (tự động)"), 1-2 phút. Xong máy tự CHÉP LINK:
        dán (Ctrl+V) vào Zalo cho khách. Trong lúc tải vẫn chụp bình thường.
-     - GOM FILE: chỉ chép vào thư mục "Gửi khách" trên Desktop (kèm .zip).
+     - GOM FILE: chỉ chép vào thư mục "Gửi khách" trên Desktop.
   Lần đầu bấm TẠO LINK DRIVE trên 1 máy: dán MÃ KẾT NỐI (anh Hào gửi) + tên phòng.
   Tải lỗi (mất mạng): bấm "Thử lại", máy tải tiếp các file còn thiếu.
 

@@ -244,13 +244,12 @@ function Show-TimAnh {
     $bot = New-Object System.Windows.Forms.Panel; $bot.Dock = 'Bottom'; $bot.Height = 100; $bot.BackColor = [System.Drawing.Color]::White
     $lblName = New-Object System.Windows.Forms.Label; $lblName.Text = 'Tên khách (không bắt buộc):'; $lblName.Font = $FontSmall; $lblName.SetBounds(15, 12, 260, 22)
     $txtName = New-Object System.Windows.Forms.TextBox; $txtName.Font = $FontMid; $txtName.SetBounds(15, 38, 300, 32)
-    $chkZip = New-Object System.Windows.Forms.CheckBox; $chkZip.Text = 'Nén thành 1 file .zip'; $chkZip.Font = $FontSmall; $chkZip.Checked = $true; $chkZip.SetBounds(330, 42, 200, 26)
-    $btnDrive = New-Object System.Windows.Forms.Button; $btnDrive.Text = 'TẠO LINK DRIVE'; $btnDrive.Font = $FontBig; $btnDrive.SetBounds(540, 14, 250, 72)
+    $btnDrive = New-Object System.Windows.Forms.Button; $btnDrive.Text = 'TẠO LINK DRIVE'; $btnDrive.Font = $FontBig; $btnDrive.SetBounds(340, 14, 290, 72)
     $btnDrive.BackColor = [System.Drawing.Color]::FromArgb(82, 10, 10); $btnDrive.ForeColor = [System.Drawing.Color]::White; $btnDrive.FlatStyle = 'Flat'
-    $btnGom = New-Object System.Windows.Forms.Button; $btnGom.Text = 'GOM FILE'; $btnGom.Font = $FontMid; $btnGom.SetBounds(805, 14, 150, 72)
-    $btnMore = New-Object System.Windows.Forms.Button; $btnMore.Text = 'Xem thêm lượt cũ hơn'; $btnMore.Font = $FontMid; $btnMore.SetBounds(970, 14, 200, 72)
-    $btnClose = New-Object System.Windows.Forms.Button; $btnClose.Text = 'Đóng'; $btnClose.Font = $FontMid; $btnClose.SetBounds(1185, 14, 110, 72)
-    $bot.Controls.AddRange(@($lblName, $txtName, $chkZip, $btnDrive, $btnGom, $btnMore, $btnClose))
+    $btnGom = New-Object System.Windows.Forms.Button; $btnGom.Text = 'GOM FILE'; $btnGom.Font = $FontMid; $btnGom.SetBounds(645, 14, 150, 72)
+    $btnMore = New-Object System.Windows.Forms.Button; $btnMore.Text = 'Xem thêm lượt cũ hơn'; $btnMore.Font = $FontMid; $btnMore.SetBounds(810, 14, 200, 72)
+    $btnClose = New-Object System.Windows.Forms.Button; $btnClose.Text = 'Đóng'; $btnClose.Font = $FontMid; $btnClose.SetBounds(1025, 14, 110, 72)
+    $bot.Controls.AddRange(@($lblName, $txtName, $btnDrive, $btnGom, $btnMore, $btnClose))
 
     $flow = New-Object System.Windows.Forms.FlowLayoutPanel; $flow.Dock = 'Fill'; $flow.AutoScroll = $true; $flow.Padding = New-Object System.Windows.Forms.Padding(10)
     $f.Controls.Add($flow); $f.Controls.Add($bot); $f.Controls.Add($top)
@@ -303,7 +302,7 @@ function Show-TimAnh {
         $s = $script:TA.Items[$script:TA.Sel]
         if (-not (Ask ("Gom file lượt " + $s.Time.ToString('HH:mm dd/MM') + "?`n`n$($s.Frames.Count) ảnh frame, $($s.Shots.Count) ảnh gốc, $($s.Videos.Count) video"))) { return }
         $btnGom.Enabled = $false; $btnGom.Text = 'Đang gom...'; [System.Windows.Forms.Application]::DoEvents()
-        try { $out = Invoke-Gom $s $txtName.Text -Zip:$chkZip.Checked } catch { $out = $null; Say "Có lỗi khi gom file: $($_.Exception.Message)" }
+        try { $out = Invoke-Gom $s $txtName.Text } catch { $out = $null; Say "Có lỗi khi gom file: $($_.Exception.Message)" }
         $btnGom.Enabled = $true; $btnGom.Text = 'GOM FILE'
         if ($out -and -not $script:Dry) { Start-Process explorer.exe "/select,`"$out`""; $txtName.Text = '' }
         elseif ($script:Dry) { Say "[CHẠY THỬ] Không chép thật. Xem nhật ký: $LogDir\hoat-dong.log" }
