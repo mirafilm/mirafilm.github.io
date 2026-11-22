@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="robots" content="noindex">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Mirafilm Photobooth">
+<meta property="og:title" content="Chọn ảnh ghép khung · Mirafilm"><meta property="og:description" content="Chọn ảnh cho từng ô khung rồi bấm Gửi để in">
+<meta property="og:url" content="https://mirafilm.github.io/chon-anh/"><meta property="og:image" content="https://mirafilm.github.io/og2.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/jpeg">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://mirafilm.github.io/og2.jpg">
 <title>Chọn ảnh ghép khung · Mirafilm</title>
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,9 +78,9 @@ button:focus-visible{outline:2px solid var(--do);outline-offset:2px}
 .zoom .m{flex-grow:1;position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;min-height:0}
 .zimg{max-width:100%;max-height:100%;border-radius:4px;overflow:hidden;background:#3a2a25}
 .zimg{width:100%}.zimg img{width:100%;height:auto;max-height:calc(100vh - 200px);object-fit:contain;cursor:zoom-in}
-.zimg.phong{height:100%;overflow:auto;-webkit-overflow-scrolling:touch;border-radius:0}
-.zimg.phong img{width:280%;max-width:none;max-height:none;cursor:zoom-out}
-.zoom .m.phong{padding:0}
+#zimg{touch-action:none;position:relative}
+#zimg img{transform-origin:0 0;will-change:transform;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.zoom .m.phong .ar{opacity:.35}
 .zoom .ar{position:absolute;top:50%;margin-top:-24px}
 .zoom .f{padding:16px;display:flex;flex-direction:column;gap:8px}
 .zoom .f span{font-size:13px;color:#b9aea4;text-align:center;min-height:18px}
@@ -106,7 +111,7 @@ var KHUNG = {
     [99,190,243,185,'r'],[21,434,69,80,'r'],[272,434,69,80,'r'],[374,59.1,182.7,193.6,'s'],[404,339,134,188,'r',1],
     [11,550,123,150,'r',1],[141,550,123,150,'r',1],[271,550,123,150,'r',1],[401,550,123,150,'r',1]] }
 };
-var S = { f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0 };
+var S = { f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
 var $ = function (id) { return document.getElementById(id); };
 var pad = function (n) { return String(n).padStart(2, '0'); };
 var oTen = function (i) { return 'Ô ' + pad(i + 1); };
@@ -122,10 +127,11 @@ function src(i) { var a = S.anh[i]; return a ? (S.img[a.id] || '') : ''; }
 function goi(q) { return fetch(API + '?' + q).then(function (r) { return r.json(); }); }
 function batDau() {
   S.f = decodeURIComponent(location.hash.replace(/^#/, ''));
-  if (!S.f || S.f === 'demo') return demo();
+  if (!S.f || /^demo\d?$/.test(S.f)) return demo();
   goi('a=mo&f=' + encodeURIComponent(S.f)).then(function (r) {
     if (!r.ok) throw new Error(r.loi);
-    S.ten = r.ten; S.anh = r.anh; S.daGui = r.daGui || 0;
+    S.ten = r.ten; S.anh = r.anh; S.daGui = r.daGui || 0; S.tong = r.tong || 0; S.lan = r.lan || [];
+    S.het = S.tong > 0 && S.daGui >= S.tong;
     if (!S.anh.length) { $('main').innerHTML = '<p>Ảnh của bạn đang được tải lên. Bạn thử mở lại link sau 1–2 phút nhé.</p>'; return; }
     ve(); for (var j = 0; j < 3; j++) taiAnh(j * 6);
   }).catch(function (e) { $('main').innerHTML = '<p>Không mở được link (' + esc(e.message || e) + '). Bạn ra quầy để nhân viên hỗ trợ nhé.</p>'; });
@@ -140,7 +146,7 @@ function taiAnh(tu, lan) {
   }).catch(function () { if ((lan || 0) < 3) setTimeout(function () { taiAnh(tu, (lan || 0) + 1); }, 3000); });
 }
 function demo() {
-  S.demo = true; S.ten = 'Khách mẫu';
+  S.demo = true; S.ten = 'Khách mẫu'; S.tong = /demo(\d)/.test(location.hash) ? +RegExp.$1 : 0;
   var tones = ['#8a6f62', '#6f5a52', '#5c6a70', '#9a7f6a', '#7a6b60', '#6b5650'];
   for (var i = 1; i <= 27; i++) {
     var s = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400' width='600' height='400'><defs><linearGradient id='g' x1='0' y1='0' x2='0.4' y2='1'><stop offset='0' stop-color='" + tones[i % 6] + "'/><stop offset='1' stop-color='#2b1f1b'/></linearGradient></defs><rect width='600' height='400' fill='url(#g)'/><g fill='rgba(255,255,255,.45)'><circle cx='230' cy='170' r='48'/><circle cx='370' cy='175' r='45'/><path d='M140 400C140 300 180 250 230 250C280 250 320 300 320 400Z'/><path d='M285 400C285 305 325 255 370 255C415 255 455 305 455 400Z'/></g></svg>";
@@ -169,7 +175,7 @@ function frameHtml(w, big) {
   var K = KHUNG[S.khung], k = w / 576;
   var h = '<div class="frame' + (S.bw ? ' bw' : '') + '" style="width:' + w + 'px;height:' + w * 4 / 3 + 'px;background-image:url(' + K.bg + ');' + (big ? 'align-self:center' : '') + '">';
   K.o.forEach(function (r, i) { h += oHtml(r, i, k, !big && i === S.act, big); });
-  if (K.chu) h += '<img class="chu" alt="" src="chu_mirafilm.png" style="left:' + K.chu[0] * k + 'px;top:' + K.chu[1] * k + 'px;width:' + K.chu[2] * k + 'px;height:' + K.chu[3] * k + 'px">';
+  if (K.chu && S.gan[0] === undefined) h += '<img class="chu" alt="" src="chu_mirafilm.png" style="left:' + K.chu[0] * k + 'px;top:' + K.chu[1] * k + 'px;width:' + K.chu[2] * k + 'px;height:' + K.chu[3] * k + 'px">';
   return h + '</div>';
 }
 function dung() { var n = 0; KHUNG[S.khung].o.forEach(function (_, i) { if (S.gan[i] !== undefined) n++; }); return n; }
@@ -178,11 +184,18 @@ function ve() {
   var old = app.querySelectorAll('.panel,.list,.foot,.msg,.zoom,.klon'); var top = $('list') ? $('list').scrollTop : 0;
   [].forEach.call(old, function (e) { e.remove(); });
   var h = '';
-  if (S.xong) {
-    h += '<div class="msg"><h2>Đã gửi lựa chọn</h2><p>Khung ' + K.ten + ', ' + (S.bw ? 'in trắng đen' : 'in màu') + (S.xong.combo > 1 ? ' (combo ' + S.xong.combo + ')' : '') + '. Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé.</p>' +
+  if (S.het && !S.xong) {
+    h += '<div class="msg"><h2>Bạn đã gửi đủ ' + S.tong + ' combo</h2><p>Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé. Muốn in thêm combo, bạn báo nhân viên ở quầy.</p><div class="box">';
+    S.lan.forEach(function (l) { h += '<div><span>Combo ' + l.combo + '</span><span style="color:var(--mo)">' + (KHUNG[l.khung] ? KHUNG[l.khung].ten : l.khung) + ' · ' + (l.bw ? 'in trắng đen' : 'in màu') + '</span></div>'; });
+    h += '</div></div>';
+  } else if (S.xong) {
+    var c = S.xong.combo, t = S.tong, con = t ? t - c : 0;
+    h += '<div class="msg"><h2>' + (t > 1 ? 'Đã gửi combo ' + c + '/' + t : 'Đã gửi lựa chọn') + '</h2><p>Khung ' + K.ten + ', ' + (S.bw ? 'in trắng đen' : 'in màu') + '. ' +
+      (con > 0 ? 'Bạn còn ' + con + ' combo nữa, bấm nút bên dưới để chọn tiếp nhé.' : 'Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé.') + '</p>' +
+      (con > 0 ? '<button class="btn" data-k="combo">Chọn ảnh cho combo ' + (c + 1) + '</button>' : '') +
       frameHtml(240, true) + '<div class="box">';
     K.o.forEach(function (_, i) { h += '<div><span>' + oTen(i) + '</span><span style="color:var(--mo)">tấm #' + S.anh[S.gan[i]].so + '</span></div>'; });
-    h += '</div><button class="btn ghost" data-k="combo">Chọn thêm combo khác</button></div>';
+    h += '</div>' + (!t ? '<button class="btn ghost" data-k="combo">Chọn thêm combo khác</button>' : '') + '</div>';
   } else {
     var cur = S.gan[S.act];
     h += '<div class="panel"><div class="row"><div class="mini">' + frameHtml(96) +
@@ -194,20 +207,21 @@ function ve() {
       '<div class="c"><b>' + oTen(S.act) + '</b><small>' + (cur !== undefined ? 'tấm #' + S.anh[cur].so : 'chưa có ảnh') + (K.o[S.act][5] ? ' · nằm ngang' : '') + '</small></div>' +
       '<button data-k="sau" aria-label="Ô sau"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>' +
       '<div class="seg" style="grid-template-columns:1fr 1fr"><button data-k="mau" class="' + (!S.bw ? 'on' : '') + '">In màu</button><button data-k="td" class="' + (S.bw ? 'on' : '') + '">In trắng đen</button></div></div></div></div>';
-    h += '<div class="list" id="list"><div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + ' tấm</b><span class="lb">Bấm vào ảnh để zoom</span></div><div class="grid">';
+    h += '<div class="list" id="list"><div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + ' tấm</b><span class="lb">Bấm vào ảnh để xem lớn</span></div><div class="grid">';
     var dung_ = {}; Object.keys(S.gan).forEach(function (o) { if (+o < tong) dung_[S.gan[o]] = +o; });
     S.anh.forEach(function (a, i) {
       var u = dung_[i] !== undefined;
       h += '<button class="tile' + (u ? ' used' : '') + '" data-anh="' + i + '" aria-label="Xem tấm ' + a.so + '">' + (src(i) ? '<img alt="" loading="lazy" src="' + src(i) + '">' : '') +
         '<span class="n">#' + esc(a.so) + '</span>' + (u ? '<span class="t">' + oTen(dung_[i]) + '</span>' : '') + '</button>';
     });
-    h += '</div></div><div class="foot"><div class="s"><b>Đã chọn ' + d + '/' + tong + '</b><span class="lb">' + (d === tong ? 'Kiểm tra lại rồi bấm Gửi' : 'Còn ' + (tong - d) + ' ô trống') + '</span></div>' +
+    h += '</div></div><div class="foot"><div class="s"><b>' + (S.tong > 1 ? 'Combo ' + Math.min(S.daGui + 1, S.tong) + '/' + S.tong + ' · ' : '') + 'Đã chọn ' + d + '/' + tong + '</b><span class="lb">' + (d === tong ? 'Kiểm tra lại rồi bấm Gửi' : 'Còn ' + (tong - d) + ' ô trống') + '</span></div>' +
       '<button class="btn" data-k="gui"' + (d === tong && !S.dangGui ? '' : ' disabled') + '>' + (S.dangGui ? 'Đang gửi…' : 'Gửi để in') + '</button></div>';
     if (S.khungLon) h += '<div class="klon"><div class="lb">Chạm vào ô để chọn · ' + oTen(S.act) + ' đang chọn</div>' + frameHtml(Math.min(320, innerWidth - 48)) +
       '<button class="btn" data-k="dongkhung" style="min-width:160px;background:var(--the);color:var(--nau)">Xong</button></div>';
     if (S.zoom !== null) h += zoomHtml();
   }
   app.insertAdjacentHTML('beforeend', h);
+  if (S.zoom !== null) zApply();
   if ($('list')) $('list').scrollTop = top;
   var m = $('main'); if (m) m.remove();
 }
@@ -217,10 +231,10 @@ function zoomHtml() {
   var cur = S.gan[S.act];
   var note = at === undefined ? (cur !== undefined ? act + ' đang có tấm #' + S.anh[cur].so + ', sẽ thay bằng tấm này' : '') :
     (at === S.act ? 'Tấm này đang ở ' + act : 'Tấm này đang ở ' + oTen(at) + ', sẽ chuyển sang ' + act);
-  if (!note) note = S.phong ? 'Kéo để xem, chạm lần nữa để thu nhỏ' : 'Chạm vào ảnh để phóng to';
+  if (!note) note = 'Chụm 2 ngón hoặc chạm đúp để phóng to · vuốt ngang để đổi tấm';
   return '<div class="zoom"><div class="h"><span style="font-size:15px;font-weight:500">Tấm #' + esc(a.so) + ' · ' + (i + 1) + '/' + S.anh.length + '</span>' +
     '<button data-k="dong" aria-label="Đóng"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
-    '<div class="m' + (S.phong ? ' phong' : '') + '"><div class="zimg' + (S.phong ? ' phong' : '') + '" id="zimg">' + (src(i) ? '<img alt="" data-k="phong" src="' + (S.lon[a.id] || src(i)) + '">' : '<div style="width:320px;height:213px"></div>') + '</div>' +
+    '<div class="m"><div class="zimg" id="zimg">' + (src(i) ? '<img alt="" data-k="phong" src="' + (S.lon[a.id] || src(i)) + '">' : '<div style="width:320px;height:213px"></div>') + '</div>' +
     '<button class="ar" style="left:4px" data-k="ztruoc" aria-label="Tấm trước"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>' +
     '<button class="ar" style="right:4px" data-k="zsau" aria-label="Tấm sau"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>' +
     '<div class="f"><span>' + note + '</span><button class="btn" data-k="' + (at === S.act ? 'bo' : 'dat') + '">' + (at === S.act ? 'Bỏ khỏi ' : 'Đặt vào ') + act + '</button></div></div>';
@@ -239,17 +253,17 @@ function dat(i, bo) {
 function gui() {
   var K = KHUNG[S.khung];
   var chon = K.o.map(function (_, i) { var a = S.anh[S.gan[i]]; return { o: i + 1, ten: a.ten, id: a.id }; });
-  if (S.demo) { S.xong = { combo: 1 }; ve(); return; }
+  if (S.demo) { S.daGui++; S.xong = { combo: S.daGui, tong: S.tong }; ve(); return; }
   S.dangGui = true; ve();
   fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ a: 'gui', f: S.f, khung: S.khung, bw: S.bw, chon: chon }) })
     .then(function (r) { return r.json(); })
-    .then(function (r) { S.dangGui = false; if (!r.ok) throw new Error(r.loi); S.xong = r; ve(); })
+    .then(function (r) { S.dangGui = false; if (!r.ok) throw new Error(r.loi); if (r.tong) S.tong = r.tong; S.daGui = Math.max(S.daGui, r.combo); S.xong = r; ve(); })
     .catch(function (e) { S.dangGui = false; ve(); alert('Chưa gửi được: ' + (e.message || e) + '. Bạn bấm Gửi lại nhé.'); });
 }
 // xem lớn: tải bản nét hơn (1600px) cho tấm đang xem
 function moZoom(i) {
-  S.zoom = i; S.phong = false; ve();
+  S.zoom = i; Z = { s: 1, x: 0, y: 0 }; ve();
   var a = S.anh[i];
   if (S.demo || !a || S.lon[a.id]) return;
   // ảnh Drive 1600px (Safari/Chrome mở được; trình duyệt Instagram chặn thì giữ bản 640px)
@@ -258,22 +272,66 @@ function moZoom(i) {
   im.onload = function () {
     if (im.naturalWidth < 700) return;
     S.lon[a.id] = u;
-    if (S.zoom === i) { var z = $('zimg'), x = z ? z.scrollLeft : 0, y = z ? z.scrollTop : 0; ve(); z = $('zimg'); if (z) { z.scrollLeft = x * 1; z.scrollTop = y; } }
+    if (S.zoom === i) { var im0 = zImg(); if (im0) { im0.src = u; } }
   };
   im.src = u;
 }
-// chạm vào ảnh: phóng to 2,8 lần quanh chỗ chạm, chạm lần nữa để thu nhỏ
-function phongTo(e, img) {
-  var r = img.getBoundingClientRect();
-  var fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
-  S.phong = !S.phong; ve();
-  var z = $('zimg');
-  if (S.phong && z) {
-    var im = z.querySelector('img');
-    z.scrollLeft = fx * im.clientWidth - z.clientWidth / 2;
-    z.scrollTop = fy * im.clientHeight - z.clientHeight / 2;
-  }
+// xem lớn: chụm 2 ngón / chạm đúp để phóng to, kéo khi đang phóng, vuốt ngang khi chưa phóng để đổi tấm
+var Z = { s: 1, x: 0, y: 0 };
+function zImg() { var z = $('zimg'); return z && z.querySelector('img'); }
+function zApply() {
+  var im = zImg(); if (!im) return;
+  var w = im.offsetWidth, h = im.offsetHeight;
+  Z.s = Math.min(5, Math.max(1, Z.s));
+  Z.x = Math.min(0, Math.max(w * (1 - Z.s), Z.x));
+  Z.y = Math.min(0, Math.max(h * (1 - Z.s), Z.y));
+  if (Z.s === 1) { Z.x = 0; Z.y = 0; }
+  im.style.transform = 'translate(' + Z.x + 'px,' + Z.y + 'px) scale(' + Z.s + ')';
+  var m = document.querySelector('.zoom .m'); if (m) m.classList.toggle('phong', Z.s > 1);
 }
+function zLocal(cx, cy) { var r = zImg().getBoundingClientRect(); return { x: cx - r.left + Z.x, y: cy - r.top + Z.y }; }
+function zTo(s, cx, cy) { // phóng tới mức s, giữ nguyên điểm dưới (cx, cy)
+  var c = zLocal(cx, cy), px = (c.x - Z.x) / Z.s, py = (c.y - Z.y) / Z.s;
+  Z.s = s; Z.x = c.x - s * px; Z.y = c.y - s * py; zApply();
+}
+function phongTo(e) { zTo(Z.s > 1 ? 1 : 2.5, e.clientX, e.clientY); }
+(function () {
+  var g = null, lastTap = 0;
+  function d(t) { return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY); }
+  function c(t) { return { x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2 }; }
+  document.addEventListener('touchstart', function (e) {
+    if (!e.target.closest || !e.target.closest('#zimg') || !zImg()) return;
+    var t = e.touches;
+    if (t.length === 2) { var m = c(t), l = zLocal(m.x, m.y); g = { pinch: true, d0: d(t), s0: Z.s, px: (l.x - Z.x) / Z.s, py: (l.y - Z.y) / Z.s, moved: true }; }
+    else if (t.length === 1) g = { x0: t[0].clientX, y0: t[0].clientY, zx: Z.x, zy: Z.y, moved: false, t0: Date.now() };
+    e.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchmove', function (e) {
+    if (!g) return; var t = e.touches; e.preventDefault();
+    if (g.pinch && t.length === 2) {
+      var m = c(t), l = zLocal(m.x, m.y);
+      Z.s = Math.min(5, Math.max(1, g.s0 * d(t) / g.d0));
+      Z.x = l.x - Z.s * g.px; Z.y = l.y - Z.s * g.py; zApply();
+    } else if (!g.pinch && t.length === 1) {
+      var dx = t[0].clientX - g.x0, dy = t[0].clientY - g.y0;
+      if (Math.abs(dx) + Math.abs(dy) > 8) g.moved = true;
+      if (Z.s > 1) { Z.x = g.zx + dx; Z.y = g.zy + dy; zApply(); }
+      else g.dx = dx;
+    }
+  }, { passive: false });
+  document.addEventListener('touchend', function (e) {
+    if (!g) return;
+    if (e.touches.length) { if (g.pinch) g = null; return; }
+    var now = Date.now(), ch = e.changedTouches[0];
+    if (!g.pinch && !g.moved) {
+      if (now - lastTap < 300) { zTo(Z.s > 1 ? 1 : 2.5, ch.clientX, ch.clientY); lastTap = 0; }
+      else lastTap = now;
+    } else if (!g.pinch && Z.s === 1 && Math.abs(g.dx || 0) > 50) {
+      moZoom((S.zoom + (g.dx < 0 ? 1 : S.anh.length - 1)) % S.anh.length);
+    }
+    g = null; e.preventDefault();
+  }, { passive: false });
+})();
 document.addEventListener('click', function (e) {
   var b = e.target.closest('button,[data-k="phong"]'); if (!b) return;
   var tong = KHUNG[S.khung].o.length;
@@ -288,7 +346,7 @@ document.addEventListener('click', function (e) {
     case 'dong': S.zoom = null; S.phong = false; return ve();
     case 'khunglon': S.khungLon = true; return ve();
     case 'dongkhung': S.khungLon = false; return ve();
-    case 'phong': return phongTo(e, b);
+    case 'phong': return phongTo(e);
     case 'ztruoc': return moZoom((S.zoom + S.anh.length - 1) % S.anh.length);
     case 'zsau': return moZoom((S.zoom + 1) % S.anh.length);
     case 'dat': return dat(S.zoom);
