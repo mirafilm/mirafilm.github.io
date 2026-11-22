@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="robots" content="noindex">
+<title>Chọn ảnh ghép khung · Mirafilm</title>
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=STIX+Two+Text:wght@500;600&display=swap">
+<style>
+:root{--nau:#520A0A;--the:#E9E6D7;--chu:#2b1414;--mo:#7d6f66;--do:#a3241b;--vien:#d9cfbb;--nen:#f7f4ec}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--nen);color:var(--chu);font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;color:inherit}
+button:focus-visible{outline:2px solid var(--do);outline-offset:2px}
+.app{position:relative;max-width:480px;margin:0 auto;height:100dvh;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--nen)}
+@supports(height:100dvh){.app{height:100dvh}}
+.top{background:var(--nau);padding:14px 20px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;flex:none}
+.top img{height:40px;display:block}
+.top h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--the);line-height:1.2}
+.panel{flex:none;background:#fff;border-bottom:1px solid var(--vien);padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.seg{display:grid;gap:4px;background:var(--the);border-radius:12px;padding:4px}
+.seg button{min-height:40px;border:0;border-radius:8px;background:transparent;font-size:14px;font-weight:500;cursor:pointer}
+.seg button.on{background:var(--nau);color:var(--the)}
+.row{display:flex;gap:16px;align-items:stretch}
+.frame{position:relative;flex:none;background:center/cover no-repeat;border-radius:2px;box-shadow:0 1px 3px rgba(43,20,20,.2)}
+.slot{position:absolute;padding:0;border:0;background:transparent;cursor:pointer}
+.slot .in{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--nau);background:rgba(233,230,215,.9)}
+.slot .in.r{border-radius:1px;border:1px solid rgba(82,10,10,.2)}
+.slot.on{z-index:2}
+.slot.on .in.r{border:2px solid var(--do);box-shadow:0 0 0 2px #fff}
+.slot.on.sh{filter:drop-shadow(0 0 1px #a3241b) drop-shadow(0 0 1px #a3241b) drop-shadow(0 0 1px #a3241b)}
+.slot img,.tile img,.zimg img{display:block;object-fit:cover}
+.slot img{position:absolute;left:50%;top:50%}
+.bw .ph{filter:grayscale(1)}
+.chu{position:absolute;z-index:3;pointer-events:none}
+.side{flex-grow:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+.lb{font-size:12px;color:var(--mo)}
+.nav{display:flex;align-items:center;gap:4px}
+.nav button{width:44px;height:44px;flex:none;border-radius:10px;border:1px solid var(--vien);background:#fff;color:var(--nau);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.nav .c{flex-grow:1;text-align:center;display:flex;flex-direction:column}
+.nav .c b{font-family:'STIX Two Text',serif;font-size:22px;font-weight:600;color:var(--nau)}
+.nav .c small{font-size:12px;color:var(--mo)}
+.list{flex-grow:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px}
+.lh{display:flex;justify-content:space-between;align-items:baseline}
+.lh b{font-size:14px;font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.tile{position:relative;aspect-ratio:3/2;border-radius:8px;overflow:hidden;padding:0;border:0;background:#d8d0c2;cursor:pointer}
+.tile img{width:100%;height:100%}
+.tile.used{outline:3px solid var(--nau);outline-offset:-3px}
+.tile .n{position:absolute;left:6px;bottom:5px;font-size:12px;font-weight:500;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.tile .t{position:absolute;right:6px;top:6px;background:var(--nau);color:var(--the);font-size:11px;font-weight:500;border-radius:6px;padding:2px 6px}
+.foot{flex:none;background:#fff;border-top:1px solid var(--vien);padding:12px 16px 16px;display:flex;gap:12px;align-items:center}
+.foot .s{display:flex;flex-direction:column;flex-grow:1}
+.foot .s b{font-size:15px;font-weight:500}
+.btn{min-height:48px;padding:0 20px;border-radius:10px;border:0;font-size:15px;font-weight:500;cursor:pointer;background:var(--nau);color:var(--the)}
+.btn[disabled]{cursor:default;background:var(--the);color:var(--mo)}
+.btn.ghost{background:transparent;border:1px solid var(--nau);color:var(--nau)}
+.msg{flex-grow:1;overflow-y:auto;padding:24px 20px;display:flex;flex-direction:column;gap:16px}
+.msg h2{margin:0;font-family:'STIX Two Text',serif;font-weight:600;font-size:28px;line-height:1.2}
+.msg p{margin:0;font-size:15px;line-height:1.55;color:var(--mo)}
+.box{background:#fff;border:1px solid var(--vien);border-radius:12px;padding:4px 16px}
+.box div{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px solid #efe8da}
+.box div:last-child{border-bottom:0}
+.zoom{position:absolute;inset:0;z-index:10;background:#1c0e0e;color:var(--the);display:flex;flex-direction:column}
+.zoom .h{display:flex;justify-content:space-between;align-items:center;padding:8px 8px 8px 20px}
+.zoom .h button,.zoom .ar{width:44px;height:48px;border:0;border-radius:10px;background:rgba(28,14,14,.55);color:var(--the);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.zoom .m{flex-grow:1;position:relative;display:flex;align-items:center;justify-content:center;padding:0 16px;min-height:0}
+.zimg{max-width:100%;max-height:100%;border-radius:4px;overflow:hidden;background:#3a2a25}
+.zimg{width:100%}.zimg img{width:100%;height:auto;max-height:calc(100vh - 200px);object-fit:contain}
+.zoom .ar{position:absolute;top:50%;margin-top:-24px}
+.zoom .f{padding:16px;display:flex;flex-direction:column;gap:8px}
+.zoom .f span{font-size:13px;color:#b9aea4;text-align:center;min-height:18px}
+.zoom .f .btn{min-height:52px;background:var(--the);color:var(--nau);font-size:16px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="top"><img src="logo.png" alt="Mirafilm Photobooth"><h1>Chọn ảnh ghép khung</h1></div>
+  <div id="main" class="msg"><p>Đang tải ảnh của bạn…</p></div>
+</div>
+<script>
+var API = 'https://script.google.com/macros/s/AKfycbxl8dBI77yUPkthdDzZ2yw2Yepv1GX-y65FakG1LxUPD45cmOd0tEZO6x-6FVJELPCtPg/exec';
+var SVG = {
+  h: ['0 0 64 56','M2.53725 8.94154C-2.65195 17.4906 1.00387 25.8117 5.59813 30.2281L32.4604 56L58.7557 30.3202C63.0287 25.5693 64.6666 20.5299 63.7569 14.9185C62.5004 7.1561 56.1037 1.13372 48.2017 0.273726C43.3553 -0.248088 38.6736 1.12342 35.0197 4.15976C34.0362 4.97672 33.1572 5.89005 32.3911 6.88277C31.4821 5.75248 30.4163 4.71854 29.2108 3.80219C25.009 0.608875 19.6604 -0.658994 14.5228 0.327059C9.65689 1.26705 5.28924 4.40582 2.53725 8.94154Z'],
+  s: ['0 0 390.54 500','M287.34,407.31c-27.22,0.06-53.23-10.39-78.44-20.68c4.35,20.39,10.41,40.49,18.22,59.83c3.12,7.73,20.86,53.54,30.06,53.54c-20.89,0-41.38,0-61.9,0s-41.01,0-61.9,0c9.2,0,26.94-45.81,30.06-53.54c7.81-19.34,13.87-39.44,18.22-59.83c-25.2,10.29-51.22,20.74-78.44,20.68C41.04,407.18-7.870,349.38,1.06,288.75c8.72-59.2,52.22-105.56,89.79-148.88c37.3-43.01,72.78-87.74,102.24-136.55c0.68-1.12,1.41-2.21,2.19-3.32c0.78,1.11,1.51,2.2,2.19,3.32c29.46,48.82,64.94,93.55,102.24,136.55c37.57,43.32,81.07,89.68,89.79,148.88C398.42,349.38,349.51,407.18,287.34,407.31z']
+};
+// ô theo khung Canva 576x768: x, y, w, h, hình (r/h/s), xoay (1 = ảnh nằm ngang trong khung)
+var KHUNG = {
+  valentine: { ten: 'Valentine', bg: 'khung_valentine.jpg', o: [
+    [36,35,158,234,'r'],[439,12,125,123,'r'],[439,142,125,123,'r'],[439,271,125,123,'r'],[439,401,125,123,'r'],
+    [18.2,353.1,182.9,186.5,'h'],[231.1,353.5,182.9,186.5,'h'],[52,623,139,113,'r'],[236,623,139,113,'r']] },
+  tapchi: { ten: 'Tạp chí', bg: 'khung_tapchi.jpg', chu: [20,20,280,170], o: [
+    [4,3,316,467,'r'],[363,178,94,124,'r',1],[363,317,94,124,'r',1],[4,471,283,293,'r'],
+    [288,471,141,147,'r',1],[430,471,141,147,'r',1],[288,618,141,147,'r',1],[430,618,141,147,'r',1]] },
+  bao: { ten: 'Báo', bg: 'khung_bao.jpg', o: [
+    [99,190,243,185,'r'],[21,434,69,80,'r'],[272,434,69,80,'r'],[374,59.1,182.7,193.6,'s'],[404,339,134,188,'r',1],
+    [11,550,123,150,'r',1],[141,550,123,150,'r',1],[271,550,123,150,'r',1],[401,550,123,150,'r',1]] }
+};
+var S = { f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, xong: null, dangGui: false, daGui: 0 };
+var $ = function (id) { return document.getElementById(id); };
+var pad = function (n) { return String(n).padStart(2, '0'); };
+var oTen = function (i) { return 'Ô ' + pad(i + 1); };
+function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
+function mask(sh) {
+  var s = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='" + SVG[sh][0] + "' preserveAspectRatio='none'><path d='" + SVG[sh][1] + "'/></svg>";
+  var u = 'url(data:image/svg+xml,' + encodeURIComponent(s).replace(/'/g, '%27') + ')';
+  return '-webkit-mask:' + u + ' center/100% 100% no-repeat;mask:' + u + ' center/100% 100% no-repeat;';
+}
+function src(i) { var a = S.anh[i]; return a ? (S.img[a.id] || '') : ''; }
+
+// ---------- tải dữ liệu ----------
+function goi(q) { return fetch(API + '?' + q).then(function (r) { return r.json(); }); }
+function batDau() {
+  S.f = decodeURIComponent(location.hash.replace(/^#/, ''));
+  if (!S.f || S.f === 'demo') return demo();
+  goi('a=mo&f=' + encodeURIComponent(S.f)).then(function (r) {
+    if (!r.ok) throw new Error(r.loi);
+    S.ten = r.ten; S.anh = r.anh; S.daGui = r.daGui || 0;
+    if (!S.anh.length) { $('main').innerHTML = '<p>Ảnh của bạn đang được tải lên. Bạn thử mở lại link sau 1–2 phút nhé.</p>'; return; }
+    ve(); for (var j = 0; j < 3; j++) taiAnh(j * 6);
+  }).catch(function (e) { $('main').innerHTML = '<p>Không mở được link (' + esc(e.message || e) + '). Bạn ra quầy để nhân viên hỗ trợ nhé.</p>'; });
+}
+// tải ảnh xem trước theo lô 6 tấm, 3 lô chạy song song
+function taiAnh(tu, lan) {
+  var ids = S.anh.slice(tu, tu + 6).map(function (a) { return a.id; });
+  if (!ids.length) return;
+  goi('a=anh&ids=' + ids.join(',')).then(function (r) {
+    Object.keys(r.anh || {}).forEach(function (k) { S.img[k] = r.anh[k]; });
+    ve(); taiAnh(tu + 18);
+  }).catch(function () { if ((lan || 0) < 3) setTimeout(function () { taiAnh(tu, (lan || 0) + 1); }, 3000); });
+}
+function demo() {
+  S.demo = true; S.ten = 'Khách mẫu';
+  var tones = ['#8a6f62', '#6f5a52', '#5c6a70', '#9a7f6a', '#7a6b60', '#6b5650'];
+  for (var i = 1; i <= 27; i++) {
+    var s = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400' width='600' height='400'><defs><linearGradient id='g' x1='0' y1='0' x2='0.4' y2='1'><stop offset='0' stop-color='" + tones[i % 6] + "'/><stop offset='1' stop-color='#2b1f1b'/></linearGradient></defs><rect width='600' height='400' fill='url(#g)'/><g fill='rgba(255,255,255,.45)'><circle cx='230' cy='170' r='48'/><circle cx='370' cy='175' r='45'/><path d='M140 400C140 300 180 250 230 250C280 250 320 300 320 400Z'/><path d='M285 400C285 305 325 255 370 255C415 255 455 305 455 400Z'/></g></svg>";
+    S.anh.push({ id: 'd' + i, ten: 'Mau_' + pad(i) + '.jpg', so: pad(i) });
+    S.img['d' + i] = 'data:image/svg+xml,' + encodeURIComponent(s);
+  }
+  ve();
+}
+
+// ---------- vẽ ----------
+function oHtml(r, i, k, on, big) {
+  var gi = S.gan[i], sh = r[4] !== 'r';
+  var w = r[2] * k, h = r[3] * k;
+  var st = 'left:' + r[0] * k + 'px;top:' + r[1] * k + 'px;width:' + w + 'px;height:' + h + 'px;';
+  var inner = '';
+  if (gi !== undefined && src(gi)) {
+    var iw = r[5] ? h : w, ih = r[5] ? w : h;
+    inner = '<img class="ph" alt="" src="' + src(gi) + '" style="width:' + iw + 'px;height:' + ih + 'px;transform:translate(-50%,-50%)' + (r[5] ? ' rotate(-90deg)' : '') + '">';
+  } else if (gi !== undefined) inner = '#' + S.anh[gi].so;
+  else inner = pad(i + 1);
+  var tag = big ? 'div' : 'button';
+  return '<' + tag + ' class="slot' + (on ? ' on' : '') + (sh ? ' sh' : '') + '" style="' + st + '"' + (big ? '' : ' data-o="' + i + '" aria-label="Chọn ' + oTen(i) + '"') + '>' +
+    '<span class="in' + (sh ? '' : ' r') + '" style="font-size:' + (big ? 11 : 9) + 'px;' + (sh ? mask(r[4]) : '') + '">' + inner + '</span></' + tag + '>';
+}
+function frameHtml(w, big) {
+  var K = KHUNG[S.khung], k = w / 576;
+  var h = '<div class="frame' + (S.bw ? ' bw' : '') + '" style="width:' + w + 'px;height:' + w * 4 / 3 + 'px;background-image:url(' + K.bg + ');' + (big ? 'align-self:center' : '') + '">';
+  K.o.forEach(function (r, i) { h += oHtml(r, i, k, !big && i === S.act, big); });
+  if (K.chu) h += '<img class="chu" alt="" src="chu_mirafilm.png" style="left:' + K.chu[0] * k + 'px;top:' + K.chu[1] * k + 'px;width:' + K.chu[2] * k + 'px;height:' + K.chu[3] * k + 'px">';
+  return h + '</div>';
+}
+function dung() { var n = 0; KHUNG[S.khung].o.forEach(function (_, i) { if (S.gan[i] !== undefined) n++; }); return n; }
+function ve() {
+  var app = $('app'), K = KHUNG[S.khung], tong = K.o.length, d = dung();
+  var old = app.querySelectorAll('.panel,.list,.foot,.msg,.zoom'); var top = $('list') ? $('list').scrollTop : 0;
+  [].forEach.call(old, function (e) { e.remove(); });
+  var h = '';
+  if (S.xong) {
+    h += '<div class="msg"><h2>Đã gửi lựa chọn</h2><p>Khung ' + K.ten + ', ' + (S.bw ? 'in trắng đen' : 'in màu') + (S.xong.combo > 1 ? ' (combo ' + S.xong.combo + ')' : '') + '. Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé.</p>' +
+      frameHtml(240, true) + '<div class="box">';
+    K.o.forEach(function (_, i) { h += '<div><span>' + oTen(i) + '</span><span style="color:var(--mo)">tấm #' + S.anh[S.gan[i]].so + '</span></div>'; });
+    h += '</div><button class="btn ghost" data-k="combo">Chọn thêm combo khác</button></div>';
+  } else {
+    h += '<div class="panel"><div class="seg" style="grid-template-columns:repeat(3,minmax(0,1fr))">';
+    Object.keys(KHUNG).forEach(function (k) { h += '<button data-khung="' + k + '" class="' + (k === S.khung ? 'on' : '') + '">' + KHUNG[k].ten + '</button>'; });
+    var cur = S.gan[S.act];
+    h += '</div><div class="row">' + frameHtml(144) + '<div class="side"><div class="lb">Đang chọn cho</div><div class="nav">' +
+      '<button data-k="truoc" aria-label="Ô trước"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>' +
+      '<div class="c"><b>' + oTen(S.act) + '</b><small>' + (cur !== undefined ? 'tấm #' + S.anh[cur].so : 'chưa có ảnh') + (K.o[S.act][5] ? ' · ảnh nằm ngang' : '') + '</small></div>' +
+      '<button data-k="sau" aria-label="Ô sau"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>' +
+      '<div style="flex-grow:1"></div><div class="lb">Kiểu in cả tờ</div><div class="seg" style="grid-template-columns:1fr">' +
+      '<button data-k="mau" class="' + (!S.bw ? 'on' : '') + '">In màu</button><button data-k="td" class="' + (S.bw ? 'on' : '') + '">In trắng đen</button></div></div></div></div>';
+    h += '<div class="list" id="list"><div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + ' tấm</b><span class="lb">Bấm ảnh để xem lớn</span></div><div class="grid">';
+    var dung_ = {}; Object.keys(S.gan).forEach(function (o) { if (+o < tong) dung_[S.gan[o]] = +o; });
+    S.anh.forEach(function (a, i) {
+      var u = dung_[i] !== undefined;
+      h += '<button class="tile' + (u ? ' used' : '') + '" data-anh="' + i + '" aria-label="Xem tấm ' + a.so + '">' + (src(i) ? '<img alt="" loading="lazy" src="' + src(i) + '">' : '') +
+        '<span class="n">#' + esc(a.so) + '</span>' + (u ? '<span class="t">' + oTen(dung_[i]) + '</span>' : '') + '</button>';
+    });
+    h += '</div></div><div class="foot"><div class="s"><b>Đã chọn ' + d + '/' + tong + '</b><span class="lb">' + (d === tong ? 'Kiểm tra lại rồi bấm Gửi' : 'Còn ' + (tong - d) + ' ô trống') + '</span></div>' +
+      '<button class="btn" data-k="gui"' + (d === tong && !S.dangGui ? '' : ' disabled') + '>' + (S.dangGui ? 'Đang gửi…' : 'Gửi để in') + '</button></div>';
+    if (S.zoom !== null) h += zoomHtml();
+  }
+  app.insertAdjacentHTML('beforeend', h);
+  if ($('list')) $('list').scrollTop = top;
+  var m = $('main'); if (m) m.remove();
+}
+function zoomHtml() {
+  var i = S.zoom, a = S.anh[i], act = oTen(S.act), at;
+  Object.keys(S.gan).forEach(function (o) { if (S.gan[o] === i && +o < KHUNG[S.khung].o.length) at = +o; });
+  var cur = S.gan[S.act];
+  var note = at === undefined ? (cur !== undefined ? act + ' đang có tấm #' + S.anh[cur].so + ', sẽ thay bằng tấm này' : '') :
+    (at === S.act ? 'Tấm này đang ở ' + act : 'Tấm này đang ở ' + oTen(at) + ', sẽ chuyển sang ' + act);
+  return '<div class="zoom"><div class="h"><span style="font-size:15px;font-weight:500">Tấm #' + esc(a.so) + ' · ' + (i + 1) + '/' + S.anh.length + '</span>' +
+    '<button data-k="dong" aria-label="Đóng"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
+    '<div class="m"><div class="zimg">' + (src(i) ? '<img alt="" src="' + src(i) + '">' : '<div style="width:320px;height:213px"></div>') + '</div>' +
+    '<button class="ar" style="left:4px" data-k="ztruoc" aria-label="Tấm trước"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>' +
+    '<button class="ar" style="right:4px" data-k="zsau" aria-label="Tấm sau"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>' +
+    '<div class="f"><span>' + note + '</span><button class="btn" data-k="' + (at === S.act ? 'bo' : 'dat') + '">' + (at === S.act ? 'Bỏ khỏi ' : 'Đặt vào ') + act + '</button></div></div>';
+}
+
+// ---------- thao tác ----------
+function dat(i, bo) {
+  var tong = KHUNG[S.khung].o.length;
+  Object.keys(S.gan).forEach(function (o) { if (S.gan[o] === i) delete S.gan[o]; });
+  if (!bo) {
+    S.gan[S.act] = i;
+    for (var j = 1; j <= tong; j++) { var t = (S.act + j) % tong; if (S.gan[t] === undefined) { S.act = t; break; } }
+  }
+  S.zoom = null; ve();
+}
+function gui() {
+  var K = KHUNG[S.khung];
+  var chon = K.o.map(function (_, i) { var a = S.anh[S.gan[i]]; return { o: i + 1, ten: a.ten, id: a.id }; });
+  if (S.demo) { S.xong = { combo: 1 }; ve(); return; }
+  S.dangGui = true; ve();
+  fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ a: 'gui', f: S.f, khung: S.khung, bw: S.bw, chon: chon }) })
+    .then(function (r) { return r.json(); })
+    .then(function (r) { S.dangGui = false; if (!r.ok) throw new Error(r.loi); S.xong = r; ve(); })
+    .catch(function (e) { S.dangGui = false; ve(); alert('Chưa gửi được: ' + (e.message || e) + '. Bạn bấm Gửi lại nhé.'); });
+}
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('button'); if (!b) return;
+  var tong = KHUNG[S.khung].o.length;
+  if (b.dataset.khung) { S.khung = b.dataset.khung; S.act = 0; S.gan = {}; return ve(); }
+  if (b.dataset.o) { S.act = +b.dataset.o; return ve(); }
+  if (b.dataset.anh) { S.zoom = +b.dataset.anh; return ve(); }
+  switch (b.dataset.k) {
+    case 'truoc': S.act = (S.act + tong - 1) % tong; return ve();
+    case 'sau': S.act = (S.act + 1) % tong; return ve();
+    case 'mau': S.bw = false; return ve();
+    case 'td': S.bw = true; return ve();
+    case 'dong': S.zoom = null; return ve();
+    case 'ztruoc': S.zoom = (S.zoom + S.anh.length - 1) % S.anh.length; return ve();
+    case 'zsau': S.zoom = (S.zoom + 1) % S.anh.length; return ve();
+    case 'dat': return dat(S.zoom);
+    case 'bo': return dat(S.zoom, true);
+    case 'gui': return gui();
+    case 'combo': S.xong = null; S.gan = {}; S.act = 0; return ve();
+  }
+});
+batDau();
+</script>
+</body>
+</html>
