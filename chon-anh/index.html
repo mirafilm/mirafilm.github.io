@@ -140,7 +140,7 @@ function batDau() {
 function taiAnh(tu, lan) {
   var ids = S.anh.slice(tu, tu + 6).map(function (a) { return a.id; });
   if (!ids.length) return;
-  goi('a=anh&s=400&ids=' + ids.join(',')).then(function (r) {
+  goi('a=anh&f=' + encodeURIComponent(S.f) + '&s=400&ids=' + ids.join(',')).then(function (r) {
     Object.keys(r.anh || {}).forEach(function (k) { S.img[k] = r.anh[k]; });
     ve(); taiAnh(tu + 18);
   }).catch(function () { if ((lan || 0) < 3) setTimeout(function () { taiAnh(tu, (lan || 0) + 1); }, 3000); });
@@ -275,7 +275,7 @@ function moZoom(i) {
     if (S.zoom === i) { var im0 = zImg(); if (im0) { im0.src = u; } }
   };
   im.onerror = function () { // trình duyệt trong app (Instagram...) chặn ảnh Drive -> lấy bản 1200px qua máy chủ
-    goi('a=anh&s=1200&ids=' + a.id).then(function (r) {
+    goi('a=anh&f=' + encodeURIComponent(S.f) + '&s=1200&ids=' + a.id).then(function (r) {
       var b = r.anh && r.anh[a.id]; if (!b) return;
       S.lon[a.id] = b; if (S.zoom === i) { var im0 = zImg(); if (im0) im0.src = b; }
     }).catch(function () {});
