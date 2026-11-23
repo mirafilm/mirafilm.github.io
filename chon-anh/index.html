@@ -76,6 +76,20 @@ button:focus-visible{outline:2px solid var(--do);outline-offset:2px}
 .box{background:#fff;border:1px solid var(--vien);border-radius:12px;padding:4px 16px}
 .box div{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px solid #efe8da}
 .box div:last-child{border-bottom:0}
+a.btn{display:flex;align-items:center;justify-content:center;text-decoration:none}
+.hai{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ghep{display:flex;flex-direction:column;gap:8px}
+.ghep b{font-size:15px;font-weight:600}
+.ghep .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.ghep .g a{display:block;background:#fff;border:1px solid var(--vien);border-radius:10px;overflow:hidden;aspect-ratio:3/4}
+.ghep .g img{display:block;width:100%;height:100%;object-fit:cover}
+.luu{display:flex;align-items:center;gap:8px;padding:8px 8px 8px 16px;background:var(--the);font-size:13px;flex:none}
+.luu span{flex:1;line-height:1.3}
+.luu button{border:0;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500}
+.luu .l{background:var(--nau);color:var(--the);padding:8px 12px}
+.luu .x{background:transparent;color:var(--mo);width:32px;height:32px;font-size:18px;line-height:1}
+.dl{font-size:12px;color:var(--do);font-weight:500}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:min(440px,calc(100% - 32px));background:var(--chu);color:var(--the);border-radius:12px;padding:12px 16px;font-size:13px;line-height:1.45;z-index:30;word-break:break-all}
 .zoom{position:absolute;inset:0;z-index:10;background:#1c0e0e;color:var(--the);display:flex;flex-direction:column}
 .zoom .h{display:flex;justify-content:space-between;align-items:center;padding:8px 8px 8px 20px}
 .zoom .h button,.zoom .ar{width:44px;height:48px;border:0;border-radius:10px;background:rgba(28,14,14,.55);color:var(--the);cursor:pointer;display:flex;align-items:center;justify-content:center}
@@ -115,7 +129,7 @@ var KHUNG = {
     [99,190,243,185,'r'],[21,434,69,80,'r'],[272,434,69,80,'r'],[374,59.1,182.7,193.6,'s'],[404,339,134,188,'r',1],
     [11,550,123,150,'r',1],[141,550,123,150,'r',1],[271,550,123,150,'r',1],[401,550,123,150,'r',1]] }
 };
-var S = { f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
+var S = { qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
 var NN = (function () { try { var v = localStorage.getItem('mf_lang'); if (v) return v; } catch (e) {} var q = /[?&]lang=(vi|en)/.exec(location.search); if (q) return q[1]; return /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en'; })();
 var TX = {
   vi: { tieude: 'Chọn ảnh ghép khung', tapchi: 'Tạp chí', bao: 'Báo', o: 'Ô ', tam: 'tấm #', chuaco: 'chưa có ảnh', ngang: ' · nằm ngang',
@@ -129,7 +143,11 @@ var TX = {
     daGuiC: 'Đã gửi combo {0}/{1}', daGuiL: 'Đã gửi lựa chọn', khung: 'Khung ', conC: 'Bạn còn {0} combo nữa, bấm nút bên dưới để chọn tiếp nhé.',
     inNgay: 'Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé.', chonC: 'Chọn ảnh cho combo ', chonThem: 'Chọn thêm combo khác',
     chuaGui: 'Chưa gửi được: {0}. Bạn bấm Gửi lại nhé.', xemKhung: 'Xem khung lớn', oTruoc: 'Ô trước', oSau: 'Ô sau', dong: 'Đóng',
-    tTruoc: 'Tấm trước', tSau: 'Tấm sau', xemTam: 'Xem tấm ' },
+    tTruoc: 'Tấm trước', tSau: 'Tấm sau', xemTam: 'Xem tấm ',
+    dangLen: 'Đang tải thêm ảnh…', dangLenP: 'Ảnh của bạn đang được tải lên, trang sẽ tự hiện ảnh trong giây lát…', taiGoc: 'Tải ảnh gốc', luuLink: 'Lưu link',
+    luuGoiY: 'Lưu link để mở lại trang này sau', daCopy: 'Đã copy link. Dán vào Ghi chú hoặc gửi cho chính bạn, hoặc chụp màn hình trang này.',
+    khongCopy: 'Chụp màn hình để giữ link này:', ghepH: 'Ảnh ghép khung', ghepCho: 'Ảnh ghép khung sẽ hiện ở đây sau khi Mirafilm căn chỉnh và in xong. Trang tự cập nhật, bạn không cần tải lại.',
+    ghepTai: 'Bấm vào ảnh để mở và tải về máy.' },
   en: { tieude: 'Choose Photos & Frame', tapchi: 'Magazine', bao: 'Newspaper', o: 'Slot ', tam: 'photo #', chuaco: 'empty', ngang: ' · landscape',
     mau: 'Color', td: 'Black & white', mau_t: 'color', td_t: 'black & white', soTam: ' photos', bamXem: 'Tap a photo to zoom in',
     daChon: 'Selected ', kiemTra: 'Check, then tap Send', con: '', oTrong: ' slots left', dangGui: 'Sending…', gui: 'Send to print',
@@ -141,7 +159,11 @@ var TX = {
     daGuiC: 'Combo {0}/{1} sent', daGuiL: 'Selection sent', khung: 'Frame ', conC: '{0} more combo(s) to go – tap below to continue.',
     inNgay: 'Our staff are adjusting and printing your photos – please collect them at the counter.', chonC: 'Choose photos for combo ', chonThem: 'Choose another combo',
     chuaGui: 'Not sent: {0}. Please tap Send again.', xemKhung: 'View large frame', oTruoc: 'Previous slot', oSau: 'Next slot', dong: 'Close',
-    tTruoc: 'Previous photo', tSau: 'Next photo', xemTam: 'View photo ' }
+    tTruoc: 'Previous photo', tSau: 'Next photo', xemTam: 'View photo ',
+    dangLen: 'More photos uploading…', dangLenP: 'Your photos are uploading – they will appear here in a moment…', taiGoc: 'Download originals', luuLink: 'Save link',
+    luuGoiY: 'Save this link to reopen the page later', daCopy: 'Link copied. Paste it into Notes or send it to yourself – or take a screenshot of this page.',
+    khongCopy: 'Take a screenshot to keep this link:', ghepH: 'Your framed photo', ghepCho: 'Your framed photo will appear here once Mirafilm has adjusted and printed it. This page updates itself.',
+    ghepTai: 'Tap the image to open and download it.' }
 };
 // loi tu may chu (tieng Viet) -> tieng Anh
 var LOI_EN = [[/Quầy chưa ghi nhận/, 'The counter has not registered this session yet. Please let our staff know – your selection is kept'],
@@ -171,9 +193,12 @@ function batDau() {
   if (!S.f || /^demo\d?$/.test(S.f)) return demo();
   goi('a=mo&f=' + encodeURIComponent(S.f)).then(function (r) {
     if (!r.ok) throw new Error(r.loi);
-    S.ten = r.ten; S.anh = r.anh; S.daGui = r.daGui || 0; S.tong = r.tong || 0; S.lan = r.lan || [];
+    S.ten = r.ten; S.anh = r.anh; S.daGui = r.daGui || 0; S.tong = r.tong || 0; S.lan = r.lan || []; S.ghep = r.ghep || null;
     S.het = S.tong > 0 && S.daGui >= S.tong;
-    if (!S.anh.length) { $('main').innerHTML = '<p>' + T('dangTai') + '</p>'; return; }
+    S.dangLen = !S.anh.length || r.tuoi < 150;
+    if (S.dangLen) setTimeout(capNhat, 15000);
+    if (S.het) theoDoiGhep();
+    if (!S.anh.length) { $('main').innerHTML = '<p>' + T('dangLenP') + '</p>'; return; }
     ve(); for (var j = 0; j < 3; j++) taiAnh(j * 6);
   }).catch(function (e) { $('main').innerHTML = '<p>' + T('khongMo', esc(loiDich(e.message || e))) + '</p>'; });
 }
@@ -185,6 +210,81 @@ function taiAnh(tu, lan) {
     Object.keys(r.anh || {}).forEach(function (k) { S.img[k] = r.anh[k]; });
     ve(); taiAnh(tu + 18);
   }).catch(function () { if ((lan || 0) < 3) setTimeout(function () { taiAnh(tu, (lan || 0) + 1); }, 3000); });
+}
+// ảnh cuối còn đang lên Drive (vừa hết giờ): đọc lại thư mục mỗi 15 giây, tự hiện tấm mới
+function capNhat() {
+  goi('a=mo&moi=1&f=' + encodeURIComponent(S.f)).then(function (r) {
+    if (!r.ok) throw new Error(r.loi);
+    var dau = !S.anh.length;
+    if (r.anh.length !== S.anh.length) ganLai(r.anh);
+    S.dangLen = r.tuoi < 150 && Date.now() - S.luc0 < 600000;
+    if (dau && !S.anh.length) { if (S.dangLen) setTimeout(capNhat, 15000); return; }
+    if (dau) { var m = $('main'); if (m) m.remove(); }
+    ve(); taiIds(S.anh.filter(function (a) { return !S.img[a.id]; }).map(function (a) { return a.id; }), 400);
+    if (S.dangLen) setTimeout(capNhat, 15000);
+  }).catch(function () { if (Date.now() - S.luc0 < 600000) setTimeout(capNhat, 20000); });
+}
+// danh sách ảnh mới (đã sắp theo số) -> giữ đúng ảnh khách đã đặt vào các ô
+function ganLai(moi) {
+  var id = function (i) { return S.anh[i] && S.anh[i].id; }, g = {}, z = S.zoom !== null ? id(S.zoom) : null;
+  Object.keys(S.gan).forEach(function (o) { g[o] = id(S.gan[o]); });
+  S.anh = moi; var vt = {}; S.anh.forEach(function (a, i) { vt[a.id] = i; });
+  S.gan = {}; Object.keys(g).forEach(function (o) { if (vt[g[o]] !== undefined) S.gan[o] = vt[g[o]]; });
+  if (z !== null) S.zoom = vt[z] !== undefined ? vt[z] : null;
+}
+function taiIds(ids, sz, lan) {
+  if (!ids.length) return;
+  var lo = ids.slice(0, 6);
+  goi('a=anh&f=' + encodeURIComponent(S.f) + '&s=' + sz + '&ids=' + lo.join(',')).then(function (r) {
+    Object.keys(r.anh || {}).forEach(function (k) { S.img[k] = r.anh[k]; });
+    ve(); taiIds(ids.slice(6), sz);
+  }).catch(function () { if ((lan || 0) < 3) setTimeout(function () { taiIds(ids, sz, (lan || 0) + 1); }, 3000); });
+}
+// màn hình đã gửi: chờ PC admin xuất ảnh ghép khung (sau khi nhân viên căn chỉnh và in), tối đa 40 phút
+function theoDoiGhep() {
+  if (S.demo || S.dangGhep) return;
+  S.dangGhep = true;
+  var t0 = Date.now();
+  (function lap() {
+    goi('a=mo&moi=1&f=' + encodeURIComponent(S.f)).then(function (r) {
+      if (r.ok && !r.ghep) S.ghep = null;
+      if (r.ok && r.ghep) {
+        var cu = (S.ghep || []).map(function (x) { return x.id; }).join();
+        S.ghep = r.ghep;
+        if (S.ghep.map(function (x) { return x.id; }).join() !== cu) { ve(); taiIds(S.ghep.map(function (x) { return x.id; }), 640); }
+      }
+    }).catch(function () {}).then(function () {
+      var du = !S.ghep || S.ghep.length >= Math.max(1, S.daGui);
+      if (!du && Date.now() - t0 < 2400000) setTimeout(lap, 30000); else S.dangGhep = false;
+    });
+  })();
+}
+function linkTrang() { return location.origin + location.pathname + '#' + encodeURIComponent(S.f); }
+function luuLink() {
+  var u = linkTrang();
+  if (navigator.share) { navigator.share({ title: 'Mirafilm · ' + T('tieude'), url: u }).catch(function () {}); return; }
+  var hong = function () { toast(T('khongCopy') + '<br>' + esc(u)); };
+  try { navigator.clipboard.writeText(u).then(function () { toast(T('daCopy')); }, hong); } catch (e) { hong(); }
+}
+function toast(html) {
+  var t = $('toast'); if (t) t.remove();
+  document.body.insertAdjacentHTML('beforeend', '<div class="toast" id="toast">' + html + '</div>');
+  clearTimeout(S.tTimer); S.tTimer = setTimeout(function () { var x = $('toast'); if (x) x.remove(); }, 7000);
+}
+function nutLuu() {
+  return '<div class="hai"><a class="btn ghost" href="https://drive.google.com/drive/folders/' + encodeURIComponent(S.f) + '" target="_blank" rel="noopener">' + T('taiGoc') + '</a>' +
+    '<button class="btn ghost" data-k="luu">' + T('luuLink') + '</button></div>';
+}
+function ghepHtml() {
+  if (!S.ghep) return '';  // máy chủ chưa hỗ trợ ảnh ghép khung
+  var h = '<div class="ghep"><b>' + T('ghepH') + '</b>';
+  if (!S.ghep.length) return h + '<p>' + T('ghepCho') + '</p></div>';
+  h += '<div class="g">';
+  S.ghep.forEach(function (x) {
+    h += '<a href="https://drive.google.com/file/d/' + encodeURIComponent(x.id) + '/view" target="_blank" rel="noopener">' +
+      (S.img[x.id] ? '<img alt="" src="' + S.img[x.id] + '">' : '') + '</a>';
+  });
+  return h + '</div><p>' + T('ghepTai') + '</p></div>';
 }
 function demo() {
   S.demo = true; S.ten = NN === 'vi' ? 'Khách mẫu' : 'Sample guest'; S.tong = /demo(\d)/.test(location.hash) ? +RegExp.$1 : 0;
@@ -222,11 +322,11 @@ function frameHtml(w, big) {
 function dung() { var n = 0; KHUNG[S.khung].o.forEach(function (_, i) { if (S.gan[i] !== undefined) n++; }); return n; }
 function ve() {
   var app = $('app'), K = KHUNG[S.khung], tong = K.o.length, d = dung();
-  var old = app.querySelectorAll('.panel,.list,.foot,.msg,.zoom,.klon'); var top = $('list') ? $('list').scrollTop : 0;
+  var old = app.querySelectorAll('.luu,.panel,.list,.foot,.msg,.zoom,.klon'); var top = $('list') ? $('list').scrollTop : 0;
   [].forEach.call(old, function (e) { e.remove(); });
   var h = '';
   if (S.het && !S.xong) {
-    h += '<div class="msg"><h2>' + T('duCombo', S.tong) + '</h2><p>' + T('duComboP') + '</p><div class="box">';
+    h += '<div class="msg"><h2>' + T('duCombo', S.tong) + '</h2><p>' + T('duComboP') + '</p>' + nutLuu() + ghepHtml() + '<div class="box">';
     S.lan.forEach(function (l) { h += '<div><span>Combo ' + l.combo + '</span><span style="color:var(--mo)">' + (KHUNG[l.khung] ? tenKhung(l.khung) : l.khung) + ' · ' + (l.bw ? T('td_t') : T('mau_t')) + '</span></div>'; });
     h += '</div></div>';
   } else if (S.xong) {
@@ -234,11 +334,12 @@ function ve() {
     h += '<div class="msg"><h2>' + (t > 1 ? T('daGuiC', c, t) : T('daGuiL')) + '</h2><p>' + T('khung') + tenKhung(S.khung) + ', ' + (S.bw ? T('td_t') : T('mau_t')) + '. ' +
       (con > 0 ? T('conC', con) : T('inNgay')) + '</p>' +
       (con > 0 ? '<button class="btn" data-k="combo">' + T('chonC') + (c + 1) + '</button>' : '') +
-      frameHtml(240, true) + '<div class="box">';
+      nutLuu() + (con > 0 ? '' : ghepHtml()) + frameHtml(240, true) + '<div class="box">';
     K.o.forEach(function (_, i) { h += '<div><span>' + oTen(i) + '</span><span style="color:var(--mo)">' + T('tam') + S.anh[S.gan[i]].so + '</span></div>'; });
     h += '</div>' + (!t ? '<button class="btn ghost" data-k="combo">' + T('chonThem') + '</button>' : '') + '</div>';
   } else {
     var cur = S.gan[S.act];
+    if (S.qr && !S.anBar) h += '<div class="luu"><span>' + T('luuGoiY') + '</span><button class="l" data-k="luu">' + T('luuLink') + '</button><button class="x" data-k="anbar" aria-label="' + T('dong') + '">×</button></div>';
     h += '<div class="panel"><div class="row"><div class="mini">' + frameHtml(96) +
       '<button class="phong-khung" data-k="khunglon" aria-label="' + T('xemKhung') + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button></div>' +
       '<div class="side"><div class="seg" style="grid-template-columns:repeat(3,minmax(0,1fr))">';
@@ -248,7 +349,7 @@ function ve() {
       '<div class="c"><b>' + oTen(S.act) + '</b><small>' + (cur !== undefined ? T('tam') + S.anh[cur].so : T('chuaco')) + (K.o[S.act][5] ? T('ngang') : '') + '</small></div>' +
       '<button data-k="sau" aria-label="' + T('oSau') + '"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>' +
       '<div class="seg" style="grid-template-columns:1fr 1fr"><button data-k="mau" class="' + (!S.bw ? 'on' : '') + '">' + T('mau') + '</button><button data-k="td" class="' + (S.bw ? 'on' : '') + '">' + T('td') + '</button></div></div></div></div>';
-    h += '<div class="list" id="list"><div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + T('soTam') + '</b><span class="lb">' + T('bamXem') + '</span></div><div class="grid">';
+    h += '<div class="list" id="list"><div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + T('soTam') + '</b>' + (S.dangLen ? '<span class="dl">' + T('dangLen') + '</span>' : '<span class="lb">' + T('bamXem') + '</span>') + '</div><div class="grid">';
     var dung_ = {}; Object.keys(S.gan).forEach(function (o) { if (+o < tong) dung_[S.gan[o]] = +o; });
     S.anh.forEach(function (a, i) {
       var u = dung_[i] !== undefined;
@@ -299,7 +400,7 @@ function gui() {
   fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ a: 'gui', f: S.f, khung: S.khung, bw: S.bw, chon: chon }) })
     .then(function (r) { return r.json(); })
-    .then(function (r) { S.dangGui = false; if (!r.ok) throw new Error(r.loi); if (r.tong) S.tong = r.tong; S.daGui = Math.max(S.daGui, r.combo); S.xong = r; ve(); })
+    .then(function (r) { S.dangGui = false; if (!r.ok) throw new Error(r.loi); if (r.tong) S.tong = r.tong; S.daGui = Math.max(S.daGui, r.combo); S.xong = r; ve(); theoDoiGhep(); })
     .catch(function (e) { S.dangGui = false; ve(); alert(T('chuaGui', loiDich(e.message || e))); });
 }
 // xem lớn: tải bản nét hơn (1600px) cho tấm đang xem
@@ -400,6 +501,8 @@ document.addEventListener('click', function (e) {
     case 'dat': return dat(S.zoom);
     case 'bo': return dat(S.zoom, true);
     case 'gui': return gui();
+    case 'luu': return luuLink();
+    case 'anbar': S.anBar = true; return ve();
     case 'combo': S.xong = null; S.gan = {}; S.act = 0; return ve();
   }
 });

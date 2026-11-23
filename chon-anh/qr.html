@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mirafilm · Hết giờ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Man hinh het gio trong phong chup (khung trinh duyet OBS). Khong lat guong. */
+:root{--nau:#520A0A;--the:#E9E6D7;--toi:#1c0e0e}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--toi);color:var(--the);font-family:Inter,system-ui,sans-serif;overflow:hidden}
+.w{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4.5vmin;padding:6vmin;text-align:center}
+.logo{height:7vmin;opacity:.9}
+h1{margin:0;font-weight:600;font-size:11vmin;line-height:1.05;letter-spacing:-.01em}
+h1 small{display:block;font-weight:400;font-size:5.2vmin;letter-spacing:0;opacity:.7;margin-top:1.2vmin}
+.qr{background:var(--the);border-radius:3vmin;padding:4vmin;width:min(62vmin,48vh);aspect-ratio:1}
+.qr svg{display:block;width:100%;height:100%}
+.cap{font-size:4.6vmin;font-weight:500;line-height:1.35}
+.cap small{display:block;font-weight:400;font-size:3.8vmin;opacity:.7}
+.cam{font-size:3.2vmin;opacity:.55;line-height:1.4}
+@media (orientation:landscape){.w{gap:2.6vh;padding:4vh}.logo{height:5vh}h1{font-size:8vh}h1 small{font-size:3.8vh;margin-top:.8vh}
+.qr{width:40vh;padding:2.6vh;border-radius:2vh}.cap{font-size:3.4vh}.cap small{font-size:2.8vh}.cam{font-size:2.4vh}}
+</style>
+</head>
+<body>
+<div class="w" id="w">
+  <img class="logo" src="logo.png" alt="Mirafilm">
+  <h1>Hết giờ<small>Time’s up</small></h1>
+  <div class="qr" id="qr"></div>
+  <div class="cap">Quét để chọn ảnh in &amp; tải ảnh gốc<small>Scan to choose your prints &amp; download originals</small></div>
+  <div class="cam">Cảm ơn bạn đã chụp cùng Mirafilm<br>Thank you for shooting with Mirafilm</div>
+</div>
+<script src="qrcode.min.js"></script>
+<script>
+(function () {
+  var fid = decodeURIComponent(location.hash.replace(/^#/, ''));
+  if (!/^[A-Za-z0-9_-]{10,}$/.test(fid)) { document.getElementById('qr').style.visibility = 'hidden'; return; }
+  var url = 'https://mirafilm.github.io/chon-anh/?qr=1#' + fid;
+  var q = qrcode(0, 'M'); q.addData(url); q.make();
+  var n = q.getModuleCount(), p = '';
+  for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) p += 'M' + c + ' ' + r + 'h1v1h-1z';
+  document.getElementById('qr').innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + n + ' ' + n +
+    '" shape-rendering="crispEdges"><path fill="#1c0e0e" d="' + p + '"/></svg>';
+})();
+</script>
+</body>
+</html>
