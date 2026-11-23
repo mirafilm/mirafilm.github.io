@@ -13,21 +13,21 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--toi);color:var(--the);font-family:Inter,system-ui,sans-serif;overflow:hidden}
 .w{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4.5vmin;padding:6vmin;text-align:center}
-.logo{height:8.4vmin;opacity:.9;margin-bottom:3vmin}
-h1{margin:0 0 2vmin;font-weight:600;font-size:8.6vmin;line-height:1.1;letter-spacing:-.01em;white-space:nowrap}
-h1 span{font-weight:400;opacity:.45;margin:0 .35em}
+.logo{display:block;height:8.4vmin;opacity:.9;margin-bottom:4vmin}
+h1{margin:0 0 3vmin;font-weight:600;font-size:11vmin;line-height:1.05;letter-spacing:-.01em}
+h1 small{display:block;font-weight:400;font-size:5vmin;letter-spacing:0;opacity:.55;margin-top:3vmin}
 .qr{background:var(--the);border-radius:3vmin;padding:4vmin;width:min(62vmin,48vh);aspect-ratio:1}
 .qr svg{display:block;width:100%;height:100%}
 .cap{font-size:4.6vmin;font-weight:500;line-height:1.35}
 .cap small{display:block;font-weight:400;font-size:3.8vmin;opacity:.7}
-@media (orientation:landscape){.w{gap:2.6vh;padding:4vh}.logo{height:6vh;margin-bottom:2vh}h1{font-size:7vh;margin-bottom:1.5vh}
+@media (orientation:landscape){.w{gap:2.6vh;padding:4vh}.logo{height:6vh;margin-bottom:2vh}h1{font-size:8.5vh;margin-bottom:2vh}h1 small{font-size:3.8vh;margin-top:2.2vh}.logo{margin-bottom:3vh}
 .qr{width:40vh;padding:2.6vh;border-radius:2vh}.cap{font-size:3.4vh}.cap small{font-size:2.8vh}}
 </style>
 </head>
 <body>
 <div class="w" id="w">
   <img class="logo" src="logo.png" alt="Mirafilm">
-  <h1>Hết giờ<span>·</span>Time’s up</h1>
+  <h1>Hết giờ<small>Time’s up</small></h1>
   <div class="qr" id="qr"></div>
   <div class="cap">Quét để chọn ảnh in &amp; tải ảnh gốc<small>Scan to choose your prints &amp; download originals</small></div>
 </div>
