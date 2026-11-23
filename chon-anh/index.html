@@ -78,6 +78,7 @@ button:focus-visible{outline:2px solid var(--do);outline-offset:2px}
 .box div:last-child{border-bottom:0}
 a.btn{display:flex;align-items:center;justify-content:center;text-decoration:none}
 .hai{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hai .btn{padding:0 8px;white-space:nowrap}
 .ghep{display:flex;flex-direction:column;gap:8px}
 .ghep b{font-size:15px;font-weight:600}
 .ghep .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
@@ -138,15 +139,15 @@ var TX = {
     chamO: 'Chạm vào ô để chọn · ', dangChon: ' đang chọn', xong: 'Xong', dangCo: ' đang có tấm #', seThay: ', sẽ thay bằng tấm này',
     oDay: 'Tấm này đang ở ', chuyen: ', sẽ chuyển sang ', chum: 'Chụm 2 ngón để phóng to\nVuốt trái/phải để đổi tấm',
     tamH: 'Tấm #', bo: 'Bỏ khỏi ', dat: 'Đặt vào ', dangTai: 'Ảnh của bạn đang được tải lên. Bạn thử mở lại link sau 1–2 phút nhé.',
-    khongMo: 'Không mở được link ({0}). Bạn ra quầy để nhân viên hỗ trợ nhé.', duCombo: 'Bạn đã gửi đủ {0} combo',
-    duComboP: 'Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé. Muốn in thêm combo, bạn báo nhân viên ở quầy.',
-    daGuiC: 'Đã gửi combo {0}/{1}', daGuiL: 'Đã gửi lựa chọn', khung: 'Khung ', conC: 'Bạn còn {0} combo nữa, bấm nút bên dưới để chọn tiếp nhé.',
+    khongMo: 'Không mở được link ({0}). Bạn ra quầy để nhân viên hỗ trợ nhé.', duCombo: 'Xong rồi, Mirafilm đang in ảnh cho bạn',
+    duComboP: 'Mirafilm đã nhận đủ {0} combo của bạn. Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé.', xongH: 'Ảnh của bạn đã hoàn thiện', xongP: 'Tải ảnh ghép khung và ảnh gốc bên dưới. Cảm ơn bạn đã chụp cùng Mirafilm.',
+    daGuiC: 'Mirafilm đã nhận combo {0}/{1}', daGuiL: 'Xong rồi, Mirafilm đang in ảnh cho bạn', khung: 'Khung ', conC: 'Bạn còn {0} combo nữa, bấm nút bên dưới để chọn tiếp nhé.',
     inNgay: 'Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé.', chonC: 'Chọn ảnh cho combo ', chonThem: 'Chọn thêm combo khác',
     chuaGui: 'Chưa gửi được: {0}. Bạn bấm Gửi lại nhé.', xemKhung: 'Xem khung lớn', oTruoc: 'Ô trước', oSau: 'Ô sau', dong: 'Đóng',
     tTruoc: 'Tấm trước', tSau: 'Tấm sau', xemTam: 'Xem tấm ',
     dangLen: 'Đang tải thêm ảnh…', dangLenP: 'Ảnh của bạn đang được tải lên, trang sẽ tự hiện ảnh trong giây lát…', taiGoc: 'Tải ảnh gốc', luuLink: 'Lưu link',
     luuGoiY: 'Lưu link để mở lại trang này sau', daCopy: 'Đã copy link. Dán vào Ghi chú hoặc gửi cho chính bạn, hoặc chụp màn hình trang này.',
-    khongCopy: 'Chụp màn hình để giữ link này:', ghepH: 'Ảnh ghép khung', ghepCho: 'Ảnh ghép khung sẽ hiện ở đây sau khi Mirafilm căn chỉnh và in xong. Trang tự cập nhật, bạn không cần tải lại.',
+    khongCopy: 'Chụp màn hình để giữ link này:', ghepH: 'Ảnh ghép khung hoàn thiện',
     ghepTai: 'Bấm vào ảnh để mở và tải về máy.' },
   en: { tieude: 'Choose Photos & Frame', tapchi: 'Magazine', bao: 'Newspaper', o: 'Slot ', tam: 'photo #', chuaco: 'empty', ngang: ' · landscape',
     mau: 'Color', td: 'Black & white', mau_t: 'color', td_t: 'black & white', soTam: ' photos', bamXem: 'Tap a photo to zoom in',
@@ -154,15 +155,15 @@ var TX = {
     chamO: 'Tap a slot to choose · ', dangChon: ' selected', xong: 'Done', dangCo: ' has photo #', seThay: ' – will be replaced',
     oDay: 'This photo is in ', chuyen: ' – will move to ', chum: 'Pinch to zoom in\nSwipe left/right to change photo',
     tamH: 'Photo #', bo: 'Remove from ', dat: 'Put in ', dangTai: 'Your photos are still uploading. Please reopen the link in 1–2 minutes.',
-    khongMo: 'Could not open this link ({0}). Please ask our staff at the counter.', duCombo: 'All {0} combo(s) sent',
-    duComboP: 'Our staff are adjusting and printing your photos – please collect them at the counter. To print more, ask our staff.',
-    daGuiC: 'Combo {0}/{1} sent', daGuiL: 'Selection sent', khung: 'Frame ', conC: '{0} more combo(s) to go – tap below to continue.',
+    khongMo: 'Could not open this link ({0}). Please ask our staff at the counter.', duCombo: 'All done – we’re printing your photos',
+    duComboP: 'We’ve received all {0} of your combo(s). Our staff are adjusting and printing them – please collect your photos at the counter.', xongH: 'Your photos are ready', xongP: 'Download your framed photo and the originals below. Thank you for shooting with Mirafilm.',
+    daGuiC: 'Combo {0} of {1} received', daGuiL: 'All done – we’re printing your photos', khung: 'Frame: ', conC: '{0} more combo(s) to go – tap below to continue.',
     inNgay: 'Our staff are adjusting and printing your photos – please collect them at the counter.', chonC: 'Choose photos for combo ', chonThem: 'Choose another combo',
     chuaGui: 'Not sent: {0}. Please tap Send again.', xemKhung: 'View large frame', oTruoc: 'Previous slot', oSau: 'Next slot', dong: 'Close',
     tTruoc: 'Previous photo', tSau: 'Next photo', xemTam: 'View photo ',
     dangLen: 'More photos uploading…', dangLenP: 'Your photos are uploading – they will appear here in a moment…', taiGoc: 'Download originals', luuLink: 'Save link',
     luuGoiY: 'Save this link to reopen the page later', daCopy: 'Link copied. Paste it into Notes or send it to yourself – or take a screenshot of this page.',
-    khongCopy: 'Take a screenshot to keep this link:', ghepH: 'Your framed photo', ghepCho: 'Your framed photo will appear here once Mirafilm has adjusted and printed it. This page updates itself.',
+    khongCopy: 'Take a screenshot to keep this link:', ghepH: 'Your finished framed photo',
     ghepTai: 'Tap the image to open and download it.' }
 };
 // loi tu may chu (tieng Viet) -> tieng Anh
@@ -278,7 +279,7 @@ function nutLuu() {
 function ghepHtml() {
   if (!S.ghep) return '';  // máy chủ chưa hỗ trợ ảnh ghép khung
   var h = '<div class="ghep"><b>' + T('ghepH') + '</b>';
-  if (!S.ghep.length) return h + '<p>' + T('ghepCho') + '</p></div>';
+  if (!S.ghep.length) return '';
   h += '<div class="g">';
   S.ghep.forEach(function (x) {
     h += '<a href="https://drive.google.com/file/d/' + encodeURIComponent(x.id) + '/view" target="_blank" rel="noopener">' +
@@ -326,20 +327,21 @@ function ve() {
   [].forEach.call(old, function (e) { e.remove(); });
   var h = '';
   if (S.het && !S.xong) {
-    h += '<div class="msg"><h2>' + T('duCombo', S.tong) + '</h2><p>' + T('duComboP') + '</p>' + nutLuu() + ghepHtml() + '<div class="box">';
+    var xg = S.ghep && S.ghep.length;
+    h += '<div class="msg"><h2>' + (xg ? T('xongH') : T('duCombo')) + '</h2><p>' + (xg ? T('xongP') : T('duComboP', S.tong)) + '</p>' + ghepHtml() + nutLuu() + '<div class="box">';
     S.lan.forEach(function (l) { h += '<div><span>Combo ' + l.combo + '</span><span style="color:var(--mo)">' + (KHUNG[l.khung] ? tenKhung(l.khung) : l.khung) + ' · ' + (l.bw ? T('td_t') : T('mau_t')) + '</span></div>'; });
     h += '</div></div>';
   } else if (S.xong) {
     var c = S.xong.combo, t = S.tong, con = t ? t - c : 0;
-    h += '<div class="msg"><h2>' + (t > 1 ? T('daGuiC', c, t) : T('daGuiL')) + '</h2><p>' + T('khung') + tenKhung(S.khung) + ', ' + (S.bw ? T('td_t') : T('mau_t')) + '. ' +
-      (con > 0 ? T('conC', con) : T('inNgay')) + '</p>' +
+    var xg2 = con <= 0 && S.ghep && S.ghep.length;
+    h += '<div class="msg"><h2>' + (con > 0 ? T('daGuiC', c, t) : xg2 ? T('xongH') : T('daGuiL')) + '</h2><p>' + (xg2 ? T('xongP') : T('khung') + tenKhung(S.khung) + ', ' + (S.bw ? T('td_t') : T('mau_t')) + '. ' +
+      (con > 0 ? T('conC', con) : T('inNgay'))) + '</p>' +
       (con > 0 ? '<button class="btn" data-k="combo">' + T('chonC') + (c + 1) + '</button>' : '') +
-      nutLuu() + (con > 0 ? '' : ghepHtml()) + frameHtml(240, true) + '<div class="box">';
+      (con > 0 ? '' : ghepHtml()) + nutLuu() + frameHtml(240, true) + '<div class="box">';
     K.o.forEach(function (_, i) { h += '<div><span>' + oTen(i) + '</span><span style="color:var(--mo)">' + T('tam') + S.anh[S.gan[i]].so + '</span></div>'; });
     h += '</div>' + (!t ? '<button class="btn ghost" data-k="combo">' + T('chonThem') + '</button>' : '') + '</div>';
   } else {
     var cur = S.gan[S.act];
-    if (S.qr && !S.anBar) h += '<div class="luu"><span>' + T('luuGoiY') + '</span><button class="l" data-k="luu">' + T('luuLink') + '</button><button class="x" data-k="anbar" aria-label="' + T('dong') + '">×</button></div>';
     h += '<div class="panel"><div class="row"><div class="mini">' + frameHtml(96) +
       '<button class="phong-khung" data-k="khunglon" aria-label="' + T('xemKhung') + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button></div>' +
       '<div class="side"><div class="seg" style="grid-template-columns:repeat(3,minmax(0,1fr))">';
