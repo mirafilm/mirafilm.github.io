@@ -143,7 +143,7 @@ var TX = {
     chamO: 'Chạm vào ô để chọn · ', dangChon: ' đang chọn', xong: 'Xong', dangCo: ' đang có tấm #', seThay: ', sẽ thay bằng tấm này',
     oDay: 'Tấm này đang ở ', chuyen: ', sẽ chuyển sang ', chum: 'Chụm 2 ngón để phóng to\nVuốt trái/phải để đổi tấm',
     tamH: 'Tấm #', bo: 'Bỏ khỏi ', dat: 'Đặt vào ', dangTai: 'Ảnh của bạn đang được tải lên. Bạn thử mở lại link sau 1–2 phút nhé.',
-    khongMo: 'Không mở được link ({0}). Bạn ra quầy để nhân viên hỗ trợ nhé.', duCombo: 'Bạn đã gửi đủ {0} combo',
+    khongMo: 'Không mở được link ({0}). Bạn ra quầy để nhân viên hỗ trợ nhé.', duCombo: 'Bạn đã gửi đủ {0} combo', duCombo1: 'Bạn đã gửi đủ 1 combo',
     duComboP: 'Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé.', xongH: 'Ghép ảnh hoàn tất', xongP: 'Tải ảnh ghép khung và ảnh gốc bên dưới. Cảm ơn bạn đã chụp cùng Mirafilm.',
     daGuiC: 'Đã nhận combo {0}/{1}', daGuiL: 'Đã gửi lựa chọn', khung: 'Khung ', conC: 'Bạn còn {0} combo nữa, bấm nút bên dưới để chọn tiếp nhé.',
     inNgay: 'Nhân viên đang căn chỉnh và in, bạn ra quầy nhận ảnh nhé.', chonC: 'Chọn ảnh cho combo ', chonThem: 'Chọn thêm combo khác',
@@ -158,7 +158,7 @@ var TX = {
     chamO: 'Tap a slot to choose · ', dangChon: ' selected', xong: 'Done', dangCo: ' has photo #', seThay: ' – will be replaced',
     oDay: 'This photo is in ', chuyen: ' – will move to ', chum: 'Pinch to zoom in\nSwipe left/right to change photo',
     tamH: 'Photo #', bo: 'Remove from ', dat: 'Put in ', dangTai: 'Your photos are still uploading. Please reopen the link in 1–2 minutes.',
-    khongMo: 'Could not open this link ({0}). Please ask our staff at the counter.', duCombo: 'All {0} combo(s) sent',
+    khongMo: 'Could not open this link ({0}). Please ask our staff at the counter.', duCombo: 'All {0} combos sent', duCombo1: 'Your combo has been sent',
     duComboP: 'Our staff are adjusting and printing your photos – please collect them at the counter.', xongH: 'Your photos are ready', xongP: 'Download your framed photo and the originals below. Thank you for shooting with Mirafilm.',
     daGuiC: 'Combo {0} of {1} received', daGuiL: 'Selection sent', khung: 'Frame: ', conC: '{0} more combo(s) to go – tap below to continue.',
     inNgay: 'Our staff are adjusting and printing your photos – please collect them at the counter.', chonC: 'Choose photos for combo ', chonThem: 'Choose another combo',
@@ -332,13 +332,13 @@ function ve() {
   var h = '';
   if (S.het && !S.xong) {
     var xg = S.ghep && S.ghep.length;
-    h += '<div class="msg"><h2>' + (xg ? T('xongH') : T('duCombo', S.tong)) + '</h2><p>' + (xg ? T('xongP') : T('duComboP', S.tong)) + '</p>' + ghepHtml() + nutLuu() + '<div class="box">';
+    h += '<div class="msg"><h2>' + (xg ? T('xongH') : T(S.tong === 1 ? 'duCombo1' : 'duCombo', S.tong)) + '</h2><p>' + (xg ? T('xongP') : T('duComboP', S.tong)) + '</p>' + ghepHtml() + nutLuu() + '<div class="box">';
     S.lan.forEach(function (l) { h += '<div><span>Combo ' + l.combo + '</span><span style="color:var(--mo)">' + (KHUNG[l.khung] ? tenKhung(l.khung) : l.khung) + ' · ' + (l.bw ? T('td_t') : T('mau_t')) + '</span></div>'; });
     h += '</div></div>';
   } else if (S.xong) {
     var c = S.xong.combo, t = S.tong, con = t ? t - c : 0;
     var xg2 = con <= 0 && S.ghep && S.ghep.length;
-    h += '<div class="msg"><h2>' + (con > 0 ? T('daGuiC', c, t) : xg2 ? T('xongH') : t ? T('duCombo', t) : T('daGuiL')) + '</h2><p>' + (xg2 ? T('xongP') : T('khung') + tenKhung(S.khung) + ', ' + (S.bw ? T('td_t') : T('mau_t')) + '. ' +
+    h += '<div class="msg"><h2>' + (con > 0 ? T('daGuiC', c, t) : xg2 ? T('xongH') : t ? T(t === 1 ? 'duCombo1' : 'duCombo', t) : T('daGuiL')) + '</h2><p>' + (xg2 ? T('xongP') : T('khung') + tenKhung(S.khung) + ', ' + (S.bw ? T('td_t') : T('mau_t')) + '. ' +
       (con > 0 ? T('conC', con) : T('inNgay'))) + '</p>' +
       (con > 0 ? '<button class="btn" data-k="combo">' + T('chonC') + (c + 1) + '</button>' : '') +
       (con > 0 ? '' : ghepHtml()) + nutLuu();
