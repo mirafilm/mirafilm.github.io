@@ -116,7 +116,7 @@ var KHUNG = {
     [11,550,123,150,'r',1],[141,550,123,150,'r',1],[271,550,123,150,'r',1],[401,550,123,150,'r',1]] }
 };
 var S = { f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
-var NN = (function () { try { var v = localStorage.getItem('mf_lang'); if (v) return v; } catch (e) {} return /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en'; })();
+var NN = (function () { try { var v = localStorage.getItem('mf_lang'); if (v) return v; } catch (e) {} var q = /[?&]lang=(vi|en)/.exec(location.search); if (q) return q[1]; return /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en'; })();
 var TX = {
   vi: { tieude: 'Chọn ảnh ghép khung', tapchi: 'Tạp chí', bao: 'Báo', o: 'Ô ', tam: 'tấm #', chuaco: 'chưa có ảnh', ngang: ' · nằm ngang',
     mau: 'In màu', td: 'In trắng đen', mau_t: 'in màu', td_t: 'in trắng đen', soTam: ' tấm', bamXem: 'Bấm vào ảnh để phóng to',
@@ -150,7 +150,7 @@ var LOI_EN = [[/Quầy chưa ghi nhận/, 'The counter has not registered this s
 function T(k) { var s = (TX[NN] && TX[NN][k] !== undefined ? TX[NN][k] : TX.vi[k]), a = arguments; return String(s).replace(/\{(\d)\}/g, function (_, i) { return a[+i + 1]; }); }
 function loiDich(m) { if (NN === 'vi') return m; for (var i = 0; i < LOI_EN.length; i++) { var x = String(m).match(LOI_EN[i][0]); if (x) return typeof LOI_EN[i][1] === 'function' ? LOI_EN[i][1](x) : LOI_EN[i][1]; } return m; }
 function tenKhung(k) { return k === 'tapchi' ? T('tapchi') : k === 'bao' ? T('bao') : 'Valentine'; }
-function doiNN(n) { NN = n; try { localStorage.setItem('mf_lang', n); } catch (e) {} document.documentElement.lang = n; $('tieude').textContent = T('tieude');
+function doiNN(n, luu) { NN = n; if (luu) try { localStorage.setItem('mf_lang', n); } catch (e) {} document.documentElement.lang = n; $('tieude').textContent = T('tieude');
   $('nn').innerHTML = '<button data-nn="vi" class="' + (n === 'vi' ? 'on' : '') + '">VI</button><button data-nn="en" class="' + (n === 'en' ? 'on' : '') + '">EN</button>'; if (S.anh.length || S.xong || S.het) ve(); }
 var $ = function (id) { return document.getElementById(id); };
 var pad = function (n) { return String(n).padStart(2, '0'); };
@@ -381,7 +381,7 @@ function phongTo(e) { zTo(Z.s > 1 ? 1 : 2.5, e.clientX, e.clientY); }
 })();
 document.addEventListener('click', function (e) {
   var b = e.target.closest('button,[data-k="phong"]'); if (!b) return;
-  if (b.dataset.nn) return doiNN(b.dataset.nn);
+  if (b.dataset.nn) return doiNN(b.dataset.nn, true);
   var tong = KHUNG[S.khung].o.length;
   if (b.dataset.khung) { S.khung = b.dataset.khung; S.act = 0; S.gan = {}; return ve(); }
   if (b.dataset.o) { S.act = +b.dataset.o; S.khungLon = false; return ve(); }
