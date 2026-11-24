@@ -386,7 +386,7 @@ function boDoMat() {
         'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite', delegate: 'CPU' },
         runningMode: 'IMAGE', minDetectionConfidence: 0.5 });
     });
-  });
+  }).catch(function (e) { dMat = null; throw e; });  // lỗi mạng thì lần sau thử lại
   return dMat;
 }
 function timMat(det, im) {  // dò cả ảnh + từng mảnh nhỏ (mặt nhỏ trong ảnh toàn thân vẫn bắt được)
@@ -423,7 +423,10 @@ function matCho(id) {
     return new Promise(function (ok, loi) {
       var im = new Image(); im.onload = function () { try { ok(timMat(x[0], im)); } catch (e) { loi(e); } }; im.onerror = loi; im.src = x[1];
     });
-  }).then(function (m) { S.mat[id] = m; }).catch(function (e) { console.log('[mat]', e); S.mat[id] = []; })
+  }).then(function (m) { S.mat[id] = m; }).catch(function (e) {
+    console.log('[mat]', e); S.matLoi = (S.matLoi || 0) + 1;
+    if (S.matLoi < 4) { delete S.matCho[id]; setTimeout(function () { matCho(id); }, 3000); } else S.mat[id] = [];
+  })
     .then(function () { if (S.ce && S.ce.id === id && !S.ce.tay) { var c = catTuDong(S.ce.o, id); S.ce.cx = c.cx; S.ce.cy = c.cy; S.ce.z = 1; } if (S.ce) ceVe(); else veSau(); });
 }
 
