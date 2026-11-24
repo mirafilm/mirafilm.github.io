@@ -195,7 +195,7 @@ function chuKhungHtml(o, ox, oy, k) {  // ox, oy = góc trên trái của vùng 
     return '<span class="gt" style="' + p + 'width:' + d.w * k + 'px;font-size:' + d.f * k + 'px;text-align:' + (d.a || 'left') + ';' + (d.st || '') + '">' + d.t + '</span>';
   }).join('');
 }
-var S = { cut: {}, cutCho: {}, ganK: {}, snk: null, xem: false, cat: {}, tl: {}, tlCho: {}, mat: {}, matCho: {}, ce: null, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
+var S = { ganK: {}, snk: null, xem: false, cat: {}, tl: {}, tlCho: {}, mat: {}, matCho: {}, ce: null, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
 var NN = (function () { try { var v = localStorage.getItem('mf_lang'); if (v) return v; } catch (e) {} var q = /[?&]lang=(vi|en)/.exec(location.search); if (q) return q[1]; return /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en'; })();
 var TX = {
   vi: { tieude: 'Chọn ảnh ghép khung', tapchi: 'Tạp chí', bao: 'Báo', o: 'Ô ', tam: 'tấm #', chuaco: 'chưa có ảnh', ngang: ' · nằm ngang',
@@ -213,7 +213,7 @@ var TX = {
     dangLen: 'Đang tải thêm ảnh…', dangLenP: 'Ảnh của bạn đang được tải lên, trang sẽ tự hiện ảnh trong giây lát…', taiGoc: 'Tải ảnh gốc', luuLink: 'Lưu link',
     luuGoiY: 'Lưu link để mở lại trang này sau', daCopy: 'Đã copy link. Dán vào Ghi chú hoặc gửi cho chính bạn, hoặc chụp màn hình trang này.',
     khongCopy: 'Chụp màn hình để giữ link này:', ghepTai: 'Bấm vào ảnh để mở và tải về máy.',
-    chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', xemH: 'Kiểm tra trước khi in', xemP: 'Chạm vào ô để chỉnh vị trí ảnh', quayLai: 'Quay lại', daDat: 'Đã đặt tấm #{0} vào {1}', gChu: '', gCho: 'Đang tách nền ảnh để xem chữ MIRAFILM sau người…', gCut: 'Đã tách nền để xem trước – nhân viên sẽ làm kỹ viền tóc khi in. Tránh để chữ trắng đè lên mặt.', xoay: 'Xoay dọc điện thoại để chọn ảnh', inNgang: ' · ô in nằm ngang' },
+    chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', xemH: 'Kiểm tra trước khi in', xemP: 'Chạm vào ô để chỉnh vị trí ảnh', quayLai: 'Quay lại', daDat: 'Đã đặt tấm #{0} vào {1}', gChu: 'Ảnh sẽ đè lên chữ MIRAFILM và nằm dưới các dòng chữ nhỏ. Tránh để chữ nhỏ đè lên mặt.', xoay: 'Xoay dọc điện thoại để chọn ảnh', inNgang: ' · ô in nằm ngang' },
   en: { tieude: 'Choose Photos & Frame', tapchi: 'Magazine', bao: 'Newspaper', o: 'Slot ', tam: 'photo #', chuaco: 'empty', ngang: ' · landscape',
     mau: 'Color', td: 'Black & white', mau_t: 'color', td_t: 'black & white', soTam: ' photos', bamXem: 'Tap a photo to zoom in',
     daChon: 'Selected ', kiemTra: 'Check, then tap Send', con: '', oTrong: ' slots left', dangGui: 'Sending…', gui: 'Send to print',
@@ -229,7 +229,7 @@ var TX = {
     dangLen: 'More photos uploading…', dangLenP: 'Your photos are uploading – they will appear here in a moment…', taiGoc: 'Download originals', luuLink: 'Save link',
     luuGoiY: 'Save this link to reopen the page later', daCopy: 'Link copied. Paste it into Notes or send it to yourself – or take a screenshot of this page.',
     khongCopy: 'Take a screenshot to keep this link:', ghepTai: 'Tap the image to open and download it.',
-    chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', xemH: 'Check before printing', xemP: 'Tap a slot to adjust its photo', quayLai: 'Back', daDat: 'Photo #{0} placed in {1}', gChu: '', gCho: 'Removing the background to show MIRAFILM behind you…', gCut: 'Background removed for preview – our staff refine the hair edges before printing. Keep the white text off faces.', xoay: 'Please rotate your phone to portrait', inNgang: ' · printed sideways' }
+    chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', xemH: 'Check before printing', xemP: 'Tap a slot to adjust its photo', quayLai: 'Back', daDat: 'Photo #{0} placed in {1}', gChu: 'Your photo covers the MIRAFILM title and sits under the small text. Keep the small text off faces.', xoay: 'Please rotate your phone to portrait', inNgang: ' · printed sideways' }
 };
 // loi tu may chu (tieng Viet) -> tieng Anh
 var LOI_EN = [[/Quầy chưa ghi nhận/, 'The counter has not registered this session yet. Please let our staff know – your selection is kept'],
@@ -369,7 +369,12 @@ function demo() {
 // Lưu theo tỉ lệ ảnh: z >= 1 (1 = vừa khít ô), cx/cy = tâm khung nhìn trên ảnh (0..1).
 // PC admin sẽ cắt ảnh gốc đúng khung này trước khi đưa lên Canva.
 var veHen = null;
-function veSau() { if (S.ce) return; clearTimeout(veHen); veHen = setTimeout(ve, 60); }
+function veSau() {  // ảnh đã đo tỉ lệ / đã tìm mặt: chỉ vẽ lại các khung xem trước, không vẽ lại cả lưới ảnh (tránh nhấp nháy)
+  if (S.ce) return; clearTimeout(veHen);
+  veHen = setTimeout(function () {
+    [].forEach.call(document.querySelectorAll('.frame[data-w]'), function (f) { f.outerHTML = frameHtml(+f.dataset.w, f.dataset.big === '1'); });
+  }, 120);
+}
 function tl(id) {  // tỉ lệ rộng/cao của ảnh (đọc từ ảnh xem trước)
   if (S.tl[id]) return S.tl[id];
   var u = S.img[id];
@@ -459,41 +464,12 @@ function matCho(id) {
     return new Promise(function (ok, loi) {
       var im = new Image(); im.onload = function () { try { ok(timMat(x[0], im)); } catch (e) { loi(e); } }; im.onerror = loi; im.src = x[1];
     });
-  }).then(function (m) { S.mat[id] = m; if (S.khung === 'tapchi' && S.gan[0] !== undefined && S.anh[S.gan[0]].id === id) tachNen(id); }).catch(function (e) {
+  }).then(function (m) { S.mat[id] = m; }).catch(function (e) {
     console.log('[mat]', e); S.matLoi = (S.matLoi || 0) + 1;
     if (S.matLoi < 4) { delete S.matCho[id]; setTimeout(function () { matCho(id); }, 3000); } else S.mat[id] = [];
   })
     .then(function () { if (S.ce && S.ce.id === id && !S.ce.tay) { var c = catTuDong(S.ce.o, id); S.ce.cx = c.cx; S.ce.cy = c.cy; S.ce.z = 1; } if (S.ce) ceVe(); else veSau(); });
 }
-
-// ---- tách nền ảnh Ô 01 khung Tạp chí để khách căn theo chữ MIRAFILM (bản thử: chạy trên điện thoại) ----
-var dNen = null;
-function boTachNen() {
-  if (!dNen) dNen = import(MP + '/vision_bundle.mjs').then(function (v) {
-    return v.FilesetResolver.forVisionTasks(MP + '/wasm').then(function (fs) {
-      return v.ImageSegmenter.createFromOptions(fs, { baseOptions: { modelAssetPath:
-        'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite', delegate: 'CPU' },
-        runningMode: 'IMAGE', outputCategoryMask: false, outputConfidenceMasks: true });
-    });
-  }).catch(function (e) { dNen = null; throw e; });
-  return dNen;
-}
-function tachNen(id) {
-  if (S.cut[id] || S.cutCho[id]) return;
-  var u = S.lon[id]; if (!u) return;  // chờ ảnh 1200px (matCho tải về) rồi mới tách
-  S.cutCho[id] = 1;
-  Promise.all([boTachNen(), new Promise(function (ok, loi) { var im = new Image(); im.onload = function () { ok(im); }; im.onerror = loi; im.src = u; })]).then(function (x) {
-    var seg = x[0], im = x[1];
-    var kq = seg.segment(im), mk = kq.confidenceMasks[0], W = mk.width, H = mk.height, nen = mk.getAsFloat32Array();
-    var cv = document.createElement('canvas'); cv.width = W; cv.height = H; var g = cv.getContext('2d');
-    g.drawImage(im, 0, 0, W, H); var d = g.getImageData(0, 0, W, H);
-    for (var i = 0; i < W * H; i++) { var a = (1 - nen[i] - 0.25) / 0.5; d.data[i * 4 + 3] = Math.max(0, Math.min(255, a * 255)); }
-    g.putImageData(d, 0, 0); kq.close();
-    S.cut[id] = cv.toDataURL('image/png');
-  }).catch(function (e) { console.log('[tach nen]', e); delete S.cutCho[id]; })
-    .then(function () { if (S.ce) ceVe(); else veSau(); });
-}
-function cutO1(o) { if (S.khung !== 'tapchi' || o !== 0 || S.gan[0] === undefined) return null; var id = S.anh[S.gan[0]].id; tachNen(id); return S.cut[id] || null; }
 
 // ---- màn hình chỉnh vị trí ----
 function ceMo(o) {
@@ -513,22 +489,16 @@ function ceHtml() {
     '<button data-k="cedong" aria-label="' + T('dong') + '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
     '<div class="m" id="cem"><div class="cw" id="cew" style="width:' + k[0] + 'px;height:' + k[1] + 'px">' +
     '<div class="cimg cbg" id="ceb"><img alt="" src="' + u + '">' + mat + '</div>' +
-    (function () {
-      var cu = cutO1(o), K = KHUNG[S.khung], kk = k[0] / r[2];
-      if (!cu) return '<div class="cwin" style="' + (sh ? mask(r[4]) : '') + '"><div class="cimg" id="cef"><img alt="" src="' + u + '"></div></div>';
-      return '<div class="cwin"><i style="position:absolute;inset:0;background:#141414"></i>' +
-        '<img alt="" src="chu_mirafilm.png" style="position:absolute;left:' + (K.chu[0] - r[0]) * kk + 'px;top:' + (K.chu[1] - r[1]) * kk + 'px;width:' + K.chu[2] * kk + 'px;height:' + K.chu[3] * kk + 'px">' +
-        '<div class="cimg" id="cef"><img alt="" src="' + cu + '"></div></div>';
-    })() +
+    '<div class="cwin" style="' + (sh ? mask(r[4]) : '') + '"><div class="cimg" id="cef"><img alt="" src="' + u + '"></div></div>' +
     (function () {  // chữ trên khung đè lên ảnh: hiện đúng chỗ để khách tránh đè mặt
       var g = '', kk = k[0] / r[2], K = KHUNG[S.khung];
       if (r[5]) return '';
-      if (K.chu && o === 0 && !cutO1(o)) g += '<img class="gchu" alt="" src="chu_mirafilm.png" style="left:' + (K.chu[0] - r[0]) * kk + 'px;top:' + (K.chu[1] - r[1]) * kk + 'px;width:' + K.chu[2] * kk + 'px;height:' + K.chu[3] * kk + 'px">';
+      if (K.chu && o === 0) g += '<img class="gchu" alt="" src="chu_mirafilm.png" style="left:' + (K.chu[0] - r[0]) * kk + 'px;top:' + (K.chu[1] - r[1]) * kk + 'px;width:' + K.chu[2] * kk + 'px;height:' + K.chu[3] * kk + 'px">';
       g += chuKhungHtml(o, r[0], r[1], kk);
       return g ? '<div class="gl" style="z-index:2">' + g + '</div>' : '';
     })() +
     (sh ? '' : '<div class="cvien"><i style="left:33.3%;top:0;bottom:0;width:1px"></i><i style="left:66.6%;top:0;bottom:0;width:1px"></i><i style="top:33.3%;left:0;right:0;height:1px"></i><i style="top:66.6%;left:0;right:0;height:1px"></i></div>') +
-    '</div></div><div class="f"><span>' + T('ceGoiY') + (KHUNG[S.khung].chu && o === 0 ? '<br><b class="gp">' + (cutO1(o) ? T('gCut') : T('gCho')) + '</b>' : '') + '</span><div class="hai"><button class="btn ghost" data-k="cegiua">' + T('ceGiua') + '</button>' +
+    '</div></div><div class="f"><span>' + T('ceGoiY') + (KHUNG[S.khung].chu && o === 0 ? '<br><b class="gp">' + T('gChu') + '</b>' : '') + '</span><div class="hai"><button class="btn ghost" data-k="cegiua">' + T('ceGiua') + '</button>' +
     '<button class="btn" data-k="cexong">' + T('xong') + '</button></div></div></div>';
 }
 function ceApply() {
@@ -574,20 +544,19 @@ function oHtml(r, i, k, on, big) {
   var inner = '';
   if (gi !== undefined && src(gi)) {
     var iw = r[5] ? h : w, ih = r[5] ? w : h;
-    var cu = cutO1(i);
     inner = '<span class="phw" style="width:' + iw + 'px;height:' + ih + 'px;transform:translate(-50%,-50%)' + (r[5] ? ' rotate(-90deg)' : '') + '">' +
-      '<img class="ph" alt="" src="' + (cu || src(gi)) + '" style="' + anhSt(catCua(i), i, iw, ih) + '"></span>';
+      '<img class="ph" alt="" src="' + src(gi) + '" style="' + anhSt(catCua(i), i, iw, ih) + '"></span>';
   } else if (gi !== undefined) inner = '#' + S.anh[gi].so;
   else inner = pad(i + 1);
   if (gi !== undefined && src(gi) && (S.khungLon || S.xem) && !big) inner += '<i class="sua"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg></i>';
   var tag = big ? 'div' : 'button';
   return '<' + tag + ' class="slot' + (on ? ' on' : '') + (sh ? ' sh' : '') + '" style="' + st + '"' + (big ? '' : ' data-o="' + i + '" aria-label="Chọn ' + oTen(i) + '"') + '>' +
-    '<span class="in' + (sh ? '' : ' r') + '" style="font-size:' + (big ? 11 : 9) + 'px;' + (sh ? mask(r[4]) : '') + (gi !== undefined && cutO1(i) ? 'background:transparent;border:0;' : '') + '">' + inner + '</span></' + tag + '>';
+    '<span class="in' + (sh ? '' : ' r') + '" style="font-size:' + (big ? 11 : 9) + 'px;' + (sh ? mask(r[4]) : '') + '">' + inner + '</span></' + tag + '>';
 }
 function frameHtml(w, big) {
   var K = KHUNG[S.khung], k = w / 576;
-  var h = '<div class="frame' + (S.bw ? ' bw' : '') + '" style="width:' + w + 'px;height:' + w * 4 / 3 + 'px;background-image:url(' + K.bg + ');' + (big ? 'align-self:center' : '') + '">';
-  if (K.chu && S.gan[0] !== undefined) h += '<i style="position:absolute;left:' + 4 * k + 'px;top:' + 3 * k + 'px;width:' + 316 * k + 'px;height:' + (cutO1(0) ? 467 : 36) * k + 'px;background:#141414"></i>' +
+  var h = '<div class="frame' + (S.bw ? ' bw' : '') + '" data-w="' + w + '" data-big="' + (big ? 1 : 0) + '" style="width:' + w + 'px;height:' + w * 4 / 3 + 'px;background-image:url(' + K.bg + ');' + (big ? 'align-self:center' : '') + '">';
+  if (K.chu && S.gan[0] !== undefined) h += '<i style="position:absolute;left:' + 4 * k + 'px;top:' + 3 * k + 'px;width:' + 316 * k + 'px;height:' + 36 * k + 'px;background:#141414"></i>' +
     '<img class="chu" alt="" src="chu_mirafilm.png" style="z-index:0;left:' + K.chu[0] * k + 'px;top:' + K.chu[1] * k + 'px;width:' + K.chu[2] * k + 'px;height:' + K.chu[3] * k + 'px">';
   K.o.forEach(function (r, i) { h += oHtml(r, i, k, !big && i === S.act, big); });
   if (w >= 200) Object.keys(CHU_KHUNG[S.khung] || {}).forEach(function (o) { if (S.gan[o] !== undefined) h += '<div class="gl" style="z-index:3">' + chuKhungHtml(+o, 0, 0, k) + '</div>'; });
@@ -597,9 +566,13 @@ function frameHtml(w, big) {
 function dung() { var n = 0; KHUNG[S.khung].o.forEach(function (_, i) { if (S.gan[i] !== undefined) n++; }); return n; }
 function ve() {
   var app = $('app'), K = KHUNG[S.khung], tong = K.o.length, d = dung();
-  var old = app.querySelectorAll('.luu,.panel,.list,.foot,.msg,.zoom,.klon,.ce,.thu,.snk');
+  // giữ nguyên lưới ảnh nếu danh sách ảnh không đổi: chỉ cập nhật nhãn, không tạo lại ảnh (tránh nhấp nháy trên iPhone)
+  var sig = S.anh.map(function (a) { return a.id; }).join(), oldL = $('list');
+  var giu = oldL && oldL.dataset.sig === sig && !(S.het && !S.xong) && !S.xong;
+  var old = app.querySelectorAll('.luu,.panel,' + (giu ? '' : '.list,') + '.foot,.msg,.zoom,.klon,.ce,.thu,.snk');
   var top = $('list') ? $('list').scrollTop : 0;
   [].forEach.call(old, function (e) { e.remove(); });
+  var lh = '';
   var h = '<div class="thu">BẢN THỬ chỉnh vị trí ảnh – không gửi in thật</div>';
   if (S.het && !S.xong) {
     var xg = S.ghep && S.ghep.length;
@@ -631,14 +604,16 @@ function ve() {
         '<div class="c"><b>' + oTen(S.act) + '</b><small>' + T('chuaco') + (K.o[S.act][5] ? T('ngang') : '') + '</small></div>') +
       '<button data-k="sau" aria-label="' + T('oSau') + '"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>' +
       '<div class="seg" style="grid-template-columns:1fr 1fr"><button data-k="mau" class="' + (!S.bw ? 'on' : '') + '">' + T('mau') + '</button><button data-k="td" class="' + (S.bw ? 'on' : '') + '">' + T('td') + '</button></div></div></div></div>';
-    h += '<div class="list" id="list"><div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + T('soTam') + '</b>' + (S.dangLen ? '<span class="dl">' + T('dangLen') + '</span>' : '<span class="lb">' + T('bamXem') + '</span>') + '</div><div class="grid">';
+    var lhd = '<div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + T('soTam') + '</b>' + (S.dangLen ? '<span class="dl">' + T('dangLen') + '</span>' : '<span class="lb">' + T('bamXem') + '</span>') + '</div>';
+    lh = '<div class="list" id="list" data-sig="' + sig + '">' + lhd + '<div class="grid">';
     var dung_ = {}; Object.keys(S.gan).forEach(function (o) { if (+o < tong) dung_[S.gan[o]] = +o; });
     S.anh.forEach(function (a, i) {
       var u = dung_[i] !== undefined;
-      h += '<button class="tile' + (u ? ' used' : '') + '" data-anh="' + i + '" aria-label="' + T('xemTam') + a.so + '">' + (src(i) ? '<img alt="" loading="lazy" src="' + src(i) + '">' : '') +
+      lh += '<button class="tile' + (u ? ' used' : '') + '" data-anh="' + i + '" aria-label="' + T('xemTam') + a.so + '">' + (src(i) ? '<img alt="" loading="lazy" src="' + src(i) + '">' : '') +
         '<span class="n">#' + esc(a.so) + '</span>' + (u ? '<span class="t">' + oTen(dung_[i]) + '</span>' : '') + '</button>';
     });
-    h += '</div></div><div class="foot"><div class="s"><b>' + (S.tong > 1 ? 'Combo ' + Math.min(S.daGui + 1, S.tong) + '/' + S.tong + ' · ' : '') + T('daChon') + d + '/' + tong + '</b><span class="lb">' + (d === tong ? T('kiemTra') : T('con') + (tong - d) + T('oTrong')) + '</span></div>' +
+    lh += '</div></div>';
+    h += '\u0001<div class="foot"><div class="s"><b>' + (S.tong > 1 ? 'Combo ' + Math.min(S.daGui + 1, S.tong) + '/' + S.tong + ' · ' : '') + T('daChon') + d + '/' + tong + '</b><span class="lb">' + (d === tong ? T('kiemTra') : T('con') + (tong - d) + T('oTrong')) + '</span></div>' +
       '<button class="btn" data-k="gui"' + (d === tong && !S.dangGui ? '' : ' disabled') + '>' + (S.dangGui ? T('dangGui') : T('gui')) + '</button></div>';
     if (S.snk && !S.zoom && !S.khungLon && !S.xem) h += '<div class="snk"><span>' + T('daDat', S.anh[S.gan[S.snk.o]].so, oTen(S.snk.o)) + '</span><button data-k="snkchinh">' +
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>' + T('chinh') + '</button></div>';
@@ -649,7 +624,18 @@ function ve() {
     if (S.zoom !== null) h += zoomHtml();
     if (S.ce) h += ceHtml();
   }
-  app.insertAdjacentHTML('beforeend', h);
+  var cat = h.split('\u0001');
+  if (cat.length > 1 && giu) {
+    oldL.insertAdjacentHTML('beforebegin', cat[0]); oldL.insertAdjacentHTML('afterend', cat[1]);
+    var lhEl = oldL.querySelector('.lh'); if (lhEl) lhEl.outerHTML = lhd;
+    var dg = {}; Object.keys(S.gan).forEach(function (o) { if (+o < tong) dg[S.gan[o]] = +o; });
+    [].forEach.call(oldL.querySelectorAll('.tile'), function (b) {
+      var i = +b.dataset.anh, u = dg[i] !== undefined, t = b.querySelector('.t');
+      b.classList.toggle('used', u);
+      if (u) { if (!t) { t = document.createElement('span'); t.className = 't'; b.appendChild(t); } t.textContent = oTen(dg[i]); } else if (t) t.remove();
+      if (!b.querySelector('img') && src(i)) b.insertAdjacentHTML('afterbegin', '<img alt="" loading="lazy" src="' + src(i) + '">');
+    });
+  } else app.insertAdjacentHTML('beforeend', cat.join(lh));
   var gg = $('ghepg');
   if (gg && gg.children.length > 1) {
     var w = function () { return gg.children[1].offsetLeft - gg.children[0].offsetLeft; };
@@ -686,7 +672,7 @@ function dat(i, bo) {
   S.snk = null;
   if (!bo) {
     S.gan[S.act] = i;
-    var o0 = S.act; S.snk = { o: o0 }; clearTimeout(S.snkHen); S.snkHen = setTimeout(function () { if (S.snk && S.snk.o === o0) { S.snk = null; veSau(); } }, 6000);
+    var o0 = S.act; S.snk = { o: o0 }; clearTimeout(S.snkHen); S.snkHen = setTimeout(function () { if (S.snk && S.snk.o === o0) { S.snk = null; var e = document.querySelector('.snk'); if (e) e.remove(); } }, 6000);
     for (var j = 1; j <= tong; j++) { var t = (S.act + j) % tong; if (S.gan[t] === undefined) { S.act = t; break; } }
   }
   S.zoom = null; S.phong = false; ve();
