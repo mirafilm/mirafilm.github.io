@@ -72,6 +72,15 @@ button:focus-visible{outline:2px solid var(--do);outline-offset:2px}
 .ce .f .btn{min-height:52px;font-size:16px;background:var(--the);color:var(--nau)}
 .ce .f .btn.ghost{background:transparent;border:1px solid rgba(233,230,215,.5);color:var(--the)}
 .bw .ce .cimg img{filter:grayscale(1)}
+.gl{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.gt{position:absolute;color:#fcfcfc;line-height:.87;white-space:nowrap;text-shadow:0 0 2px rgba(0,0,0,.35)}
+.gc{position:absolute;border-color:#fff;border-style:solid;border-width:0}
+.gc.tl{border-top-width:1px;border-left-width:1px}.gc.tr{border-top-width:1px;border-right-width:1px}
+.gc.bl{border-bottom-width:1px;border-left-width:1px}.gc.br{border-bottom-width:1px;border-right-width:1px}
+.ce .gchu{position:absolute;opacity:.6;pointer-events:none}
+.ce .f .gp{font-size:12px;color:#d9c9a8}
+.xoay{display:none;position:fixed;inset:0;z-index:50;background:#1c0e0e;color:var(--the);flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px;font-size:16px}
+@media (orientation:landscape) and (max-height:520px){.xoay{display:flex}}
 .snk{position:absolute;left:12px;right:12px;bottom:80px;z-index:5;display:flex;align-items:center;gap:8px;background:var(--chu);color:var(--the);border-radius:12px;padding:6px 6px 6px 14px;font-size:13px;box-shadow:0 4px 16px rgba(28,14,14,.25)}
 .snk span{flex:1}
 .snk button{border:0;border-radius:8px;background:var(--the);color:var(--nau);font-size:13px;font-weight:600;padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:6px}
@@ -144,6 +153,7 @@ a.btn{display:flex;align-items:center;justify-content:center;text-decoration:non
 </style>
 </head>
 <body>
+<div class="xoay" id="xoay"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><span id="xoayc">Xoay dọc điện thoại để chọn ảnh</span></div>
 <div class="app" id="app">
   <div class="top"><img src="logo.png" alt="Mirafilm Photobooth"><h1 id="tieude">Chọn ảnh ghép khung</h1><div class="nn" id="nn"></div></div>
   <div id="main" class="msg"><p>Đang tải ảnh của bạn…</p></div>
@@ -160,12 +170,28 @@ var KHUNG = {
     [36,35,158,234,'r'],[439,12,125,123,'r'],[439,142,125,123,'r'],[439,271,125,123,'r'],[439,401,125,123,'r'],
     [18.2,353.1,182.9,186.5,'h'],[231.1,353.5,182.9,186.5,'h'],[52,623,139,113,'r'],[236,623,139,113,'r']] },
   tapchi: { ten: 'Tạp chí', bg: 'khung_tapchi.jpg', chu: [20,20,280,170], o: [
-    [4,3,316,467,'r'],[363,178,94,124,'r',1],[363,317,94,124,'r',1],[4,471,283,293,'r'],
+    [4,38,316,433,'r'],[363,178,94,124,'r',1],[363,317,94,124,'r',1],[4,471,283,293,'r'],
     [288,471,141,147,'r',1],[430,471,141,147,'r',1],[288,618,141,147,'r',1],[430,618,141,147,'r',1]] },
   bao: { ten: 'Báo', bg: 'khung_bao.jpg', o: [
     [99,190,243,185,'r'],[21,434,69,80,'r'],[272,434,69,80,'r'],[374,59.1,182.7,193.6,'s'],[404,339,134,188,'r',1],
     [11,550,123,150,'r',1],[141,550,123,150,'r',1],[271,550,123,150,'r',1],[401,550,123,150,'r',1]] }
 };
+// chữ in trên khung đè lên ảnh (lấy từ mẫu Canva, toạ độ theo khung 576×768) – để khách căn ảnh tránh chữ đè mặt
+var CHU_KHUNG = { tapchi: {
+  0: [{ t: 'BEYOND<br>BOLD', x: 29.8, y: 232.1, w: 73, f: 13.4 }, { t: 'BEYOND<br>BEAUTY', x: 27.2, y: 326, w: 74.4, f: 13.4 },
+      { t: '+84 XXX<br>XXX XXX', x: 27.6, y: 426.9, w: 62.5, f: 10.4 }, { t: 'IN 2026', x: 113.3, y: 435.6, w: 90.6, f: 10.4, a: 'center', st: 'font-weight:700;font-style:italic' },
+      { t: '@MIRAFILM.VN', x: 223.6, y: 435.6, w: 74, f: 10.4, a: 'right' }],
+  3: [{ t: 'video', x: 24, y: 730, w: 49, f: 7.3, a: 'center' }, { t: 'rec', x: 80, y: 730, w: 43, f: 7.3, a: 'center' }, { t: 'photo', x: 124.5, y: 730, w: 43, f: 7.3, a: 'center', st: 'color:#ecab2e' },
+      { t: 'film', x: 174.5, y: 730, w: 43, f: 7.3, a: 'center' }, { t: 'camera', x: 220, y: 730, w: 43, f: 7.3, a: 'center' },
+      { g: 'tl', x: 47, y: 506 }, { g: 'tr', x: 223, y: 506 }, { g: 'bl', x: 45.5, y: 681.7 }, { g: 'br', x: 221.6, y: 681.7 }] } };
+function chuKhungHtml(o, ox, oy, k) {  // ox, oy = góc trên trái của vùng vẽ theo toạ độ khung; k = px trên 1 đơn vị khung
+  var ds = (CHU_KHUNG[S.khung] || {})[o]; if (!ds) return '';
+  return ds.map(function (d) {
+    var p = 'left:' + (d.x - ox) * k + 'px;top:' + (d.y - oy) * k + 'px;';
+    if (d.g) return '<i class="gc ' + d.g + '" style="' + p + 'width:' + 22 * k + 'px;height:' + 22 * k + 'px"></i>';
+    return '<span class="gt" style="' + p + 'width:' + d.w * k + 'px;font-size:' + d.f * k + 'px;text-align:' + (d.a || 'left') + ';' + (d.st || '') + '">' + d.t + '</span>';
+  }).join('');
+}
 var S = { ganK: {}, snk: null, xem: false, cat: {}, tl: {}, tlCho: {}, mat: {}, matCho: {}, ce: null, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
 var NN = (function () { try { var v = localStorage.getItem('mf_lang'); if (v) return v; } catch (e) {} var q = /[?&]lang=(vi|en)/.exec(location.search); if (q) return q[1]; return /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en'; })();
 var TX = {
@@ -184,7 +210,7 @@ var TX = {
     dangLen: 'Đang tải thêm ảnh…', dangLenP: 'Ảnh của bạn đang được tải lên, trang sẽ tự hiện ảnh trong giây lát…', taiGoc: 'Tải ảnh gốc', luuLink: 'Lưu link',
     luuGoiY: 'Lưu link để mở lại trang này sau', daCopy: 'Đã copy link. Dán vào Ghi chú hoặc gửi cho chính bạn, hoặc chụp màn hình trang này.',
     khongCopy: 'Chụp màn hình để giữ link này:', ghepTai: 'Bấm vào ảnh để mở và tải về máy.',
-    chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', xemH: 'Kiểm tra trước khi in', xemP: 'Chạm vào ô để chỉnh vị trí ảnh', quayLai: 'Quay lại', daDat: 'Đã đặt tấm #{0} vào {1}', inNgang: ' · ô in nằm ngang' },
+    chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', xemH: 'Kiểm tra trước khi in', xemP: 'Chạm vào ô để chỉnh vị trí ảnh', quayLai: 'Quay lại', daDat: 'Đã đặt tấm #{0} vào {1}', gChu: 'Chữ MIRAFILM sẽ nằm sau người khi in. Tránh để chữ trắng đè lên mặt.', xoay: 'Xoay dọc điện thoại để chọn ảnh', inNgang: ' · ô in nằm ngang' },
   en: { tieude: 'Choose Photos & Frame', tapchi: 'Magazine', bao: 'Newspaper', o: 'Slot ', tam: 'photo #', chuaco: 'empty', ngang: ' · landscape',
     mau: 'Color', td: 'Black & white', mau_t: 'color', td_t: 'black & white', soTam: ' photos', bamXem: 'Tap a photo to zoom in',
     daChon: 'Selected ', kiemTra: 'Check, then tap Send', con: '', oTrong: ' slots left', dangGui: 'Sending…', gui: 'Send to print',
@@ -200,7 +226,7 @@ var TX = {
     dangLen: 'More photos uploading…', dangLenP: 'Your photos are uploading – they will appear here in a moment…', taiGoc: 'Download originals', luuLink: 'Save link',
     luuGoiY: 'Save this link to reopen the page later', daCopy: 'Link copied. Paste it into Notes or send it to yourself – or take a screenshot of this page.',
     khongCopy: 'Take a screenshot to keep this link:', ghepTai: 'Tap the image to open and download it.',
-    chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', xemH: 'Check before printing', xemP: 'Tap a slot to adjust its photo', quayLai: 'Back', daDat: 'Photo #{0} placed in {1}', inNgang: ' · printed sideways' }
+    chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', xemH: 'Check before printing', xemP: 'Tap a slot to adjust its photo', quayLai: 'Back', daDat: 'Photo #{0} placed in {1}', gChu: 'MIRAFILM will sit behind you in the print. Keep the white text off faces.', xoay: 'Please rotate your phone to portrait', inNgang: ' · printed sideways' }
 };
 // loi tu may chu (tieng Viet) -> tieng Anh
 var LOI_EN = [[/Quầy chưa ghi nhận/, 'The counter has not registered this session yet. Please let our staff know – your selection is kept'],
@@ -209,7 +235,7 @@ var LOI_EN = [[/Quầy chưa ghi nhận/, 'The counter has not registered this s
 function T(k) { var s = (TX[NN] && TX[NN][k] !== undefined ? TX[NN][k] : TX.vi[k]), a = arguments; return String(s).replace(/\{(\d)\}/g, function (_, i) { return a[+i + 1]; }); }
 function loiDich(m) { if (NN === 'vi') return m; for (var i = 0; i < LOI_EN.length; i++) { var x = String(m).match(LOI_EN[i][0]); if (x) return typeof LOI_EN[i][1] === 'function' ? LOI_EN[i][1](x) : LOI_EN[i][1]; } return m; }
 function tenKhung(k) { return k === 'tapchi' ? T('tapchi') : k === 'bao' ? T('bao') : 'Valentine'; }
-function doiNN(n, luu) { NN = n; if (luu) try { localStorage.setItem('mf_lang', n); } catch (e) {} document.documentElement.lang = n; $('tieude').textContent = T('tieude');
+function doiNN(n, luu) { NN = n; if ($('xoayc')) $('xoayc').textContent = T('xoay'); if (luu) try { localStorage.setItem('mf_lang', n); } catch (e) {} document.documentElement.lang = n; $('tieude').textContent = T('tieude');
   $('nn').innerHTML = '<button data-nn="vi" class="' + (n === 'vi' ? 'on' : '') + '">VI</button><button data-nn="en" class="' + (n === 'en' ? 'on' : '') + '">EN</button>'; if (S.anh.length || S.xong || S.het) ve(); }
 var $ = function (id) { return document.getElementById(id); };
 var pad = function (n) { return String(n).padStart(2, '0'); };
@@ -456,8 +482,15 @@ function ceHtml() {
     '<div class="m" id="cem"><div class="cw" id="cew" style="width:' + k[0] + 'px;height:' + k[1] + 'px">' +
     '<div class="cimg cbg" id="ceb"><img alt="" src="' + u + '">' + mat + '</div>' +
     '<div class="cwin" style="' + (sh ? mask(r[4]) : '') + '"><div class="cimg" id="cef"><img alt="" src="' + u + '"></div></div>' +
+    (function () {  // chữ trên khung đè lên ảnh: hiện đúng chỗ để khách tránh đè mặt
+      var g = '', kk = k[0] / r[2], K = KHUNG[S.khung];
+      if (r[5]) return '';
+      if (K.chu && o === 0) g += '<img class="gchu" alt="" src="chu_mirafilm.png" style="left:' + (K.chu[0] - r[0]) * kk + 'px;top:' + (K.chu[1] - r[1]) * kk + 'px;width:' + K.chu[2] * kk + 'px;height:' + K.chu[3] * kk + 'px">';
+      g += chuKhungHtml(o, r[0], r[1], kk);
+      return g ? '<div class="gl" style="z-index:2">' + g + '</div>' : '';
+    })() +
     (sh ? '' : '<div class="cvien"><i style="left:33.3%;top:0;bottom:0;width:1px"></i><i style="left:66.6%;top:0;bottom:0;width:1px"></i><i style="top:33.3%;left:0;right:0;height:1px"></i><i style="top:66.6%;left:0;right:0;height:1px"></i></div>') +
-    '</div></div><div class="f"><span>' + T('ceGoiY') + '</span><div class="hai"><button class="btn ghost" data-k="cegiua">' + T('ceGiua') + '</button>' +
+    '</div></div><div class="f"><span>' + T('ceGoiY') + (KHUNG[S.khung].chu && o === 0 ? '<br><b class="gp">' + T('gChu') + '</b>' : '') + '</span><div class="hai"><button class="btn ghost" data-k="cegiua">' + T('ceGiua') + '</button>' +
     '<button class="btn" data-k="cexong">' + T('xong') + '</button></div></div></div>';
 }
 function ceApply() {
@@ -515,7 +548,10 @@ function oHtml(r, i, k, on, big) {
 function frameHtml(w, big) {
   var K = KHUNG[S.khung], k = w / 576;
   var h = '<div class="frame' + (S.bw ? ' bw' : '') + '" style="width:' + w + 'px;height:' + w * 4 / 3 + 'px;background-image:url(' + K.bg + ');' + (big ? 'align-self:center' : '') + '">';
+  if (K.chu && S.gan[0] !== undefined) h += '<i style="position:absolute;left:' + 4 * k + 'px;top:' + 3 * k + 'px;width:' + 316 * k + 'px;height:' + 36 * k + 'px;background:#141414"></i>' +
+    '<img class="chu" alt="" src="chu_mirafilm.png" style="z-index:0;left:' + K.chu[0] * k + 'px;top:' + K.chu[1] * k + 'px;width:' + K.chu[2] * k + 'px;height:' + K.chu[3] * k + 'px">';
   K.o.forEach(function (r, i) { h += oHtml(r, i, k, !big && i === S.act, big); });
+  if (w >= 200) Object.keys(CHU_KHUNG[S.khung] || {}).forEach(function (o) { if (S.gan[o] !== undefined) h += '<div class="gl" style="z-index:3">' + chuKhungHtml(+o, 0, 0, k) + '</div>'; });
   if (K.chu && S.gan[0] === undefined) h += '<img class="chu" alt="" src="chu_mirafilm.png" style="left:' + K.chu[0] * k + 'px;top:' + K.chu[1] * k + 'px;width:' + K.chu[2] * k + 'px;height:' + K.chu[3] * k + 'px">';
   return h + '</div>';
 }
