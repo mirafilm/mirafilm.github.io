@@ -183,16 +183,19 @@ var CHU_KHUNG = { tapchi: {
       { t: '@MIRAFILM.VN', x: 223.6, y: 435.6, w: 74, f: 10.4, a: 'right' }],
   3: [{ t: 'video', x: 24, y: 730, w: 49, f: 7.3, a: 'center' }, { t: 'rec', x: 80, y: 730, w: 43, f: 7.3, a: 'center' }, { t: 'photo', x: 124.5, y: 730, w: 43, f: 7.3, a: 'center', st: 'color:#ecab2e' },
       { t: 'film', x: 174.5, y: 730, w: 43, f: 7.3, a: 'center' }, { t: 'camera', x: 220, y: 730, w: 43, f: 7.3, a: 'center' },
-      { g: 'tl', x: 47, y: 506 }, { g: 'tr', x: 223, y: 506 }, { g: 'bl', x: 45.5, y: 681.7 }, { g: 'br', x: 221.6, y: 681.7 }] } };
+      { g: 'tl', x: 47, y: 506 }, { g: 'tr', x: 223, y: 506 }, { g: 'bl', x: 45.5, y: 681.7 }, { g: 'br', x: 221.6, y: 681.7 },
+      { g: 'tl', x: 128.2, y: 587.1, s: 11 }, { g: 'tr', x: 153.3, y: 587.1, s: 11 }, { g: 'bl', x: 128.2, y: 612.2, s: 11 }, { g: 'br', x: 153.3, y: 612.2, s: 11 },
+      { r: [141.95, 604.3, 8.6, 1] }, { r: [145.75, 600.8, 1, 8.6] }] } };
 function chuKhungHtml(o, ox, oy, k) {  // ox, oy = góc trên trái của vùng vẽ theo toạ độ khung; k = px trên 1 đơn vị khung
   var ds = (CHU_KHUNG[S.khung] || {})[o]; if (!ds) return '';
   return ds.map(function (d) {
     var p = 'left:' + (d.x - ox) * k + 'px;top:' + (d.y - oy) * k + 'px;';
-    if (d.g) return '<i class="gc ' + d.g + '" style="' + p + 'width:' + 22 * k + 'px;height:' + 22 * k + 'px"></i>';
+    if (d.r) return '<i style="position:absolute;background:#efedeb;left:' + (d.r[0] - ox) * k + 'px;top:' + (d.r[1] - oy) * k + 'px;width:' + Math.max(1, d.r[2] * k) + 'px;height:' + Math.max(1, d.r[3] * k) + 'px"></i>';
+    if (d.g) return '<i class="gc ' + d.g + '" style="' + p + 'width:' + (d.s || 22) * k + 'px;height:' + (d.s || 22) * k + 'px"></i>';
     return '<span class="gt" style="' + p + 'width:' + d.w * k + 'px;font-size:' + d.f * k + 'px;text-align:' + (d.a || 'left') + ';' + (d.st || '') + '">' + d.t + '</span>';
   }).join('');
 }
-var S = { ganK: {}, snk: null, xem: false, cat: {}, tl: {}, tlCho: {}, mat: {}, matCho: {}, ce: null, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
+var S = { cut: {}, cutCho: {}, ganK: {}, snk: null, xem: false, cat: {}, tl: {}, tlCho: {}, mat: {}, matCho: {}, ce: null, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
 var NN = (function () { try { var v = localStorage.getItem('mf_lang'); if (v) return v; } catch (e) {} var q = /[?&]lang=(vi|en)/.exec(location.search); if (q) return q[1]; return /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en'; })();
 var TX = {
   vi: { tieude: 'Chọn ảnh ghép khung', tapchi: 'Tạp chí', bao: 'Báo', o: 'Ô ', tam: 'tấm #', chuaco: 'chưa có ảnh', ngang: ' · nằm ngang',
@@ -210,7 +213,7 @@ var TX = {
     dangLen: 'Đang tải thêm ảnh…', dangLenP: 'Ảnh của bạn đang được tải lên, trang sẽ tự hiện ảnh trong giây lát…', taiGoc: 'Tải ảnh gốc', luuLink: 'Lưu link',
     luuGoiY: 'Lưu link để mở lại trang này sau', daCopy: 'Đã copy link. Dán vào Ghi chú hoặc gửi cho chính bạn, hoặc chụp màn hình trang này.',
     khongCopy: 'Chụp màn hình để giữ link này:', ghepTai: 'Bấm vào ảnh để mở và tải về máy.',
-    chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', xemH: 'Kiểm tra trước khi in', xemP: 'Chạm vào ô để chỉnh vị trí ảnh', quayLai: 'Quay lại', daDat: 'Đã đặt tấm #{0} vào {1}', gChu: 'Chữ MIRAFILM sẽ nằm sau người khi in. Tránh để chữ trắng đè lên mặt.', xoay: 'Xoay dọc điện thoại để chọn ảnh', inNgang: ' · ô in nằm ngang' },
+    chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', xemH: 'Kiểm tra trước khi in', xemP: 'Chạm vào ô để chỉnh vị trí ảnh', quayLai: 'Quay lại', daDat: 'Đã đặt tấm #{0} vào {1}', gChu: '', gCho: 'Đang tách nền ảnh để xem chữ MIRAFILM sau người…', gCut: 'Đã tách nền để xem trước – nhân viên sẽ làm kỹ viền tóc khi in. Tránh để chữ trắng đè lên mặt.', xoay: 'Xoay dọc điện thoại để chọn ảnh', inNgang: ' · ô in nằm ngang' },
   en: { tieude: 'Choose Photos & Frame', tapchi: 'Magazine', bao: 'Newspaper', o: 'Slot ', tam: 'photo #', chuaco: 'empty', ngang: ' · landscape',
     mau: 'Color', td: 'Black & white', mau_t: 'color', td_t: 'black & white', soTam: ' photos', bamXem: 'Tap a photo to zoom in',
     daChon: 'Selected ', kiemTra: 'Check, then tap Send', con: '', oTrong: ' slots left', dangGui: 'Sending…', gui: 'Send to print',
@@ -226,7 +229,7 @@ var TX = {
     dangLen: 'More photos uploading…', dangLenP: 'Your photos are uploading – they will appear here in a moment…', taiGoc: 'Download originals', luuLink: 'Save link',
     luuGoiY: 'Save this link to reopen the page later', daCopy: 'Link copied. Paste it into Notes or send it to yourself – or take a screenshot of this page.',
     khongCopy: 'Take a screenshot to keep this link:', ghepTai: 'Tap the image to open and download it.',
-    chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', xemH: 'Check before printing', xemP: 'Tap a slot to adjust its photo', quayLai: 'Back', daDat: 'Photo #{0} placed in {1}', gChu: 'MIRAFILM will sit behind you in the print. Keep the white text off faces.', xoay: 'Please rotate your phone to portrait', inNgang: ' · printed sideways' }
+    chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', xemH: 'Check before printing', xemP: 'Tap a slot to adjust its photo', quayLai: 'Back', daDat: 'Photo #{0} placed in {1}', gChu: '', gCho: 'Removing the background to show MIRAFILM behind you…', gCut: 'Background removed for preview – our staff refine the hair edges before printing. Keep the white text off faces.', xoay: 'Please rotate your phone to portrait', inNgang: ' · printed sideways' }
 };
 // loi tu may chu (tieng Viet) -> tieng Anh
 var LOI_EN = [[/Quầy chưa ghi nhận/, 'The counter has not registered this session yet. Please let our staff know – your selection is kept'],
@@ -456,12 +459,41 @@ function matCho(id) {
     return new Promise(function (ok, loi) {
       var im = new Image(); im.onload = function () { try { ok(timMat(x[0], im)); } catch (e) { loi(e); } }; im.onerror = loi; im.src = x[1];
     });
-  }).then(function (m) { S.mat[id] = m; }).catch(function (e) {
+  }).then(function (m) { S.mat[id] = m; if (S.khung === 'tapchi' && S.gan[0] !== undefined && S.anh[S.gan[0]].id === id) tachNen(id); }).catch(function (e) {
     console.log('[mat]', e); S.matLoi = (S.matLoi || 0) + 1;
     if (S.matLoi < 4) { delete S.matCho[id]; setTimeout(function () { matCho(id); }, 3000); } else S.mat[id] = [];
   })
     .then(function () { if (S.ce && S.ce.id === id && !S.ce.tay) { var c = catTuDong(S.ce.o, id); S.ce.cx = c.cx; S.ce.cy = c.cy; S.ce.z = 1; } if (S.ce) ceVe(); else veSau(); });
 }
+
+// ---- tách nền ảnh Ô 01 khung Tạp chí để khách căn theo chữ MIRAFILM (bản thử: chạy trên điện thoại) ----
+var dNen = null;
+function boTachNen() {
+  if (!dNen) dNen = import(MP + '/vision_bundle.mjs').then(function (v) {
+    return v.FilesetResolver.forVisionTasks(MP + '/wasm').then(function (fs) {
+      return v.ImageSegmenter.createFromOptions(fs, { baseOptions: { modelAssetPath:
+        'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite', delegate: 'CPU' },
+        runningMode: 'IMAGE', outputCategoryMask: false, outputConfidenceMasks: true });
+    });
+  }).catch(function (e) { dNen = null; throw e; });
+  return dNen;
+}
+function tachNen(id) {
+  if (S.cut[id] || S.cutCho[id]) return;
+  var u = S.lon[id]; if (!u) return;  // chờ ảnh 1200px (matCho tải về) rồi mới tách
+  S.cutCho[id] = 1;
+  Promise.all([boTachNen(), new Promise(function (ok, loi) { var im = new Image(); im.onload = function () { ok(im); }; im.onerror = loi; im.src = u; })]).then(function (x) {
+    var seg = x[0], im = x[1];
+    var kq = seg.segment(im), mk = kq.confidenceMasks[0], W = mk.width, H = mk.height, nen = mk.getAsFloat32Array();
+    var cv = document.createElement('canvas'); cv.width = W; cv.height = H; var g = cv.getContext('2d');
+    g.drawImage(im, 0, 0, W, H); var d = g.getImageData(0, 0, W, H);
+    for (var i = 0; i < W * H; i++) { var a = (1 - nen[i] - 0.25) / 0.5; d.data[i * 4 + 3] = Math.max(0, Math.min(255, a * 255)); }
+    g.putImageData(d, 0, 0); kq.close();
+    S.cut[id] = cv.toDataURL('image/png');
+  }).catch(function (e) { console.log('[tach nen]', e); delete S.cutCho[id]; })
+    .then(function () { if (S.ce) ceVe(); else veSau(); });
+}
+function cutO1(o) { if (S.khung !== 'tapchi' || o !== 0 || S.gan[0] === undefined) return null; var id = S.anh[S.gan[0]].id; tachNen(id); return S.cut[id] || null; }
 
 // ---- màn hình chỉnh vị trí ----
 function ceMo(o) {
@@ -481,16 +513,22 @@ function ceHtml() {
     '<button data-k="cedong" aria-label="' + T('dong') + '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
     '<div class="m" id="cem"><div class="cw" id="cew" style="width:' + k[0] + 'px;height:' + k[1] + 'px">' +
     '<div class="cimg cbg" id="ceb"><img alt="" src="' + u + '">' + mat + '</div>' +
-    '<div class="cwin" style="' + (sh ? mask(r[4]) : '') + '"><div class="cimg" id="cef"><img alt="" src="' + u + '"></div></div>' +
+    (function () {
+      var cu = cutO1(o), K = KHUNG[S.khung], kk = k[0] / r[2];
+      if (!cu) return '<div class="cwin" style="' + (sh ? mask(r[4]) : '') + '"><div class="cimg" id="cef"><img alt="" src="' + u + '"></div></div>';
+      return '<div class="cwin"><i style="position:absolute;inset:0;background:#141414"></i>' +
+        '<img alt="" src="chu_mirafilm.png" style="position:absolute;left:' + (K.chu[0] - r[0]) * kk + 'px;top:' + (K.chu[1] - r[1]) * kk + 'px;width:' + K.chu[2] * kk + 'px;height:' + K.chu[3] * kk + 'px">' +
+        '<div class="cimg" id="cef"><img alt="" src="' + cu + '"></div></div>';
+    })() +
     (function () {  // chữ trên khung đè lên ảnh: hiện đúng chỗ để khách tránh đè mặt
       var g = '', kk = k[0] / r[2], K = KHUNG[S.khung];
       if (r[5]) return '';
-      if (K.chu && o === 0) g += '<img class="gchu" alt="" src="chu_mirafilm.png" style="left:' + (K.chu[0] - r[0]) * kk + 'px;top:' + (K.chu[1] - r[1]) * kk + 'px;width:' + K.chu[2] * kk + 'px;height:' + K.chu[3] * kk + 'px">';
+      if (K.chu && o === 0 && !cutO1(o)) g += '<img class="gchu" alt="" src="chu_mirafilm.png" style="left:' + (K.chu[0] - r[0]) * kk + 'px;top:' + (K.chu[1] - r[1]) * kk + 'px;width:' + K.chu[2] * kk + 'px;height:' + K.chu[3] * kk + 'px">';
       g += chuKhungHtml(o, r[0], r[1], kk);
       return g ? '<div class="gl" style="z-index:2">' + g + '</div>' : '';
     })() +
     (sh ? '' : '<div class="cvien"><i style="left:33.3%;top:0;bottom:0;width:1px"></i><i style="left:66.6%;top:0;bottom:0;width:1px"></i><i style="top:33.3%;left:0;right:0;height:1px"></i><i style="top:66.6%;left:0;right:0;height:1px"></i></div>') +
-    '</div></div><div class="f"><span>' + T('ceGoiY') + (KHUNG[S.khung].chu && o === 0 ? '<br><b class="gp">' + T('gChu') + '</b>' : '') + '</span><div class="hai"><button class="btn ghost" data-k="cegiua">' + T('ceGiua') + '</button>' +
+    '</div></div><div class="f"><span>' + T('ceGoiY') + (KHUNG[S.khung].chu && o === 0 ? '<br><b class="gp">' + (cutO1(o) ? T('gCut') : T('gCho')) + '</b>' : '') + '</span><div class="hai"><button class="btn ghost" data-k="cegiua">' + T('ceGiua') + '</button>' +
     '<button class="btn" data-k="cexong">' + T('xong') + '</button></div></div></div>';
 }
 function ceApply() {
@@ -536,19 +574,20 @@ function oHtml(r, i, k, on, big) {
   var inner = '';
   if (gi !== undefined && src(gi)) {
     var iw = r[5] ? h : w, ih = r[5] ? w : h;
+    var cu = cutO1(i);
     inner = '<span class="phw" style="width:' + iw + 'px;height:' + ih + 'px;transform:translate(-50%,-50%)' + (r[5] ? ' rotate(-90deg)' : '') + '">' +
-      '<img class="ph" alt="" src="' + src(gi) + '" style="' + anhSt(catCua(i), i, iw, ih) + '"></span>';
+      '<img class="ph" alt="" src="' + (cu || src(gi)) + '" style="' + anhSt(catCua(i), i, iw, ih) + '"></span>';
   } else if (gi !== undefined) inner = '#' + S.anh[gi].so;
   else inner = pad(i + 1);
   if (gi !== undefined && src(gi) && (S.khungLon || S.xem) && !big) inner += '<i class="sua"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg></i>';
   var tag = big ? 'div' : 'button';
   return '<' + tag + ' class="slot' + (on ? ' on' : '') + (sh ? ' sh' : '') + '" style="' + st + '"' + (big ? '' : ' data-o="' + i + '" aria-label="Chọn ' + oTen(i) + '"') + '>' +
-    '<span class="in' + (sh ? '' : ' r') + '" style="font-size:' + (big ? 11 : 9) + 'px;' + (sh ? mask(r[4]) : '') + '">' + inner + '</span></' + tag + '>';
+    '<span class="in' + (sh ? '' : ' r') + '" style="font-size:' + (big ? 11 : 9) + 'px;' + (sh ? mask(r[4]) : '') + (gi !== undefined && cutO1(i) ? 'background:transparent;border:0;' : '') + '">' + inner + '</span></' + tag + '>';
 }
 function frameHtml(w, big) {
   var K = KHUNG[S.khung], k = w / 576;
   var h = '<div class="frame' + (S.bw ? ' bw' : '') + '" style="width:' + w + 'px;height:' + w * 4 / 3 + 'px;background-image:url(' + K.bg + ');' + (big ? 'align-self:center' : '') + '">';
-  if (K.chu && S.gan[0] !== undefined) h += '<i style="position:absolute;left:' + 4 * k + 'px;top:' + 3 * k + 'px;width:' + 316 * k + 'px;height:' + 36 * k + 'px;background:#141414"></i>' +
+  if (K.chu && S.gan[0] !== undefined) h += '<i style="position:absolute;left:' + 4 * k + 'px;top:' + 3 * k + 'px;width:' + 316 * k + 'px;height:' + (cutO1(0) ? 467 : 36) * k + 'px;background:#141414"></i>' +
     '<img class="chu" alt="" src="chu_mirafilm.png" style="z-index:0;left:' + K.chu[0] * k + 'px;top:' + K.chu[1] * k + 'px;width:' + K.chu[2] * k + 'px;height:' + K.chu[3] * k + 'px">';
   K.o.forEach(function (r, i) { h += oHtml(r, i, k, !big && i === S.act, big); });
   if (w >= 200) Object.keys(CHU_KHUNG[S.khung] || {}).forEach(function (o) { if (S.gan[o] !== undefined) h += '<div class="gl" style="z-index:3">' + chuKhungHtml(+o, 0, 0, k) + '</div>'; });
