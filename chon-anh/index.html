@@ -134,7 +134,7 @@ var KHUNG = {
     [99,190,243,185,'r'],[21,434,69,80,'r'],[272,434,69,80,'r'],[374,59.1,182.7,193.6,'s'],[404,339,134,188,'r',1],
     [11,550,123,150,'r',1],[141,550,123,150,'r',1],[271,550,123,150,'r',1],[401,550,123,150,'r',1]] }
 };
-var S = { qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
+var S = { ganK: {}, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
 var NN = (function () { try { var v = localStorage.getItem('mf_lang'); if (v) return v; } catch (e) {} var q = /[?&]lang=(vi|en)/.exec(location.search); if (q) return q[1]; return /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en'; })();
 var TX = {
   vi: { tieude: 'Chọn ảnh ghép khung', tapchi: 'Tạp chí', bao: 'Báo', o: 'Ô ', tam: 'tấm #', chuaco: 'chưa có ảnh', ngang: ' · nằm ngang',
@@ -503,7 +503,11 @@ document.addEventListener('click', function (e) {
   var b = e.target.closest('button,[data-k="phong"]'); if (!b) return;
   if (b.dataset.nn) return doiNN(b.dataset.nn, true);
   var tong = KHUNG[S.khung].o.length;
-  if (b.dataset.khung) { S.khung = b.dataset.khung; S.act = 0; S.gan = {}; return ve(); }
+  if (b.dataset.khung) {  // đổi khung: giữ lại ảnh đã chọn của từng khung, bấm nhầm quay lại vẫn còn
+    if (b.dataset.khung === S.khung) return;
+    S.ganK[S.khung] = { gan: S.gan, act: S.act };
+    var k = S.ganK[b.dataset.khung]; S.khung = b.dataset.khung; S.gan = k ? k.gan : {}; S.act = k ? k.act : 0; return ve();
+  }
   if (b.dataset.o) { S.act = +b.dataset.o; S.khungLon = false; return ve(); }
   if (b.dataset.anh) { moZoom(+b.dataset.anh); return; }
   switch (b.dataset.k) {
@@ -522,7 +526,7 @@ document.addEventListener('click', function (e) {
     case 'gui': return gui();
     case 'luu': return luuLink();
     case 'anbar': S.anBar = true; return ve();
-    case 'combo': S.xong = null; S.gan = {}; S.act = 0; return ve();
+    case 'combo': S.xong = null; S.gan = {}; S.ganK = {}; S.act = 0; return ve();
   }
 });
 batDau();
