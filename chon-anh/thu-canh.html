@@ -72,6 +72,13 @@ button:focus-visible{outline:2px solid var(--do);outline-offset:2px}
 .ce .f .btn{min-height:52px;font-size:16px;background:var(--the);color:var(--nau)}
 .ce .f .btn.ghost{background:transparent;border:1px solid rgba(233,230,215,.5);color:var(--the)}
 .bw .ce .cimg img{filter:grayscale(1)}
+.snk{position:absolute;left:12px;right:12px;bottom:80px;z-index:5;display:flex;align-items:center;gap:8px;background:var(--chu);color:var(--the);border-radius:12px;padding:6px 6px 6px 14px;font-size:13px;box-shadow:0 4px 16px rgba(28,14,14,.25)}
+.snk span{flex:1}
+.snk button{border:0;border-radius:8px;background:var(--the);color:var(--nau);font-size:13px;font-weight:600;padding:9px 12px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.slot .sua{position:absolute;right:3px;top:3px;z-index:3;width:20px;height:20px;border-radius:10px;background:rgba(28,14,14,.72);color:#fff;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.klon h3{margin:0;color:var(--the);font-size:18px;font-weight:600}
+.klon .hai{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;width:min(320px,100%)}
+.klon .hai .btn.ghost{border-color:rgba(233,230,215,.5);color:var(--the)}
 .chu{position:absolute;z-index:3;pointer-events:none}
 .side{flex-grow:1;display:flex;flex-direction:column;gap:6px;min-width:0;justify-content:space-between}
 .lb{font-size:12px;color:var(--mo)}
@@ -159,7 +166,7 @@ var KHUNG = {
     [99,190,243,185,'r'],[21,434,69,80,'r'],[272,434,69,80,'r'],[374,59.1,182.7,193.6,'s'],[404,339,134,188,'r',1],
     [11,550,123,150,'r',1],[141,550,123,150,'r',1],[271,550,123,150,'r',1],[401,550,123,150,'r',1]] }
 };
-var S = { cat: {}, tl: {}, tlCho: {}, mat: {}, matCho: {}, ce: null, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
+var S = { ganK: {}, snk: null, xem: false, cat: {}, tl: {}, tlCho: {}, mat: {}, matCho: {}, ce: null, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
 var NN = (function () { try { var v = localStorage.getItem('mf_lang'); if (v) return v; } catch (e) {} var q = /[?&]lang=(vi|en)/.exec(location.search); if (q) return q[1]; return /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en'; })();
 var TX = {
   vi: { tieude: 'Chọn ảnh ghép khung', tapchi: 'Tạp chí', bao: 'Báo', o: 'Ô ', tam: 'tấm #', chuaco: 'chưa có ảnh', ngang: ' · nằm ngang',
@@ -177,7 +184,7 @@ var TX = {
     dangLen: 'Đang tải thêm ảnh…', dangLenP: 'Ảnh của bạn đang được tải lên, trang sẽ tự hiện ảnh trong giây lát…', taiGoc: 'Tải ảnh gốc', luuLink: 'Lưu link',
     luuGoiY: 'Lưu link để mở lại trang này sau', daCopy: 'Đã copy link. Dán vào Ghi chú hoặc gửi cho chính bạn, hoặc chụp màn hình trang này.',
     khongCopy: 'Chụp màn hình để giữ link này:', ghepTai: 'Bấm vào ảnh để mở và tải về máy.',
-    chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', inNgang: ' · ô in nằm ngang' },
+    chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', xemH: 'Kiểm tra trước khi in', xemP: 'Chạm vào ô để chỉnh vị trí ảnh', quayLai: 'Quay lại', daDat: 'Đã đặt tấm #{0} vào {1}', inNgang: ' · ô in nằm ngang' },
   en: { tieude: 'Choose Photos & Frame', tapchi: 'Magazine', bao: 'Newspaper', o: 'Slot ', tam: 'photo #', chuaco: 'empty', ngang: ' · landscape',
     mau: 'Color', td: 'Black & white', mau_t: 'color', td_t: 'black & white', soTam: ' photos', bamXem: 'Tap a photo to zoom in',
     daChon: 'Selected ', kiemTra: 'Check, then tap Send', con: '', oTrong: ' slots left', dangGui: 'Sending…', gui: 'Send to print',
@@ -193,7 +200,7 @@ var TX = {
     dangLen: 'More photos uploading…', dangLenP: 'Your photos are uploading – they will appear here in a moment…', taiGoc: 'Download originals', luuLink: 'Save link',
     luuGoiY: 'Save this link to reopen the page later', daCopy: 'Link copied. Paste it into Notes or send it to yourself – or take a screenshot of this page.',
     khongCopy: 'Take a screenshot to keep this link:', ghepTai: 'Tap the image to open and download it.',
-    chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', inNgang: ' · printed sideways' }
+    chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', xemH: 'Check before printing', xemP: 'Tap a slot to adjust its photo', quayLai: 'Back', daDat: 'Photo #{0} placed in {1}', inNgang: ' · printed sideways' }
 };
 // loi tu may chu (tieng Viet) -> tieng Anh
 var LOI_EN = [[/Quầy chưa ghi nhận/, 'The counter has not registered this session yet. Please let our staff know – your selection is kept'],
@@ -434,7 +441,7 @@ function matCho(id) {
 function ceMo(o) {
   var c = catCua(o), a = S.anh[S.gan[o]];
   S.ce = { o: o, id: a.id, z: c.z, cx: c.cx, cy: c.cy, tay: !!(S.cat[S.khung + '|' + o] && S.cat[S.khung + '|' + o].id === a.id) };
-  S.khungLon = false; ve();
+  S.snk = null; ve();
 }
 function ceKich() {
   var b = oHop(S.ce.o), A = b[0] / b[1], mw = Math.min(innerWidth - 48, 460), mh = Math.max(160, innerHeight - 300);
@@ -500,6 +507,7 @@ function oHtml(r, i, k, on, big) {
       '<img class="ph" alt="" src="' + src(gi) + '" style="' + anhSt(catCua(i), i, iw, ih) + '"></span>';
   } else if (gi !== undefined) inner = '#' + S.anh[gi].so;
   else inner = pad(i + 1);
+  if (gi !== undefined && src(gi) && (S.khungLon || S.xem) && !big) inner += '<i class="sua"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg></i>';
   var tag = big ? 'div' : 'button';
   return '<' + tag + ' class="slot' + (on ? ' on' : '') + (sh ? ' sh' : '') + '" style="' + st + '"' + (big ? '' : ' data-o="' + i + '" aria-label="Chọn ' + oTen(i) + '"') + '>' +
     '<span class="in' + (sh ? '' : ' r') + '" style="font-size:' + (big ? 11 : 9) + 'px;' + (sh ? mask(r[4]) : '') + '">' + inner + '</span></' + tag + '>';
@@ -514,7 +522,7 @@ function frameHtml(w, big) {
 function dung() { var n = 0; KHUNG[S.khung].o.forEach(function (_, i) { if (S.gan[i] !== undefined) n++; }); return n; }
 function ve() {
   var app = $('app'), K = KHUNG[S.khung], tong = K.o.length, d = dung();
-  var old = app.querySelectorAll('.luu,.panel,.list,.foot,.msg,.zoom,.klon,.ce,.thu');
+  var old = app.querySelectorAll('.luu,.panel,.list,.foot,.msg,.zoom,.klon,.ce,.thu,.snk');
   var top = $('list') ? $('list').scrollTop : 0;
   [].forEach.call(old, function (e) { e.remove(); });
   var h = '<div class="thu">BẢN THỬ chỉnh vị trí ảnh – không gửi in thật</div>';
@@ -557,6 +565,10 @@ function ve() {
     });
     h += '</div></div><div class="foot"><div class="s"><b>' + (S.tong > 1 ? 'Combo ' + Math.min(S.daGui + 1, S.tong) + '/' + S.tong + ' · ' : '') + T('daChon') + d + '/' + tong + '</b><span class="lb">' + (d === tong ? T('kiemTra') : T('con') + (tong - d) + T('oTrong')) + '</span></div>' +
       '<button class="btn" data-k="gui"' + (d === tong && !S.dangGui ? '' : ' disabled') + '>' + (S.dangGui ? T('dangGui') : T('gui')) + '</button></div>';
+    if (S.snk && !S.zoom && !S.khungLon && !S.xem) h += '<div class="snk"><span>' + T('daDat', S.anh[S.gan[S.snk.o]].so, oTen(S.snk.o)) + '</span><button data-k="snkchinh">' +
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>' + T('chinh') + '</button></div>';
+    if (S.xem) h += '<div class="klon"><h3>' + T('xemH') + '</h3><div class="lb">' + T('xemP') + '</div>' + frameHtml(Math.min(320, innerWidth - 48)) +
+      '<div class="hai"><button class="btn ghost" data-k="xemdong">' + T('quayLai') + '</button><button class="btn" data-k="guithat" style="background:var(--the);color:var(--nau)">' + T('gui') + '</button></div></div>';
     if (S.khungLon) h += '<div class="klon"><div class="lb">' + (d ? T('chamCo') : T('chamO')) + oTen(S.act) + T('dangChon') + '</div>' + frameHtml(Math.min(320, innerWidth - 48)) +
       '<button class="btn" data-k="dongkhung" style="min-width:160px;background:var(--the);color:var(--nau)">' + T('xong') + '</button></div>';
     if (S.zoom !== null) h += zoomHtml();
@@ -596,8 +608,10 @@ function zoomHtml() {
 function dat(i, bo) {
   var tong = KHUNG[S.khung].o.length;
   Object.keys(S.gan).forEach(function (o) { if (S.gan[o] === i) delete S.gan[o]; });
+  S.snk = null;
   if (!bo) {
     S.gan[S.act] = i;
+    var o0 = S.act; S.snk = { o: o0 }; clearTimeout(S.snkHen); S.snkHen = setTimeout(function () { if (S.snk && S.snk.o === o0) { S.snk = null; veSau(); } }, 6000);
     for (var j = 1; j <= tong; j++) { var t = (S.act + j) % tong; if (S.gan[t] === undefined) { S.act = t; break; } }
   }
   S.zoom = null; S.phong = false; ve();
@@ -701,8 +715,12 @@ document.addEventListener('click', function (e) {
   var b = e.target.closest('button,[data-k="phong"]'); if (!b) return;
   if (b.dataset.nn) return doiNN(b.dataset.nn, true);
   var tong = KHUNG[S.khung].o.length;
-  if (b.dataset.khung) { S.khung = b.dataset.khung; S.act = 0; S.gan = {}; return ve(); }
-  if (b.dataset.o) { S.act = +b.dataset.o; if (S.khungLon && S.gan[S.act] !== undefined) return ceMo(S.act); S.khungLon = false; return ve(); }
+  if (b.dataset.khung) {  // đổi khung: giữ lại ảnh đã chọn của từng khung, bấm nhầm quay lại vẫn còn
+    if (b.dataset.khung === S.khung) return;
+    S.ganK[S.khung] = { gan: S.gan, act: S.act };
+    var k = S.ganK[b.dataset.khung]; S.khung = b.dataset.khung; S.gan = k ? k.gan : {}; S.act = k ? k.act : 0; S.snk = null; return ve();
+  }
+  if (b.dataset.o) { S.act = +b.dataset.o; if ((S.khungLon || S.xem) && S.gan[S.act] !== undefined) return ceMo(S.act); if (S.xem) return ve(); S.khungLon = false; return ve(); }
   if (b.dataset.anh) { moZoom(+b.dataset.anh); return; }
   switch (b.dataset.k) {
     case 'truoc': S.act = (S.act + tong - 1) % tong; return ve();
@@ -717,7 +735,10 @@ document.addEventListener('click', function (e) {
     case 'zsau': return moZoom((S.zoom + 1) % S.anh.length);
     case 'dat': return dat(S.zoom);
     case 'bo': return dat(S.zoom, true);
-    case 'gui': return gui();
+    case 'gui': S.xem = true; S.snk = null; return ve();
+    case 'guithat': S.xem = false; return gui();
+    case 'xemdong': S.xem = false; return ve();
+    case 'snkchinh': var so = S.snk.o; S.snk = null; return ceMo(so);
     case 'chinh': return ceMo(S.act);
     case 'cedong': S.ce = null; return ve();
     case 'cegiua': var c0 = catTuDong(S.ce.o, S.ce.id); S.ce.cx = c0.cx; S.ce.cy = c0.cy; S.ce.z = 1; S.ce.tay = false; return ceApply();
@@ -726,7 +747,7 @@ document.addEventListener('click', function (e) {
       S.ce = null; return ve();
     case 'luu': return luuLink();
     case 'anbar': S.anBar = true; return ve();
-    case 'combo': S.xong = null; S.gan = {}; S.act = 0; return ve();
+    case 'combo': S.xong = null; S.gan = {}; S.ganK = {}; S.act = 0; return ve();
   }
 });
 batDau();
