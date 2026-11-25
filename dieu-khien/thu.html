@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Bảng điều khiển Selfbooth · bản thử</title>
+<style>
+:root{--do:#6b1e26;--do2:#83303a;--nen:#efe9e4;--the:#fff;--ke:#e6ddd6;--mo:#8a7d76;--chu:#2a1a17;--nhat:#f3efec;--xanh:#2e7d32;--cam:#b4530c;--loi:#b00020;--lam:#1565c0}
+*{box-sizing:border-box}
+html,body{margin:0;background:#2a1215;color:var(--chu);font:14px/1.45 "Segoe UI",Inter,system-ui,sans-serif}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;color:#f3e6da}
+header b{font-size:17px;font-weight:600}
+.chip{font-size:12px;padding:3px 10px;border-radius:12px;background:#f7d9a8;color:#5c3a00;font-weight:600}
+header .tt{margin-left:auto;font-size:12px;opacity:.8}
+.gl{margin:0 12px 12px;padding:12px 14px;border:1px dashed #b98;border-radius:12px;color:#f3e6da;font-size:13px}
+.gl h2{margin:0 0 4px;font-size:13px;font-weight:600}
+.gl p{margin:0 0 10px;opacity:.8}
+.gl .h{display:flex;gap:8px 18px;flex-wrap:wrap;align-items:center}
+.gl label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.gl select{font:inherit;padding:4px 6px;border-radius:6px;border:0}
+main{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;padding:0 12px 16px}
+.phong{background:var(--nen);border-radius:14px;padding:14px}
+.dau{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.dau h1{margin:0;font-size:18px;font-weight:600;color:var(--do)}
+.pill{font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px;background:var(--nhat);color:var(--mo)}
+.ag{margin-left:auto;font-size:12px;color:var(--mo)}
+.ag.mat{color:var(--loi);font-weight:600}
+.bao{display:none;margin-bottom:10px;padding:8px 12px;border-radius:10px;background:#fdf0e3;color:var(--cam);font-size:13px;font-weight:600}
+.bao.hien{display:block}
+.the{background:var(--the);border:1px solid var(--ke);border-radius:12px;padding:10px 14px 12px;margin-bottom:8px}
+.the h3{margin:0 0 6px;font-size:11px;font-weight:600;color:var(--mo);letter-spacing:.02em}
+select.k,button{font:inherit}
+select.k{width:100%;height:38px;border:1px solid var(--ke);border-radius:8px;padding:0 10px;background:#fff;color:var(--chu)}
+.goi{display:flex;gap:4px;margin-top:8px;background:var(--nhat);border-radius:8px;padding:3px}
+.goi button{flex:1;height:30px;border:0;border-radius:6px;background:transparent;color:var(--chu);cursor:pointer}
+.goi button.chon{background:#ead2bd;font-weight:600}
+.nut{min-height:36px;line-height:1.2;border-radius:8px;border:1px solid var(--ke);background:#fff;color:var(--chu);cursor:pointer;padding:0 10px}
+.nut:hover{background:#f5eee9}
+.nut.chinh{background:var(--do);border-color:var(--do);color:#fff;font-weight:600}
+.nut.chinh:hover{background:var(--do2)}
+.nut.to{min-height:44px;width:100%;font-size:15px}
+.nut.nhe{border-color:transparent;background:transparent;color:var(--do);min-height:30px;font-size:13px}
+.nut.nhe:hover{background:#f1e8e2}
+.nut:disabled{background:var(--nhat);border-color:transparent;color:#b7aca6;cursor:default}
+.nut.cho{opacity:.6}
+.luoi{display:grid;gap:6px;margin-top:6px}
+.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:repeat(3,1fr)}
+.dh{display:flex;align-items:center;gap:14px}
+.dh .so{font-size:40px;font-weight:700;color:var(--do);font-variant-numeric:tabular-nums;line-height:1.1}
+.dh .tt b{display:block;font-weight:600}
+.dh .tt span{font-size:12px;color:var(--mo)}
+.tien{height:6px;border-radius:3px;background:#efe6e0;margin:6px 0 2px;overflow:hidden}
+.tien i{display:block;height:100%;background:var(--do);width:0}
+.gy{margin:6px 0 0;font-size:12px;color:var(--mo)}
+.lenh{min-height:18px;margin-top:6px;font-size:12px;color:var(--lam)}
+.mh{position:relative;aspect-ratio:16/9;border-radius:10px;background:#1c0e0e;color:#e9e6d7;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center}
+.mh .goc{position:absolute;top:8px;left:10px;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.mh .giua{font-size:13px;opacity:.55}
+.mh .het{display:flex;flex-direction:column;align-items:center;gap:6px}
+.mh .het b{font-size:22px;font-weight:600;line-height:1.1}
+.mh .het small{opacity:.55;font-size:12px}
+.mh .het .q{width:74px;height:74px;background:#e9e6d7;border-radius:6px;padding:5px}
+.mh .het .q svg{display:block;width:100%;height:100%}
+.nk{margin:0;padding:0;list-style:none;font-size:12px;color:#6d5f58;max-height:96px;overflow:auto}
+#mo{display:none;position:fixed;inset:0;background:rgba(20,8,8,.6);align-items:center;justify-content:center;padding:16px}
+#mo.hien{display:flex}
+#mo .h{background:var(--nen);border-radius:14px;padding:16px;width:min(380px,100%)}
+#mo .q{background:#fff;border:1px solid var(--ke);border-radius:12px;padding:14px;margin:10px 0;text-align:center}
+#mo .q svg{width:220px;height:220px}
+#mo p{margin:8px 0 0;font-size:13px}
+</style>
+</head>
+<body>
+<header><b>Mirafilm Selfbooth</b><span class="chip">BẢN THỬ · dữ liệu giả lập</span><span class="tt" id="tt"></span></header>
+<section class="gl">
+  <h2>Bảng giả lập (chỉ có ở bản thử)</h2>
+  <p>Mỗi PC phòng chạy một «agent» tự đếm giờ, tự hiện màn hình phòng và tự đẩy ảnh lên Drive. Trang này chỉ gửi lệnh qua internet, không cần 3 máy chung mạng LAN. Thời gian chạy nhanh gấp 10 để xem cho nhanh.</p>
+  <div class="h">
+    <label>Đường truyền lệnh <select id="tre"><option value="400">Thời gian thực (~0,4 giây)</option><option value="4000">Qua Google Sheet (~4 giây)</option></select></label>
+    <label><input type="checkbox" data-mat="0"> Rút mạng Phòng 1</label>
+    <label><input type="checkbox" data-mat="1"> Rút mạng Phòng 2</label>
+  </div>
+</section>
+<main id="ds"></main>
+<div id="mo"><div class="h"><h3 style="margin:0;font-size:12px;color:var(--mo)">KHÁCH HÔM NAY</h3><select class="k" id="mok" style="margin-top:6px"></select><div class="q" id="moq"></div><p>Khách quét bằng điện thoại để chọn ảnh in và tải ảnh gốc.</p><div class="luoi c2"><button class="nut chinh" id="mocp">Copy tin nhắn</button><button class="nut" id="mox">Đóng</button></div></div></div>
+<script src="../chon-anh/qrcode.min.js"></script>
+<script>
+// ===== BẢN THỬ: mọi thứ chạy giả lập ngay trong trang (không có khách thật, không gọi máy chủ) =====
+var TOC = 10, THU = 5, GOI = [5, 10, 15];
+var SIM = { tre: 400 };
+var KHACH = [{ dong: 412, ten: 'Hảo', goi: 10, gio: '15:02' }, { dong: 413, ten: 'Minh Anh', goi: 5, gio: '15:06' }, { dong: 414, ten: 'Linh Chi', goi: 15, gio: '15:10' }, { dong: 415, ten: 'Trâm', goi: 5, gio: '15:14' }];
+var XONG = [{ so: 12, ten: 'Thư' }], SO = 13, MA = 0;
+function $(q, g) { return (g || document).querySelector(q); }
+function mmss(ms) { var s = Math.max(0, Math.ceil(ms * TOC / 1000)); return ('0' + Math.floor(s / 60)).slice(-2) + ':' + ('0' + s % 60).slice(-2); }
+function gio() { var d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+function qrSvg(u) { var q = qrcode(0, 'M'); q.addData(u); q.make(); var n = q.getModuleCount(), p = ''; for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) p += 'M' + c + ' ' + r + 'h1v1h-1z'; return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + n + ' ' + n + '" shape-rendering="crispEdges"><path fill="#1c0e0e" d="' + p + '"/></svg>'; }
+
+// ---------- AGENT PHÒNG (giả lập chương trình chạy trên từng PC phòng) ----------
+function Agent(i, ten) { this.i = i; this.ten = ten; this.mang = true; this.s = null; this.qr = 0; this.nk = []; this.cho = []; this.ma = 0; this.chup = 0; this.len = 0; }
+Agent.prototype.ghi = function (t) { this.nk.unshift(gio() + '  ' + t); this.nk.length = Math.min(this.nk.length, 12); };
+Agent.prototype.dai = function () { return this.s.goi * 60000 / TOC + (this.s.test ? 0 : 15000 / TOC); };
+Agent.prototype.chay = function () { var s = this.s; s.tt = 'chay'; s.het = Date.now() + this.dai(); s.tong = this.dai(); };
+Agent.prototype.nhan = function (c) {
+  var s = this.s, n = Date.now(); this.ma = c.ma;
+  if (c.l === 'batdau' && !s) {
+    this.qr = 0;
+    this.s = { khach: c.khach, goi: c.goi, dong: c.dong, test: !!c.test, so: c.test ? 0 : SO++, tt: 'thu', thu: 0, anh: 0, len: 0, tong: 0 };
+    this.ghi(c.test ? 'Test máy · 1′' : 'Bắt đầu ' + this.s.so + '. ' + c.khach + ' · gói ' + c.goi + '′');
+    if (c.test) this.chay();
+    this.chup = n + 900;
+  } else if (!s) { if (c.l === 'anqr') this.qr = 0; return; }
+  else if (c.l === 'chaygio' && s.tt === 'thu') this.chay();
+  else if (c.l === 'tamdung' && s.tt === 'chay') { s.tt = 'dung'; s.con = s.het - n; this.ghi('Tạm dừng ' + s.khach); }
+  else if (c.l === 'tieptuc' && s.tt === 'dung') { s.tt = 'chay'; s.het = n + s.con; this.ghi('Tiếp tục ' + s.khach); }
+  else if (c.l === 'them1') {
+    var th = 60000 / TOC;
+    if (s.tt === 'het') { s.tt = 'chay'; s.het = n + th; this.qr = 0; } else if (s.tt === 'dung') s.con += th; else if (s.tt === 'chay') s.het += th;
+    s.tong += th; this.ghi('+1 phút – ' + s.khach);
+  } else if (c.l === 'chuplai') { s.tt = 'thu'; s.thu = 0; this.qr = 0; this.ghi('↺ Chụp lại từ đầu – ' + s.khach + ' (giữ ' + s.anh + ' ảnh)'); }
+  else if (c.l === 'ketthuc') this.xong();
+  else if (c.l === 'anqr') this.qr = 0;
+};
+Agent.prototype.hetGio = function () { var s = this.s; s.tt = 'het'; s.dong_luc = Date.now() + 20000 / TOC; this.qr = Date.now() + 60000 / TOC; };
+Agent.prototype.xong = function () {
+  var s = this.s; if (!s) return;
+  this.ghi(s.test ? 'Test máy xong · ' + s.anh + ' ảnh (không tính khách)' : 'Xong ' + s.so + '. ' + s.khach + ' — gói ' + s.goi + '′, ' + s.anh + ' ảnh');
+  if (!s.test) XONG.unshift({ so: s.so, ten: s.khach });
+  if (!this.qr) this.qr = Date.now() + 60000 / TOC;
+  this.vua = s; this.s = null;
+};
+Agent.prototype.tick = function () {   // chạy ngay trên PC phòng: có mạng hay không vẫn đếm giờ
+  var s = this.s, n = Date.now();
+  if (this.qr && n > this.qr) this.qr = 0;
+  if (this.mang && this.cho.length) { var c; while ((c = this.cho.shift())) this.nhan(c); s = this.s; }
+  if (!s) return;
+  if ((s.tt === 'thu' || s.tt === 'chay') && n > this.chup) {   // khách bấm remote
+    this.chup = n + 500 + Math.random() * 900; s.anh++;
+    if (s.tt === 'thu' && ++s.thu > THU) this.chay();
+  }
+  if (this.mang && !s.test && s.len < s.anh && n > this.len) { this.len = n + 350; s.len++; }   // ảnh lên Drive khi có mạng
+  if (s.tt === 'chay' && n >= s.het) this.hetGio();
+  if (s.tt === 'het' && n >= s.dong_luc) this.xong();
+};
+Agent.prototype.anh = function () { return JSON.parse(JSON.stringify({ s: this.s, qr: this.qr, nk: this.nk, ma: this.ma, vua: this.vua || null })); };
+
+// ---------- TRUNG TÂM (đường truyền qua internet, có độ trễ) ----------
+var A = [new Agent(0, 'Phòng 1 · The Prologue'), new Agent(1, 'Phòng 2 · The Drama')];
+var P = A.map(function (a) { return { v: a.anh(), luc: Date.now(), cho: null }; });   // điều bảng điều khiển biết về từng phòng
+function gui(i, c, nhan) {
+  c.ma = ++MA; P[i].cho = { ma: c.ma, nhan: nhan };
+  setTimeout(function () { if (A[i].mang) A[i].nhan(c); else A[i].cho.push(c); }, SIM.tre);
+}
+function baoVe() { A.forEach(function (a, i) { if (!a.mang) return; var v = a.anh(); setTimeout(function () { P[i].v = v; P[i].luc = Date.now(); if (P[i].cho && v.ma >= P[i].cho.ma) P[i].cho = null; }, Math.min(SIM.tre, 1500) / 2); }); }
+
+// ---------- BẢNG ĐIỀU KHIỂN ----------
+var E = [];
+function dung() {
+  $('#ds').innerHTML = A.map(function (a, i) {
+    return '<section class="phong" data-i="' + i + '"><div class="dau"><h1>' + a.ten + '</h1><span class="pill" data-e="pill"></span><span class="ag" data-e="ag"></span></div>' +
+      '<div class="bao" data-e="bao"></div>' +
+      '<div class="the"><h3>KHÁCH</h3><select class="k" data-e="kh"></select><div class="goi" data-e="gois">' + GOI.map(function (g) { return '<button data-goi="' + g + '">' + g + ' phút</button>'; }).join('') + '</div></div>' +
+      '<div class="the"><h3>LƯỢT CHỤP</h3><div data-e="vao"><button class="nut chinh to" data-l="batdau">BẮT ĐẦU</button><div class="luoi"><button class="nut" data-l="test">Test máy (không cần dòng sheet, không lên Drive)</button></div><p class="gy" data-e="gy">Chọn khách và gói rồi bấm Bắt đầu. ' + THU + ' tấm đầu là chụp thử.</p></div>' +
+      '<div data-e="dang" hidden><div class="dh"><div class="so" data-e="so"></div><div class="tt"><b data-e="t1"></b><span data-e="t2"></span></div></div><div class="tien"><i data-e="tien"></i></div>' +
+      '<div class="luoi c3"><button class="nut" data-l="chaygio">Chạy giờ ngay</button><button class="nut" data-l="tamdung" data-e="td">Tạm dừng</button><button class="nut" data-l="ketthuc">Kết thúc sớm</button></div>' +
+      '<div class="luoi c2"><button class="nut nhe" data-l="chuplai">↺ Chụp lại từ đầu</button><button class="nut nhe" data-l="them1">+1 phút</button></div></div>' +
+      '<div class="lenh" data-e="lenh"></div></div>' +
+      '<div class="the"><h3>GỬI KHÁCH CHỌN ẢNH</h3><div class="luoi c2" style="margin-top:0"><button class="nut chinh" data-l="copy">Copy tin nhắn</button><button class="nut" data-l="copyen">Copy (EN)</button><button class="nut" data-l="qrquay">QR tại quầy</button><button class="nut" data-l="anqr">Ẩn QR phòng</button></div></div>' +
+      '<div class="the"><h3>MÀN HÌNH TRONG PHÒNG (agent tự hiện, không cần mạng)</h3><div class="mh" data-e="mh"></div></div>' +
+      '<div class="the" style="margin-bottom:0"><h3>NHẬT KÝ PHÒNG</h3><ul class="nk" data-e="nk"></ul></div></section>';
+  }).join('');
+  [].forEach.call(document.querySelectorAll('.phong'), function (el, i) {
+    var e = { el: el, goi: 0, dsk: '' };
+    [].forEach.call(el.querySelectorAll('[data-e]'), function (x) { e[x.dataset.e] = x; });
+    E[i] = e;
+  });
+}
+function dat(el, t) { if (el.textContent !== t) el.textContent = t; }
+function html(el, h) { if (el._h !== h) { el._h = h; el.innerHTML = h; } }
+function ve(i) {
+  var e = E[i], p = P[i], s = p.v.s, n = Date.now(), mat = n - p.luc > 2500 + SIM.tre, a = A[i];
+  // danh sách khách đã thu tiền, chưa chụp
+  var dang = P.map(function (x) { return x.v.s && x.v.s.dong; }).concat(P.map(function (x) { return x.cho && x.cho.dong; }));
+  var ds = KHACH.filter(function (k) { return dang.indexOf(k.dong) < 0 && !k.xong; });
+  var sig = ds.map(function (k) { return k.dong; }).join();
+  if (sig !== e.dsk) {
+    var cu = e.kh.value; e.dsk = sig;
+    e.kh.innerHTML = '<option value="">Chọn khách đã thu tiền…</option>' + ds.map(function (k) { return '<option value="' + k.dong + '">' + k.ten + ' · ' + k.goi + ' phút · ' + k.gio + ' (dòng ' + k.dong + ')</option>'; }).join('');
+    e.kh.value = cu; if (e.kh.value !== cu) { e.kh.value = ''; }
+  }
+  [].forEach.call(e.gois.children, function (b) { b.classList.toggle('chon', +b.dataset.goi === e.goi); });
+  // trạng thái
+  var ten = { thu: ['● Chụp thử', '#b4530c', '#fde9d9'], chay: ['● Đang chụp', '#b4530c', '#fde9d9'], dung: ['● Tạm dừng', '#1565c0', '#e1edfb'], het: ['● Hết giờ', '#b00020', '#fde4e4'] };
+  var pl = mat ? ['● Mất kết nối', '#fff', '#b00020'] : s ? ten[s.tt] : ['● Trống', '#2e7d32', '#e3f1e6'];
+  dat(e.pill, pl[0]); e.pill.style.color = pl[1]; e.pill.style.background = pl[2];
+  dat(e.ag, mat ? 'Agent phòng: mất mạng ' + Math.round((n - p.luc) / 1000) + ' giây' : 'Agent phòng: trực tuyến'); e.ag.classList.toggle('mat', mat);
+  e.bao.classList.toggle('hien', mat);
+  dat(e.bao, mat ? 'PC phòng đang mất mạng. Lượt chụp trong phòng vẫn chạy bình thường; lệnh bấm ở đây sẽ tới ngay khi có mạng lại.' : '');
+  e.vao.hidden = !!s; e.dang.hidden = !s; e.kh.disabled = !!s;
+  if (s) {
+    var con = s.tt === 'chay' ? s.het - n : s.tt === 'dung' ? s.con : 0;
+    dat(e.so, s.tt === 'thu' ? 'Thử ' + Math.min(s.thu, THU) + '/' + THU : s.tt === 'het' ? 'HẾT GIỜ' : mmss(con));
+    e.so.style.color = s.tt === 'thu' ? 'var(--cam)' : s.tt === 'dung' ? 'var(--lam)' : s.tt === 'het' || (s.tt === 'chay' && con * TOC < 60000) ? 'var(--loi)' : 'var(--do)';
+    e.so.style.fontSize = s.tt === 'thu' || s.tt === 'het' ? '28px' : '';
+    dat(e.t1, s.test ? 'Test máy' : s.so + '. ' + s.khach + ' · gói ' + s.goi + '′ (+15″)');
+    dat(e.t2, s.test ? s.anh + ' ảnh · test, không lên Drive' : s.anh + ' ảnh · ' + s.len + ' đã lên Drive' + (mat ? ' (số liệu lúc còn mạng)' : ''));
+    e.tien.style.width = (s.tt === 'thu' ? Math.min(s.thu, THU) / THU : s.tong ? Math.max(0, con / s.tong) : 0) * 100 + '%';
+    dat(e.td, s.tt === 'dung' ? '▶ Tiếp tục' : 'Tạm dừng'); e.td.dataset.l = s.tt === 'dung' ? 'tieptuc' : 'tamdung';
+    e.td.disabled = s.tt === 'het' || s.tt === 'thu';
+    $('[data-l=chaygio]', e.el).disabled = s.tt !== 'thu';
+  } else if (p.v.vua && !e.kh.value) dat(e.gy, p.v.vua.test ? 'Test máy xong · ' + p.v.vua.anh + ' ảnh (không tính khách).' : 'Vừa xong: ' + p.v.vua.so + '. ' + p.v.vua.khach + ' · ' + p.v.vua.anh + ' ảnh. Gửi tin nhắn cho khách ở khung dưới.');
+  dat(e.lenh, p.cho ? 'Đang gửi lệnh «' + p.cho.nhan + '»… ' + (a.mang ? '' : '(chờ phòng có mạng lại)') : '');
+  var co = (s && !s.test) || (p.v.vua && !p.v.vua.test);
+  $('[data-l=copy]', e.el).disabled = $('[data-l=copyen]', e.el).disabled = !co;
+  html(e.nk, p.v.nk.map(function (t) { return '<li>' + t + '</li>'; }).join(''));
+  // màn hình trong phòng: lấy thẳng từ agent (sự thật trong phòng), không qua mạng
+  var t = a.s, m;
+  if (a.qr && (!t || t.tt === 'het')) m = '<div class="het"><b>Hết giờ</b><small>Time’s up</small><div class="q">' + (e.qrsvg || (e.qrsvg = qrSvg('https://mirafilm.github.io/chon-anh/'))) + '</div></div>';
+  else if (!t) m = '<span class="giua">Camera trực tiếp</span>';
+  else m = '<span class="goc" style="color:' + (t.tt === 'het' || (t.tt === 'chay' && (t.het - n) * TOC < 60000) ? '#ff6b6b' : '#fff') + '">' + (t.tt === 'thu' ? 'CHỤP THỬ ' + Math.min(t.thu, THU) + '/' + THU : t.tt === 'dung' ? 'TẠM DỪNG ' + mmss(t.con) : t.tt === 'het' ? '00:00' : mmss(t.het - n)) + '</span><span class="giua">Camera trực tiếp</span>';
+  html(e.mh, m);
+}
+function nhay(b, t) { var c = b.textContent; b.textContent = t; setTimeout(function () { b.textContent = c; }, 1500); }
+document.addEventListener('click', function (ev) {
+  var b = ev.target.closest('button'); if (!b) return;
+  var ph = b.closest('.phong'), i = ph ? +ph.dataset.i : -1, e = E[i];
+  if (b.dataset.goi) { e.goi = +b.dataset.goi; return ve(i); }
+  var l = b.dataset.l; if (!l) return;
+  if (l === 'batdau') {
+    var k = KHACH.filter(function (x) { return String(x.dong) === e.kh.value; })[0];
+    if (!k) return nhay(b, 'Chưa chọn khách'); if (!e.goi) return nhay(b, 'Chưa chọn gói');
+    gui(i, { l: 'batdau', khach: k.ten, goi: e.goi, dong: k.dong }, 'Bắt đầu ' + k.ten); P[i].cho.dong = k.dong; k.xong = 1; e.kh.value = ''; e.goi = 0;
+  } else if (l === 'test') gui(i, { l: 'batdau', khach: 'Test máy', goi: 1, test: 1 }, 'Test máy');
+  else if (l === 'copy' || l === 'copyen') nhay(b, 'Đã copy ✓');
+  else if (l === 'qrquay') moQr();
+  else if (l === 'chuplai') { if (confirm('Chụp lại từ đầu?\nĐồng hồ về lại lúc chưa chạy, khách chụp thử lại ' + THU + ' tấm. Giữ nguyên dòng sheet, link và ảnh đã chụp.')) gui(i, { l: l }, b.textContent.trim()); }
+  else gui(i, { l: l }, b.textContent.trim());
+});
+document.addEventListener('change', function (ev) {
+  var t = ev.target;
+  if (t.id === 'tre') SIM.tre = +t.value;
+  if (t.dataset.mat !== undefined) A[+t.dataset.mat].mang = !t.checked;
+  if (t.classList.contains('k') && t.closest('.phong')) { var i = +t.closest('.phong').dataset.i, k = KHACH.filter(function (x) { return String(x.dong) === t.value; })[0]; if (k) E[i].goi = k.goi; ve(i); }
+  if (t.id === 'mok') veQr();
+});
+function moQr() { $('#mok').innerHTML = XONG.map(function (x) { return '<option>' + x.so + '. ' + x.ten + '</option>'; }).join(''); veQr(); $('#mo').classList.add('hien'); }
+function veQr() { $('#moq').innerHTML = qrSvg('https://mirafilm.github.io/chon-anh/?khach=' + encodeURIComponent($('#mok').value)); }
+$('#mox').onclick = function () { $('#mo').classList.remove('hien'); };
+$('#mocp').onclick = function () { nhay(this, 'Đã copy ✓'); };
+dung();
+setInterval(function () { A.forEach(function (a) { a.tick(); }); A.forEach(function (_, i) { ve(i); }); dat($('#tt'), 'Trung tâm: trực tuyến · ' + gio()); }, 200);
+setInterval(baoVe, 500); baoVe();
+</script>
+</body>
+</html>
