@@ -12,7 +12,9 @@
 <title>Chọn ảnh ghép khung · Mirafilm</title>
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://drive.google.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <style>
 :root{--nau:#520A0A;--the:#E9E6D7;--chu:#2b1414;--mo:#7d6f66;--do:#a3241b;--vien:#d9cfbb;--nen:#f7f4ec}
 *{box-sizing:border-box}
@@ -265,9 +267,35 @@ function batDau() {
     if (S.het) theoDoiGhep();
     if (S.ghep && S.ghep.length) taiIds(S.ghep.map(function (x) { return x.id; }), 640);
     if (!S.anh.length) { $('main').innerHTML = '<p>' + T('dangLenP') + '</p>'; return; }
-    ve(); for (var j = 0; j < 3; j++) taiAnh(j * 6);
+    ve();
+    thuTruc(function (ok) {
+      if (ok) { ganTruc(S.anh.map(function (a) { return a.id; })); ve(); }
+      else for (var j = 0; j < 3; j++) taiAnh(j * 6);
+      if (window.requestIdleCallback) requestIdleCallback(function () { boDoMat().catch(function () {}); }, { timeout: 8000 });
+      else setTimeout(function () { boDoMat().catch(function () {}); }, 4000);   // tải sẵn bộ nhận diện mặt khi rảnh
+    });
   }).catch(function (e) { $('main').innerHTML = '<p>' + T('khongMo', esc(loiDich(e.message || e))) + '</p>'; });
 }
+// ảnh xem trước: ưu tiên lấy thẳng ảnh thu nhỏ của Drive (nhanh, tải song song, có bộ nhớ đệm);
+// trình duyệt chặn (Instagram...) hoặc ảnh vừa lên chưa có ảnh thu nhỏ -> lấy qua máy chủ như cũ
+var DRV = 'https://drive.google.com/thumbnail?sz=w400&id=';
+function thuTruc(xong) {
+  if (S.truc !== undefined || S.demo) return xong(!!S.truc);
+  var a = S.anh[0], im = new Image(), da = false;
+  function kq(ok) { if (da) return; da = true; S.truc = ok; xong(ok); }
+  im.onload = function () { kq(im.naturalWidth > 50); };
+  im.onerror = function () { kq(false); };
+  setTimeout(function () { kq(false); }, 4000);
+  im.src = DRV + encodeURIComponent(a.id);
+}
+function ganTruc(ids) { ids.forEach(function (id) { if (!S.img[id]) S.img[id] = DRV + encodeURIComponent(id); }); }
+document.addEventListener('error', function (e) {  // ảnh Drive lỗi -> lấy bản qua máy chủ cho đúng tấm đó
+  var t = e.target, u = t && t.tagName === 'IMG' && t.getAttribute('src') || '';
+  if (u.indexOf(DRV) !== 0) return;
+  var id = decodeURIComponent(u.slice(DRV.length));
+  if (t.closest && t.closest('.tile')) t.remove();   // ve() se gan lai anh moi vao o luoi
+  if (S.img[id] === u) { delete S.img[id]; S.loiTruc = (S.loiTruc || 0) + 1; taiIds([id], 400); }
+}, true);
 // tải ảnh xem trước theo lô 6 tấm, 3 lô chạy song song
 function taiAnh(tu, lan) {
   var ids = S.anh.slice(tu, tu + 6).map(function (a) { return a.id; });
@@ -286,7 +314,9 @@ function capNhat() {
     S.dangLen = r.tuoi < 150 && Date.now() - S.luc0 < 600000;
     if (dau && !S.anh.length) { if (S.dangLen) setTimeout(capNhat, 15000); return; }
     if (dau) { var m = $('main'); if (m) m.remove(); }
-    ve(); taiIds(S.anh.filter(function (a) { return !S.img[a.id]; }).map(function (a) { return a.id; }), 400);
+    var thieu = S.anh.filter(function (a) { return !S.img[a.id]; }).map(function (a) { return a.id; });
+    if (S.truc) ganTruc(thieu); else taiIds(thieu, 400);
+    ve();
     if (S.dangLen) setTimeout(capNhat, 15000);
   }).catch(function () { if (Date.now() - S.luc0 < 600000) setTimeout(capNhat, 20000); });
 }
