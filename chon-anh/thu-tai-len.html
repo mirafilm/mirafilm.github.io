@@ -111,8 +111,13 @@ button:focus-visible{outline:2px solid var(--do);outline-offset:2px}
 .them.day{opacity:.45;cursor:default}
 .tile .dc{position:absolute;left:6px;top:6px;background:var(--the);color:var(--nau);font-size:10px;font-weight:600;border-radius:6px;padding:2px 6px}
 .tile .dc.nho{background:#e9c46a;color:#3a2a00}
+.tile.nho{outline:3px solid #e9c46a;outline-offset:-3px}
+.tile.nho.used{outline-color:#e9c46a}
+.slot.nho{outline:3px solid #e9c46a;outline-offset:-2px;z-index:2}
+.uphd{margin:6px 0 10px;padding:8px 12px;border-radius:10px;background:rgba(107,30,38,.06);font-size:12px;line-height:1.45;color:var(--mo);text-align:center;text-wrap:balance}
+.lh{gap:12px}.lh .lb{text-align:right}
 .zoom .tv{font:inherit;font-size:13px;color:inherit;background:transparent;border:1px solid currentColor;border-radius:8px;padding:5px 10px;opacity:.85;margin-left:auto;margin-right:8px;cursor:pointer}
-.luuy{margin:8px auto 0;max-width:320px;font-size:12px;line-height:1.4;text-align:left;background:rgba(233,196,106,.22);color:#f6ead2;border-radius:8px;padding:8px 10px}
+.luuy{margin:10px auto 0;max-width:320px;font-size:12px;line-height:1.4;text-align:center;text-wrap:balance;border:2px solid #e9c46a;background:rgba(233,196,106,.22);color:#f6ead2;border-radius:8px;padding:8px 10px}
 .tile .n{position:absolute;left:6px;bottom:5px;font-size:12px;font-weight:500;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .tile .t{position:absolute;right:6px;top:6px;background:var(--nau);color:var(--the);font-size:11px;font-weight:500;border-radius:6px;padding:2px 6px}
 .foot{flex:none;background:#fff;border-top:1px solid var(--vien);padding:8px 12px 12px;display:flex;gap:12px;align-items:center}
@@ -223,7 +228,7 @@ var TX = {
     luuGoiY: 'Lưu link để mở lại trang này sau', daCopy: 'Đã copy link. Dán vào Ghi chú hoặc gửi cho chính bạn, hoặc chụp màn hình trang này.',
     khongCopy: 'Chụp màn hình để giữ link này:', ghepTai: 'Bấm vào ảnh để mở và tải về máy.',
     chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', xemH: 'Kiểm tra trước khi in', xemP: 'Chạm vào ô để chỉnh vị trí ảnh', quayLai: 'Quay lại', daDat: 'Đã đặt tấm #{0} vào {1}', gChu: 'Ảnh sẽ đè lên chữ MIRAFILM và nằm dưới các dòng chữ nhỏ. Tránh để chữ nhỏ đè lên mặt.', xoay: 'Xoay dọc điện thoại để chọn ảnh', inNgang: ' · ô in nằm ngang',
-    thuUp: 'BẢN THỬ tải ảnh đã chỉnh – ảnh mẫu, không gửi in thật', upNut: 'Tải ảnh đã chỉnh lên', upDem: '{0}/{1} ảnh', upDay: 'Đã đủ {0} ảnh tải lên', dc: 'Đã chỉnh', dcNho: 'Ảnh nhỏ', upThem: 'Đã thêm {0} ảnh đã chỉnh. Chạm vào ảnh để đặt vào ô.', upNho: ' Có {0} ảnh kích thước nhỏ, in có thể không nét – nên xuất lại ở chất lượng cao nhất.', upQua: 'Mỗi combo tải lên tối đa {0} ảnh.', upLoi: 'Không đọc được {0} tệp (chỉ nhận ảnh JPG, PNG, HEIC).', taiVe: 'Tải về máy', taiVeThu: 'Bản thử: ở trang thật, tấm #{0} sẽ được tải về máy ở cỡ gốc để bạn chỉnh bằng Xingtu, Meitu…', luuY1: 'Có ảnh bạn tự chỉnh: màu in có thể hơi khác màn hình điện thoại.', luuY2: ' Ảnh có nhãn «Ảnh nhỏ» in ra có thể không nét.', upHd: 'Muốn chỉnh ảnh bằng Xingtu / Meitu? Bấm vào ảnh → «Tải về máy», chỉnh xong thì tải lên ở ô đầu tiên.' },
+    thuUp: 'BẢN THỬ tải ảnh đã chỉnh – ảnh mẫu, không gửi in thật', upNut: 'Tải ảnh đã chỉnh lên', upDem: '{0}/{1} ảnh', upDay: 'Đã đủ {0} ảnh tải lên', dc: 'Đã chỉnh', dcNho: 'Ảnh nhỏ', upThem: 'Đã thêm {0} ảnh đã chỉnh.', upNho: ' {0} ảnh viền vàng có kích thước nhỏ, in ra có thể không nét.', upQua: 'Mỗi combo tải lên tối đa {0} ảnh.', upLoi: 'Không đọc được {0} tệp (chỉ nhận ảnh JPG, PNG, HEIC).', taiVe: 'Tải về máy', xoaUp: 'Xoá ảnh này', daXoa: 'Đã xoá ảnh #{0}.', taiVeThu: 'Bản thử: ở trang thật, tấm #{0} sẽ được tải về máy ở cỡ gốc để bạn chỉnh bằng Xingtu, Meitu…', luuY1: 'Ảnh có viền vàng là ảnh nhỏ, in ra có thể không nét.', luuY2: '', upHd: 'Bạn muốn tự chỉnh ảnh bằng app bên ngoài (Xingtu/Meitu/...)? Bấm vào ảnh, tải về máy, chỉnh xong thì upload lên lại nhé' },
   en: { tieude: 'Choose Photos & Frame', tapchi: 'Magazine', bao: 'Newspaper', o: 'Slot ', tam: 'photo #', chuaco: 'empty', ngang: ' · landscape',
     mau: 'Color', td: 'Black & white', mau_t: 'color', td_t: 'black & white', soTam: ' photos', bamXem: 'Tap a photo to zoom in',
     daChon: 'Selected ', kiemTra: 'Check, then tap Send', con: '', oTrong: ' slots left', dangGui: 'Sending…', gui: 'Send to print',
@@ -240,7 +245,7 @@ var TX = {
     luuGoiY: 'Save this link to reopen the page later', daCopy: 'Link copied. Paste it into Notes or send it to yourself – or take a screenshot of this page.',
     khongCopy: 'Take a screenshot to keep this link:', ghepTai: 'Tap the image to open and download it.',
     chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', xemH: 'Check before printing', xemP: 'Tap a slot to adjust its photo', quayLai: 'Back', daDat: 'Photo #{0} placed in {1}', gChu: 'Your photo covers the MIRAFILM title and sits under the small text. Keep the small text off faces.', xoay: 'Please rotate your phone to portrait', inNgang: ' · printed sideways',
-    thuUp: 'DEMO: upload edited photos – sample photos, nothing is printed', upNut: 'Upload edited photos', upDem: '{0}/{1} photos', upDay: 'All {0} uploads used', dc: 'Edited', dcNho: 'Low-res', upThem: '{0} edited photo(s) added. Tap a photo to place it.', upNho: ' {0} photo(s) are low resolution and may print soft – export at the highest quality.', upQua: 'Up to {0} uploads per combo.', upLoi: 'Could not read {0} file(s) (JPG, PNG or HEIC only).', taiVe: 'Download', taiVeThu: 'Demo: on the live page, photo #{0} downloads at full size so you can edit it in Xingtu, Meitu…', luuY1: 'Some photos were edited by you: printed colors may differ slightly from your screen.', luuY2: ' Photos tagged “Low-res” may print soft.', upHd: 'Want to retouch in Xingtu / Meitu? Tap a photo → “Download”, then upload the edited version in the first tile.' }
+    thuUp: 'DEMO: upload edited photos – sample photos, nothing is printed', upNut: 'Upload edited photos', upDem: '{0}/{1} photos', upDay: 'All {0} uploads used', dc: 'Edited', dcNho: 'Low-res', upThem: '{0} edited photo(s) added.', upNho: ' {0} photo(s) with a yellow border are low resolution and may print soft.', upQua: 'Up to {0} uploads per combo.', upLoi: 'Could not read {0} file(s) (JPG, PNG or HEIC only).', taiVe: 'Download', xoaUp: 'Remove photo', daXoa: 'Photo #{0} removed.', taiVeThu: 'Demo: on the live page, photo #{0} downloads at full size so you can edit it in Xingtu, Meitu…', luuY1: 'Photos with a yellow border are low resolution and may print soft.', luuY2: '', upHd: 'Want to retouch your photos in another app (Xingtu/Meitu/...)? Tap a photo, download it, then upload the edited version here' }
 };
 // loi tu may chu (tieng Viet) -> tieng Anh
 var LOI_EN = [[/Quầy chưa ghi nhận/, 'The counter has not registered this session yet. Please let our staff know – your selection is kept'],
@@ -395,6 +400,21 @@ function ghepHtml() {
 }
 // ---------- khách tải ảnh đã chỉnh (Xingtu, Meitu…) lên để ghép khung ----------
 var UP_MOI_COMBO = 9, UP_NHO = 1200;   // cạnh ngắn dưới 1200px -> cảnh báo in không nét
+function themHtml() {
+  var nUp = S.anh.filter(function (a) { return a.up; }).length, toiDa = upToiDa();
+  return '<label class="them' + (nUp >= toiDa ? ' day' : '') + '" id="them"><input type="file" id="up" accept="image/*" multiple' + (nUp >= toiDa ? ' disabled' : '') + '>' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>' +
+    '<span>' + (nUp >= toiDa ? T('upDay', toiDa) : T('upNut')) + '</span><small>' + T('upDem', nUp, toiDa) + '</small></label>';
+}
+function xoaUp(i) {   // xoá ảnh khách tải lên nhầm: gỡ khỏi mọi ô (cả các khung khác), dồn lại số thứ tự trong S.gan
+  var a = S.anh[i]; if (!a || !a.up) return;
+  function don(g) { Object.keys(g).forEach(function (o) { if (g[o] === i) delete g[o]; else if (g[o] > i) g[o]--; }); }
+  don(S.gan); Object.keys(S.ganK).forEach(function (k) { if (S.ganK[k] && S.ganK[k].gan) don(S.ganK[k].gan); });
+  Object.keys(S.cat).forEach(function (k) { if (S.cat[k].id === a.id) delete S.cat[k]; });
+  S.anh.splice(i, 1); try { URL.revokeObjectURL(S.img[a.id]); } catch (e) {}
+  delete S.img[a.id]; delete S.lon[a.id]; delete S.tl[a.id]; delete S.mat[a.id];
+  S.zoom = null; S.snk = null; ve(); toast(T('daXoa', a.so));
+}
 function upToiDa() { return UP_MOI_COMBO * Math.max(1, S.tong || 1); }
 document.addEventListener('change', function (e) {
   var inp = e.target; if (inp.id !== 'up') return;
@@ -410,7 +430,7 @@ document.addEventListener('change', function (e) {
   fs.forEach(function (f) {
     var u = URL.createObjectURL(f), im = new Image();
     im.onload = function () {
-      var n = S.anh.filter(function (a) { return a.up; }).length + 1, id = 'up' + Date.now() + '_' + n;
+      var n = S.upN = (S.upN || 0) + 1, id = 'up' + Date.now() + '_' + n;
       var a = { id: id, ten: 'Chinh_' + pad(n) + '.jpg', so: 'C' + n, up: 1, nho: Math.min(im.naturalWidth, im.naturalHeight) < UP_NHO ? 1 : 0, w: im.naturalWidth, h: im.naturalHeight };
       S.anh.push(a); S.img[id] = u; S.lon[id] = u; S.tl[id] = im.naturalWidth / im.naturalHeight;
       them++; nho += a.nho; het();
@@ -615,7 +635,7 @@ function oHtml(r, i, k, on, big) {
   else inner = pad(i + 1);
   if (gi !== undefined && src(gi) && (S.khungLon || S.xem) && !big) inner += '<i class="sua"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg></i>';
   var tag = big ? 'div' : 'button';
-  return '<' + tag + ' class="slot' + (on ? ' on' : '') + (sh ? ' sh' : '') + '" style="' + st + '"' + (big ? '' : ' data-o="' + i + '" aria-label="Chọn ' + oTen(i) + '"') + '>' +
+  return '<' + tag + ' class="slot' + (on ? ' on' : '') + (sh ? ' sh' : '') + (gi !== undefined && S.anh[gi] && S.anh[gi].nho ? ' nho' : '') + '" style="' + st + '"' + (big ? '' : ' data-o="' + i + '" aria-label="Chọn ' + oTen(i) + '"') + '>' +
     '<span class="in' + (sh ? '' : ' r') + '" style="font-size:' + (big ? 11 : 9) + 'px;' + (sh ? mask(r[4]) : '') + '">' + inner + '</span></' + tag + '>';
 }
 function frameHtml(w, big) {
@@ -669,17 +689,14 @@ function ve() {
         '<div class="c"><b>' + oTen(S.act) + '</b><small>' + T('chuaco') + (K.o[S.act][5] ? T('ngang') : '') + '</small></div>') +
       '<button data-k="sau" aria-label="' + T('oSau') + '"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>' +
       '<div class="seg" style="grid-template-columns:1fr 1fr"><button data-k="mau" class="' + (!S.bw ? 'on' : '') + '">' + T('mau') + '</button><button data-k="td" class="' + (S.bw ? 'on' : '') + '">' + T('td') + '</button></div></div></div></div>';
-    var lhd = '<div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + T('soTam') + '</b>' + (S.dangLen ? '<span class="dl">' + T('dangLen') + '</span>' :  '<span class="lb">' + T('bamXem') + '</span>') + '</div><div class="lb" style="margin:-2px 2px 8px;font-size:12px">' + T('upHd') + '</div>';
-    lh = '<div class="list" id="list" data-sig="' + sig + '">' + lhd + '<div class="grid">';
+    var lhd = '<div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + T('soTam') + '</b>' + (S.dangLen ? '<span class="dl">' + T('dangLen') + '</span>' :  '<span class="lb">' + T('bamXem') + '</span>') + '</div>';
+    lh = '<div class="list" id="list" data-sig="' + sig + '">' + lhd + '<div class="uphd" id="uphd">' + T('upHd') + '</div><div class="grid">';
     var dung_ = {}; Object.keys(S.gan).forEach(function (o) { if (+o < tong) dung_[S.gan[o]] = +o; });
-    var nUp = S.anh.filter(function (a) { return a.up; }).length, toiDa = upToiDa();
-    lh += '<label class="them' + (nUp >= toiDa ? ' day' : '') + '"><input type="file" id="up" accept="image/*" multiple' + (nUp >= toiDa ? ' disabled' : '') + '>' +
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"/></svg>' +
-      '<span>' + (nUp >= toiDa ? T('upDay', toiDa) : T('upNut')) + '</span><small>' + T('upDem', nUp, toiDa) + '</small></label>';
+    lh += themHtml();
     var thuTu = S.anh.map(function (_, i) { return i; }).sort(function (x, y) { return (S.anh[y].up ? 1 : 0) - (S.anh[x].up ? 1 : 0) || x - y; });
     thuTu.forEach(function (i) {
       var a = S.anh[i], u = dung_[i] !== undefined;
-      lh += '<button class="tile' + (u ? ' used' : '') + '" data-anh="' + i + '" aria-label="' + T('xemTam') + a.so + '">' + (src(i) ? '<img alt="" loading="lazy" src="' + src(i) + '">' : '') +
+      lh += '<button class="tile' + (u ? ' used' : '') + (a.nho ? ' nho' : '') + '" data-anh="' + i + '" aria-label="' + T('xemTam') + a.so + '">' + (src(i) ? '<img alt="" loading="lazy" src="' + src(i) + '">' : '') +
         (a.up ? '<span class="dc' + (a.nho ? ' nho' : '') + '">' + (a.nho ? T('dcNho') : T('dc')) + '</span>' : '') +
         '<span class="n">#' + esc(a.so) + '</span>' + (u ? '<span class="t">' + oTen(dung_[i]) + '</span>' : '') + '</button>';
     });
@@ -690,7 +707,7 @@ function ve() {
       '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>' + T('chinh') + '</button></div>';
     var coUp = K.o.some(function (_, i) { var a = S.anh[S.gan[i]]; return a && a.up; }), coNho = K.o.some(function (_, i) { var a = S.anh[S.gan[i]]; return a && a.nho; });
     if (S.xem) h += '<div class="klon"><h3>' + T('xemH') + '</h3><div class="lb">' + T('xemP') + '</div>' + frameHtml(Math.min(320, innerWidth - 48)) +
-      (coUp ? '<div class="luuy">' + T('luuY1') + (coNho ? T('luuY2') : '') + '</div>' : '') +
+      (coNho ? '<div class="luuy">' + T('luuY1') + '</div>' : '') +
       '<div class="hai"><button class="btn ghost" data-k="xemdong">' + T('quayLai') + '</button><button class="btn" data-k="guithat" style="background:var(--the);color:var(--nau)">' + T('gui') + '</button></div></div>';
     if (S.khungLon) h += '<div class="klon"><div class="lb">' + (d ? T('chamCo') : T('chamO')) + oTen(S.act) + T('dangChon') + '</div>' + frameHtml(Math.min(320, innerWidth - 48)) +
       '<button class="btn" data-k="dongkhung" style="min-width:160px;background:var(--the);color:var(--nau)">' + T('xong') + '</button></div>';
@@ -701,6 +718,8 @@ function ve() {
   if (cat.length > 1 && giu) {
     oldL.insertAdjacentHTML('beforebegin', cat[0]); oldL.insertAdjacentHTML('afterend', cat[1]);
     var lhEl = oldL.querySelector('.lh'); if (lhEl) lhEl.outerHTML = lhd;
+    if ($('uphd')) $('uphd').textContent = T('upHd');
+    if ($('them')) $('them').outerHTML = themHtml();
     var dg = {}; Object.keys(S.gan).forEach(function (o) { if (+o < tong) dg[S.gan[o]] = +o; });
     [].forEach.call(oldL.querySelectorAll('.tile'), function (b) {
       var i = +b.dataset.anh, u = dg[i] !== undefined, t = b.querySelector('.t');
@@ -730,7 +749,7 @@ function zoomHtml() {
   var note = at === undefined ? (cur !== undefined ? act + T('dangCo') + S.anh[cur].so + T('seThay') : '') :
     (at === S.act ? T('oDay') + act : T('oDay') + oTen(at) + T('chuyen') + act);
   if (!note) note = T('chum');
-  return '<div class="zoom"><div class="h"><span style="font-size:15px;font-weight:500">' + T('tamH') + esc(a.so) + ' · ' + (i + 1) + '/' + S.anh.length + '</span>' + (a.up ? '' : '<button class="tv" data-k="taive">' + T('taiVe') + '</button>') +
+  return '<div class="zoom"><div class="h"><span style="font-size:15px;font-weight:500">' + T('tamH') + esc(a.so) + ' · ' + (i + 1) + '/' + S.anh.length + '</span>' + '<button class="tv" data-k="' + (a.up ? 'xoaup' : 'taive') + '">' + T(a.up ? 'xoaUp' : 'taiVe') + '</button>' +
     '<button data-k="dong" aria-label="' + T('dong') + '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
     '<div class="m"><div class="zimg" id="zimg">' + (src(i) ? '<img alt="" data-k="phong" src="' + (S.lon[a.id] || src(i)) + '">' : '<div style="width:320px;height:213px"></div>') + '</div>' +
     '<button class="ar" style="left:4px" data-k="ztruoc" aria-label="' + T('tTruoc') + '"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>' +
@@ -864,6 +883,7 @@ document.addEventListener('click', function (e) {
     case 'phong': return phongTo(e);
     case 'ztruoc': return moZoom((S.zoom + S.anh.length - 1) % S.anh.length);
     case 'zsau': return moZoom((S.zoom + 1) % S.anh.length);
+    case 'xoaup': return xoaUp(S.zoom);
     case 'taive': return toast(T('taiVeThu', S.anh[S.zoom].so));
     case 'dat': return dat(S.zoom);
     case 'bo': return dat(S.zoom, true);
