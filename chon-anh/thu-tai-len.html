@@ -114,7 +114,12 @@ button:focus-visible{outline:2px solid var(--do);outline-offset:2px}
 .tile.nho{outline:3px solid #e9c46a;outline-offset:-3px}
 .tile.nho.used{outline-color:#e9c46a}
 .slot.nho{outline:3px solid #e9c46a;outline-offset:-2px;z-index:2}
-.uphd{margin:6px 0 10px;padding:8px 12px;border-radius:10px;background:rgba(107,30,38,.06);font-size:12px;line-height:1.45;color:var(--mo);text-align:center;text-wrap:balance}
+.uphd{margin:4px 0 10px;font-size:12px;line-height:1.45;color:var(--mo)}
+.tim{position:absolute;right:0;bottom:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:#fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.65))}
+.tim svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round}
+.tim.on svg{fill:#ef5b6b;stroke:#ef5b6b}
+.taitim{font:inherit;font-size:12px;font-weight:600;border:0;border-radius:14px;padding:5px 12px;background:var(--nau);color:var(--the);cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.taitim svg{width:13px;height:13px;fill:#ef5b6b}
 .lh{gap:12px}.lh .lb{text-align:right}
 .zoom .tv{font:inherit;font-size:13px;color:inherit;background:transparent;border:1px solid currentColor;border-radius:8px;padding:5px 10px;opacity:.85;margin-left:auto;margin-right:8px;cursor:pointer}
 .luuy{margin:10px auto 0;max-width:320px;font-size:12px;line-height:1.4;text-align:center;text-wrap:balance;border:2px solid #e9c46a;background:rgba(233,196,106,.22);color:#f6ead2;border-radius:8px;padding:8px 10px}
@@ -209,7 +214,7 @@ function chuKhungHtml(o, ox, oy, k) {  // ox, oy = góc trên trái của vùng 
     return '<span class="gt" style="' + p + 'width:' + d.w * k + 'px;font-size:' + d.f * k + 'px;text-align:' + (d.a || 'left') + ';' + (d.st || '') + '">' + d.t + '</span>';
   }).join('');
 }
-var S = { ganK: {}, snk: null, xem: false, cat: {}, tl: {}, tlCho: {}, mat: {}, matCho: {}, ce: null, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
+var S = { tim: {}, ganK: {}, snk: null, xem: false, cat: {}, tl: {}, tlCho: {}, mat: {}, matCho: {}, ce: null, qr: /[?&]qr=1/.test(location.search), anBar: false, ghep: null, dangLen: false, luc0: Date.now(), f: '', demo: false, ten: '', anh: [], img: {}, khung: 'valentine', act: 0, gan: {}, bw: false, zoom: null, phong: false, lon: {}, xong: null, dangGui: false, daGui: 0, tong: 0, lan: [], het: false };
 var NN = (function () { try { var v = localStorage.getItem('mf_lang'); if (v) return v; } catch (e) {} var q = /[?&]lang=(vi|en)/.exec(location.search); if (q) return q[1]; return /^vi/i.test(navigator.language || 'vi') ? 'vi' : 'en'; })();
 var TX = {
   vi: { tieude: 'Chọn ảnh ghép khung', tapchi: 'Tạp chí', bao: 'Báo', o: 'Ô ', tam: 'tấm #', chuaco: 'chưa có ảnh', ngang: ' · nằm ngang',
@@ -228,7 +233,7 @@ var TX = {
     luuGoiY: 'Lưu link để mở lại trang này sau', daCopy: 'Đã copy link. Dán vào Ghi chú hoặc gửi cho chính bạn, hoặc chụp màn hình trang này.',
     khongCopy: 'Chụp màn hình để giữ link này:', ghepTai: 'Bấm vào ảnh để mở và tải về máy.',
     chinh: 'Chỉnh vị trí', ceGoiY: 'Kéo để dời ảnh · Chụm 2 ngón để phóng to', ceGiua: 'Căn giữa', chamCo: 'Chạm vào ô có ảnh để chỉnh vị trí · ', xemH: 'Kiểm tra trước khi in', xemP: 'Chạm vào ô để chỉnh vị trí ảnh', quayLai: 'Quay lại', daDat: 'Đã đặt tấm #{0} vào {1}', gChu: 'Ảnh sẽ đè lên chữ MIRAFILM và nằm dưới các dòng chữ nhỏ. Tránh để chữ nhỏ đè lên mặt.', xoay: 'Xoay dọc điện thoại để chọn ảnh', inNgang: ' · ô in nằm ngang',
-    thuUp: 'BẢN THỬ tải ảnh đã chỉnh – ảnh mẫu, không gửi in thật', upNut: 'Tải ảnh đã chỉnh lên', upDem: '{0}/{1} ảnh', upDay: 'Đã đủ {0} ảnh tải lên', dc: 'Đã chỉnh', dcNho: 'Ảnh nhỏ', upThem: 'Đã thêm {0} ảnh đã chỉnh.', upNho: ' {0} ảnh viền vàng có kích thước nhỏ, in ra có thể không nét.', upQua: 'Mỗi combo tải lên tối đa {0} ảnh.', upLoi: 'Không đọc được {0} tệp (chỉ nhận ảnh JPG, PNG, HEIC).', taiVe: 'Tải về máy', xoaUp: 'Xoá ảnh này', daXoa: 'Đã xoá ảnh #{0}.', taiVeThu: 'Bản thử: ở trang thật, tấm #{0} sẽ được tải về máy ở cỡ gốc để bạn chỉnh bằng Xingtu, Meitu…', luuY1: 'Ảnh có viền vàng là ảnh nhỏ, in ra có thể không nét.', luuY2: '', upHd: 'Bạn muốn tự chỉnh ảnh bằng app bên ngoài (Xingtu/Meitu/...)? Bấm vào ảnh, tải về máy, chỉnh xong thì upload lên lại nhé' },
+    thuUp: 'BẢN THỬ tải ảnh đã chỉnh – ảnh mẫu, không gửi in thật', upNut: 'Tải ảnh đã chỉnh lên', upDem: '{0}/{1} ảnh', upDay: 'Đã đủ {0} ảnh tải lên', dc: 'Đã chỉnh', dcNho: 'Ảnh nhỏ', upThem: 'Đã thêm {0} ảnh đã chỉnh.', upNho: ' {0} ảnh viền vàng có kích thước nhỏ, in ra có thể không nét.', upQua: 'Mỗi combo tải lên tối đa {0} ảnh.', upLoi: 'Không đọc được {0} tệp (chỉ nhận ảnh JPG, PNG, HEIC).', taiVe: 'Tải về máy', taiTim: 'Tải {0} ảnh', timThu: 'Bản thử: ở trang thật, {0} ảnh đã thả tim sẽ được tải về máy ở cỡ gốc.', tim: 'Thả tim tấm ', xoaUp: 'Xoá ảnh này', daXoa: 'Đã xoá ảnh #{0}.', taiVeThu: 'Bản thử: ở trang thật, tấm #{0} sẽ được tải về máy ở cỡ gốc để bạn chỉnh bằng Xingtu, Meitu…', luuY1: 'Ảnh có viền vàng là ảnh nhỏ, in ra có thể không nét.', luuY2: '', upHd: 'Muốn tự chỉnh bằng app khác (Xingtu/Meitu…)? Thả tim để tải ảnh về, chỉnh xong upload lại.' },
   en: { tieude: 'Choose Photos & Frame', tapchi: 'Magazine', bao: 'Newspaper', o: 'Slot ', tam: 'photo #', chuaco: 'empty', ngang: ' · landscape',
     mau: 'Color', td: 'Black & white', mau_t: 'color', td_t: 'black & white', soTam: ' photos', bamXem: 'Tap a photo to zoom in',
     daChon: 'Selected ', kiemTra: 'Check, then tap Send', con: '', oTrong: ' slots left', dangGui: 'Sending…', gui: 'Send to print',
@@ -245,7 +250,7 @@ var TX = {
     luuGoiY: 'Save this link to reopen the page later', daCopy: 'Link copied. Paste it into Notes or send it to yourself – or take a screenshot of this page.',
     khongCopy: 'Take a screenshot to keep this link:', ghepTai: 'Tap the image to open and download it.',
     chinh: 'Adjust', ceGoiY: 'Drag to move · Pinch to zoom', ceGiua: 'Re-center', chamCo: 'Tap a filled slot to adjust it · ', xemH: 'Check before printing', xemP: 'Tap a slot to adjust its photo', quayLai: 'Back', daDat: 'Photo #{0} placed in {1}', gChu: 'Your photo covers the MIRAFILM title and sits under the small text. Keep the small text off faces.', xoay: 'Please rotate your phone to portrait', inNgang: ' · printed sideways',
-    thuUp: 'DEMO: upload edited photos – sample photos, nothing is printed', upNut: 'Upload edited photos', upDem: '{0}/{1} photos', upDay: 'All {0} uploads used', dc: 'Edited', dcNho: 'Low-res', upThem: '{0} edited photo(s) added.', upNho: ' {0} photo(s) with a yellow border are low resolution and may print soft.', upQua: 'Up to {0} uploads per combo.', upLoi: 'Could not read {0} file(s) (JPG, PNG or HEIC only).', taiVe: 'Download', xoaUp: 'Remove photo', daXoa: 'Photo #{0} removed.', taiVeThu: 'Demo: on the live page, photo #{0} downloads at full size so you can edit it in Xingtu, Meitu…', luuY1: 'Photos with a yellow border are low resolution and may print soft.', luuY2: '', upHd: 'Want to retouch your photos in another app (Xingtu/Meitu/...)? Tap a photo, download it, then upload the edited version here' }
+    thuUp: 'DEMO: upload edited photos – sample photos, nothing is printed', upNut: 'Upload edited photos', upDem: '{0}/{1} photos', upDay: 'All {0} uploads used', dc: 'Edited', dcNho: 'Low-res', upThem: '{0} edited photo(s) added.', upNho: ' {0} photo(s) with a yellow border are low resolution and may print soft.', upQua: 'Up to {0} uploads per combo.', upLoi: 'Could not read {0} file(s) (JPG, PNG or HEIC only).', taiVe: 'Download', taiTim: 'Download {0}', timThu: 'Demo: on the live page, your {0} hearted photo(s) download at full size.', tim: 'Heart photo ', xoaUp: 'Remove photo', daXoa: 'Photo #{0} removed.', taiVeThu: 'Demo: on the live page, photo #{0} downloads at full size so you can edit it in Xingtu, Meitu…', luuY1: 'Photos with a yellow border are low resolution and may print soft.', luuY2: '', upHd: 'Want to retouch in another app (Xingtu/Meitu…)? Heart photos to download them, then upload your edits.' }
 };
 // loi tu may chu (tieng Viet) -> tieng Anh
 var LOI_EN = [[/Quầy chưa ghi nhận/, 'The counter has not registered this session yet. Please let our staff know – your selection is kept'],
@@ -400,6 +405,7 @@ function ghepHtml() {
 }
 // ---------- khách tải ảnh đã chỉnh (Xingtu, Meitu…) lên để ghép khung ----------
 var UP_MOI_COMBO = 9, UP_NHO = 1200;   // cạnh ngắn dưới 1200px -> cảnh báo in không nét
+function nTim() { return S.anh.filter(function (a) { return S.tim[a.id]; }).length; }
 function themHtml() {
   var nUp = S.anh.filter(function (a) { return a.up; }).length, toiDa = upToiDa();
   return '<label class="them' + (nUp >= toiDa ? ' day' : '') + '" id="them"><input type="file" id="up" accept="image/*" multiple' + (nUp >= toiDa ? ' disabled' : '') + '>' +
@@ -689,7 +695,7 @@ function ve() {
         '<div class="c"><b>' + oTen(S.act) + '</b><small>' + T('chuaco') + (K.o[S.act][5] ? T('ngang') : '') + '</small></div>') +
       '<button data-k="sau" aria-label="' + T('oSau') + '"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>' +
       '<div class="seg" style="grid-template-columns:1fr 1fr"><button data-k="mau" class="' + (!S.bw ? 'on' : '') + '">' + T('mau') + '</button><button data-k="td" class="' + (S.bw ? 'on' : '') + '">' + T('td') + '</button></div></div></div></div>';
-    var lhd = '<div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + T('soTam') + '</b>' + (S.dangLen ? '<span class="dl">' + T('dangLen') + '</span>' :  '<span class="lb">' + T('bamXem') + '</span>') + '</div>';
+    var lhd = '<div class="lh"><b>' + esc(S.ten) + ' · ' + S.anh.length + T('soTam') + '</b>' + (S.dangLen ? '<span class="dl">' + T('dangLen') + '</span>' :   (nTim() ? '<button class="taitim" data-k="taitim"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.600-7.500 10.200-7.500 10.200z"/></svg>' + T('taiTim', nTim()) + '</button>' : '<span class="lb">' + T('bamXem') + '</span>')) + '</div>';
     lh = '<div class="list" id="list" data-sig="' + sig + '">' + lhd + '<div class="uphd" id="uphd">' + T('upHd') + '</div><div class="grid">';
     var dung_ = {}; Object.keys(S.gan).forEach(function (o) { if (+o < tong) dung_[S.gan[o]] = +o; });
     lh += themHtml();
@@ -698,7 +704,8 @@ function ve() {
       var a = S.anh[i], u = dung_[i] !== undefined;
       lh += '<button class="tile' + (u ? ' used' : '') + (a.nho ? ' nho' : '') + '" data-anh="' + i + '" aria-label="' + T('xemTam') + a.so + '">' + (src(i) ? '<img alt="" loading="lazy" src="' + src(i) + '">' : '') +
         (a.up ? '<span class="dc' + (a.nho ? ' nho' : '') + '">' + (a.nho ? T('dcNho') : T('dc')) + '</span>' : '') +
-        '<span class="n">#' + esc(a.so) + '</span>' + (u ? '<span class="t">' + oTen(dung_[i]) + '</span>' : '') + '</button>';
+        '<span class="n">#' + esc(a.so) + '</span>' + (u ? '<span class="t">' + oTen(dung_[i]) + '</span>' : '') +
+        (a.up ? '' : '<span class="tim' + (S.tim[a.id] ? ' on' : '') + '" data-tim="' + i + '" role="button" aria-label="' + T('tim') + a.so + '"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.600-7.500 10.200-7.500 10.200z"/></svg></span>') + '</button>';
     });
     lh += '</div></div>';
     h += '\u0001<div class="foot"><div class="s"><b>' + (S.tong > 1 ? 'Combo ' + Math.min(S.daGui + 1, S.tong) + '/' + S.tong + ' · ' : '') + T('daChon') + d + '/' + tong + '</b><span class="lb">' + (d === tong ? T('kiemTra') : T('con') + (tong - d) + T('oTrong')) + '</span></div>' +
@@ -862,6 +869,8 @@ function phongTo(e) { zTo(Z.s > 1 ? 1 : 2.5, e.clientX, e.clientY); }
   }, { passive: false });
 })();
 document.addEventListener('click', function (e) {
+  var tm = e.target.closest('[data-tim]');
+  if (tm) { var at = S.anh[+tm.dataset.tim]; if (at) { S.tim[at.id] = !S.tim[at.id]; tm.classList.toggle('on', !!S.tim[at.id]); ve(); } return; }
   var b = e.target.closest('button,[data-k="phong"]'); if (!b) return;
   if (b.dataset.nn) return doiNN(b.dataset.nn, true);
   var tong = KHUNG[S.khung].o.length;
@@ -883,6 +892,7 @@ document.addEventListener('click', function (e) {
     case 'phong': return phongTo(e);
     case 'ztruoc': return moZoom((S.zoom + S.anh.length - 1) % S.anh.length);
     case 'zsau': return moZoom((S.zoom + 1) % S.anh.length);
+    case 'taitim': return toast(T('timThu', nTim()));
     case 'xoaup': return xoaUp(S.zoom);
     case 'taive': return toast(T('taiVeThu', S.anh[S.zoom].so));
     case 'dat': return dat(S.zoom);
