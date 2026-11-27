@@ -34,7 +34,7 @@ h1 small{display:block;font-weight:400;font-size:5vmin;letter-spacing:0;opacity:
 (function () {
   var fid = decodeURIComponent(location.hash.replace(/^#/, ''));
   if (!/^[A-Za-z0-9_-]{10,}$/.test(fid)) { document.getElementById('qr').style.visibility = 'hidden'; return; }
-  var url = 'https://mirafilm.github.io/chon-anh/?qr=1#' + fid;
+  var url = 'https://app.mirafilm.vn/chon-anh/?qr=1#' + fid;
   var q = qrcode(0, 'M'); q.addData(url); q.make();
   var n = q.getModuleCount(), p = '';
   for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) p += 'M' + c + ' ' + r + 'h1v1h-1z';

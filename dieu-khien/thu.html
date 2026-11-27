@@ -215,7 +215,7 @@ function ve(i) {
   html(e.nk, p.v.nk.map(function (t) { return '<li>' + t + '</li>'; }).join(''));
   // màn hình trong phòng: lấy thẳng từ agent (sự thật trong phòng), không qua mạng
   var t = a.s, m;
-  if (a.qr && (!t || t.tt === 'het')) m = '<div class="het"><b>Hết giờ</b><small>Time’s up</small><div class="q">' + (e.qrsvg || (e.qrsvg = qrSvg('https://mirafilm.github.io/chon-anh/'))) + '</div></div>';
+  if (a.qr && (!t || t.tt === 'het')) m = '<div class="het"><b>Hết giờ</b><small>Time’s up</small><div class="q">' + (e.qrsvg || (e.qrsvg = qrSvg('https://app.mirafilm.vn/chon-anh/'))) + '</div></div>';
   else if (!t) m = '<span class="giua">Camera trực tiếp</span>';
   else m = '<span class="goc" style="color:' + (t.tt === 'het' || (t.tt === 'chay' && (t.het - n) * TOC < 60000) ? '#ff6b6b' : '#fff') + '">' + (t.tt === 'thu' ? 'CHỤP THỬ ' + Math.min(t.thu, THU) + '/' + THU : t.tt === 'dung' ? 'TẠM DỪNG ' + mmss(t.con) : t.tt === 'het' ? '00:00' : mmss(t.het - n)) + '</span><span class="giua">Camera trực tiếp</span>';
   html(e.mh, m);
@@ -244,7 +244,7 @@ document.addEventListener('change', function (ev) {
   if (t.id === 'mok') veQr();
 });
 function moQr() { $('#mok').innerHTML = XONG.map(function (x) { return '<option>' + x.so + '. ' + x.ten + '</option>'; }).join(''); veQr(); $('#mo').classList.add('hien'); }
-function veQr() { $('#moq').innerHTML = qrSvg('https://mirafilm.github.io/chon-anh/?khach=' + encodeURIComponent($('#mok').value)); }
+function veQr() { $('#moq').innerHTML = qrSvg('https://app.mirafilm.vn/chon-anh/?khach=' + encodeURIComponent($('#mok').value)); }
 $('#mox').onclick = function () { $('#mo').classList.remove('hien'); };
 $('#mocp').onclick = function () { nhay(this, 'Đã copy ✓'); };
 dung();
