@@ -99,6 +99,7 @@ button:disabled{opacity:.5}
 .logo img{display:block;width:118px;max-width:36%;height:auto}
 .tit{text-align:center;color:#E9E6D7;font-size:17px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding-left:.2em;line-height:1.35;margin:24px 0 14px}
 .cnp{text-align:center;margin:0 0 18px}.cnp span{display:inline-block;border:1px solid rgba(233,230,215,.38);border-radius:999px;padding:6px 16px;color:#E9E6D7;font-size:13.5px;font-weight:500;letter-spacing:.01em}
+.nn{position:absolute;top:12px;right:12px;display:flex;border:1px solid rgba(233,230,215,.45);border-radius:999px;overflow:hidden;font-size:12px;font-weight:700;letter-spacing:.06em;z-index:5}.nn a{padding:6px 11px;color:#E9E6D7;text-decoration:none;opacity:.7}.nn a.on{background:#E9E6D7;color:#520A0A;opacity:1}
 .tit.solo{margin-bottom:20px}.cnp{margin-bottom:22px}.logo.sm img{width:120px;max-width:none}
 .bang{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .bang .o{background:#fffdf8;border:1px solid var(--vien);border-radius:10px;padding:10px 8px;text-align:center}
@@ -177,12 +178,22 @@ function dau(t,cn){return '<div class="tit'+(cn?'':' solo')+'">'+t+'</div>'+(cn?
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
 var BOOT=null;
+var EN=(function(){try{var q=new URLSearchParams(location.search),l=q.get('lang');if(l)ls('mf_lang',l==='en'?'en':'vi');return q.get('view')!=='nv'&&ls('mf_lang')==='en'}catch(e){return false}})();
+function T(v,e){return EN?e:v}
+function doiNN(l){ls('mf_lang',l);try{var q=new URLSearchParams(location.search);q.delete('lang');var s=q.toString();location.replace(location.pathname+(s?'?'+s:''))}catch(e){location.reload()}}
+var THU={2:'Mon',3:'Tue',4:'Wed',5:'Thu',6:'Fri',7:'Sat'};
+function dich(s){if(!EN||s==null)return s;return String(s).replace(/Hôm nay/g,'Today').replace(/Ngày mai/g,'Tomorrow').replace(/Chủ nhật/gi,'Sun').replace(/(^|[^A-Za-z0-9])CN(?= \d)/g,'$1Sun').replace(/Thứ ([2-7])/gi,function(m,n){return THU[n]}).replace(/(^|[^A-Za-z0-9])T([2-7])(?![A-Za-z0-9])/g,function(m,a,n){return a+THU[n]}).replace(/(\d+) combo ảnh in/g,function(m,n){return n+' print combo'+(+n>1?'s':'')}).replace(/(\d+) phút/g,'$1 min').replace(/ảnh nhỏ/g,'small prints').replace(/ảnh lớn/g,'large prints').replace(/(\d{1,3}(?:\.\d{3})+)đ/g,function(m,n){return n.replace(/\./g,',')+' VND'})}
+function ttN(v){return (EN&&{cho_ck:'Awaiting transfer',da_xn:'Confirmed',het_han:'Hold expired',huy:'Cancelled',xong:'Completed',khong_den:'No-show'}[v.tt])||v.ttNhan}
+var LOI=[[/nhập (họ )?tên/i,'Please enter your name'],[/Mã quầy/i,'Counter code is incorrect – see the 4-digit code at the counter'],[/tick xác nhận/i,'Please tick the box to confirm the deposit is non-refundable'],[/vừa có người/i,'That time was just taken – please choose another'],[/điện thoại|SĐT/i,'Please check the phone number (Vietnamese mobile number, 10 digits)'],[/chọn phòng/i,'Please choose a room'],[/chọn giờ/i,'Please choose a time'],[/đang bận/i,'The system is busy – please tap again in a few seconds'],[/Mất kết nối/i,'Connection lost – please try again'],[/quá nhiều|thử lại sau/i,'Too many attempts – please try again later']];
+function dichLoi(m){m=String(m||'');if(!EN)return m;for(var i=0;i<LOI.length;i++)if(LOI[i][0].test(m))return LOI[i][1];return m}
+if(EN)try{document.documentElement.lang='en'}catch(e){}
+try{if(new URLSearchParams(location.search).get('view')!=='nv')document.addEventListener('DOMContentLoaded',function(){document.body.insertAdjacentHTML('afterbegin','<div class="nn"><a href="#" class="'+(EN?'':'on')+'" onclick="doiNN(\'vi\');return false">VI</a><a href="#" class="'+(EN?'on':'')+'" onclick="doiNN(\'en\');return false">EN</a></div>')})}catch(e){}
 function diToi(q){location.href=location.pathname+q}
-function trangChu(){clearTimeout(TIMER);$('app').innerHTML=LOGO+'<div class="card"><div class="state">Đang tải…</div></div>';
+function trangChu(){clearTimeout(TIMER);$('app').innerHTML=LOGO+'<div class="card"><div class="state">'+T('Đang tải…','Loading…')+'</div></div>';
   api('dlChiNhanh',[],function(ds){
     var h=LOGO+'<div class="tit solo">Mirafilm Photobooth</div>'+
-      '<div class="card"><h2>Đặt lịch chụp online</h2><div class="lbl" style="margin-bottom:12px">Chọn chi nhánh, phòng và giờ – chuyển khoản trước để giữ chỗ.</div><button class="b1" onclick="diToi(\'?view=dat\')">Đặt lịch ngay →</button></div>'+
-      '<div class="card"><h2>Lấy số thứ tự</h2><div class="lbl" style="margin-bottom:4px">Đang ở tiệm? Chọn chi nhánh để bốc số chờ (cần mã quầy 4 số tại tiệm).</div>';
+      '<div class="card"><h2>'+T('Đặt lịch chụp online','Book a session online')+'</h2><div class="lbl" style="margin-bottom:12px">'+T('Chọn chi nhánh, phòng và giờ – chuyển khoản trước để giữ chỗ.','Choose a branch, room and time – pay a deposit by bank transfer to hold your slot.')+'</div><button class="b1" onclick="diToi(\'?view=dat\')">'+T('Đặt lịch ngay →','Book now →')+'</button></div>'+
+      '<div class="card"><h2>'+T('Lấy số thứ tự','Get a queue number')+'</h2><div class="lbl" style="margin-bottom:4px">'+T('Đang ở tiệm? Chọn chi nhánh để bốc số chờ (cần mã quầy 4 số tại tiệm).','Already at the studio? Choose your branch to join the queue (you need the 4-digit counter code shown in store).')+'</div>';
     ds.forEach(function(c){h+='<button class="b2" style="margin-top:8px" onclick="diToi(\'?cn='+c.cn+'\')">'+esc(c.ten)+'</button>'});
     $('app').innerHTML=h+'</div>';
   });
@@ -192,11 +203,11 @@ function nvChonCN(view){api('dlChiNhanh',[],function(ds){
   ds.forEach(function(c){h+='<button class="b2" style="margin-top:8px" onclick="diToi(\'?view='+view+'&cn='+c.cn+'\')">'+esc(c.ten)+'</button>'});
   $('app').innerHTML=h+'</div>';
 })}
-function api(fn,args,ok,fail){var r=google.script.run.withSuccessHandler(ok).withFailureHandler(fail||function(e){var x=$('err');if(x)x.textContent=e.message||e});r[fn].apply(r,args)}
+function api(fn,args,ok,fail){var f0=fail||function(e){var x=$('err');if(x)x.textContent=e.message||e};var r=google.script.run.withSuccessHandler(ok).withFailureHandler(function(e){if(EN){var g=String((e&&e.message)||e);e=new Error(dichLoi(g));e.goc=g}f0(e)});r[fn].apply(r,args)}
 function hom(){var d=new Date();d=new Date(d.getTime()+(d.getTimezoneOffset()+420)*60000);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
-function tien(n){return Number(n||0).toLocaleString('vi-VN')+'đ'}
-function sao(t,btn){try{navigator.clipboard.writeText(t).then(function(){btn.textContent='Đã chép ✓'},function(){})}catch(e){}}
-function hai(btn,fn){if(btn.dataset.ok){fn();return}btn.dataset.ok=1;var t=btn.textContent;btn.textContent='Bấm lần nữa';setTimeout(function(){if(btn){delete btn.dataset.ok;btn.textContent=t}},3000)}
+function tien(n){return EN?Number(n||0).toLocaleString('en-US')+' VND':Number(n||0).toLocaleString('vi-VN')+'đ'}
+function sao(t,btn){try{navigator.clipboard.writeText(t).then(function(){btn.textContent=''+T('Đã chép ✓','Copied ✓')+''},function(){})}catch(e){}}
+function hai(btn,fn){if(btn.dataset.ok){fn();return}btn.dataset.ok=1;var t=btn.textContent;btn.textContent=''+T('Bấm lần nữa','Tap again')+'';setTimeout(function(){if(btn){delete btn.dataset.ok;btn.textContent=t}},3000)}
 
 google.script.url.getLocation(function(loc){
   P=loc.parameter||{};CN=P.cn||'CN2';K=P.k||'';
@@ -213,24 +224,24 @@ function gioNay(){var d=new Date();return ('0'+d.getHours()).slice(-2)+':'+('0'+
 function dsMa(){var s=ls('bs_ma_'+CN+'_'+hom());return s?String(s).split(',').filter(function(x){return x}):[]}
 function luuMa(){ls('bs_ma_'+CN+'_'+hom(),MAS.length?MAS.join(','):null)}
 function veBang(d){
-  var h='<div class="card"><h2>Số đang gọi</h2><div class="bang">';
-  d.phong.forEach(function(p){h+='<div class="o"><span>'+esc(p.ten)+'</span><b>'+(p.dang?esc(p.dang):'–')+'</b><small>'+(p.cho?p.cho+' người đang chờ':'Chưa có ai chờ')+'</small></div>'});
-  return h+'</div><div class="note">Tự cập nhật · '+gioNay()+'</div></div>';
+  var h='<div class="card"><h2>'+T('Số đang gọi','Now serving')+'</h2><div class="bang">';
+  d.phong.forEach(function(p){h+='<div class="o"><span>'+esc(p.ten)+'</span><b>'+(p.dang?esc(p.dang):'–')+'</b><small>'+(p.cho?p.cho+''+T(' người đang chờ',' waiting')+'':''+T('Chưa có ai chờ','No one waiting')+'')+'</small></div>'});
+  return h+'</div><div class="note">'+T('Tự cập nhật · ','Auto-updating · ')+''+gioNay()+'</div></div>';
 }
 function moForm(){clearTimeout(TIMER);if(BOOT&&BOOT.bs&&BOOT.cn===CN){var b=BOOT.bs;BOOT=null;return veForm(b)}api('bsThongTin',[CN],veForm)}
 function veForm(info){
   if(info.loi){$('app').innerHTML=LOGO+'<div class="card"><div class="state">'+esc(info.loi)+'</div></div>';return}
   taiAnh();PHONG=0;try{window.scrollTo(0,0)}catch(e){}
-  var h=LOGO+dau('Lấy số thứ tự',info.ten)+
-    (MAS.length?'<div style="text-align:center;margin:-8px 0 14px"><a href="#" onclick="xemVe();return false" style="color:#E9E6D7;font-weight:600">← Về số của tôi</a></div>':'')+
-    '<div class="card"><h2>1. Chọn phòng chụp</h2><div class="rooms">';
+  var h=LOGO+dau(''+T('Lấy số thứ tự','Get a queue number')+'',info.ten)+
+    (MAS.length?'<div style="text-align:center;margin:-8px 0 14px"><a href="#" onclick="xemVe();return false" style="color:#E9E6D7;font-weight:600">'+T('← Về số của tôi','← Back to my number')+'</a></div>':'')+
+    '<div class="card"><h2>'+T('1. Chọn phòng chụp','1. Choose a room')+'</h2><div class="rooms">';
   info.phong.forEach(function(t,i){h+='<div class="room" data-p="'+(i+1)+'" onclick="chonPhong('+(i+1)+')">'+esc(t)+'</div>'});
-  h+='</div><div id="anhQ"></div><label>2. Tên của bạn</label><input id="ten" autocomplete="name" maxlength="40" placeholder="VD: Minh Anh" value="'+esc(ls('bs_ten')||'')+'">'+
-     '<label>Số điện thoại</label><input id="sdt" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" placeholder="09xxxxxxxx" value="'+esc(ls('bs_sdt')||'')+'">'+
-     '<label>3. Mã quầy (4 số, xem tại quầy)</label><input id="k" class="code" inputmode="numeric" maxlength="6" value="'+esc(K)+'" placeholder="····">'+
-     '<div class="err" id="err"></div><button class="b1" id="btn" onclick="laySo()">Lấy số thứ tự</button>'+
-     '<div class="note">Muốn chụp nhiều phòng: lấy số xong bấm “Lấy số phòng khác”. Thông tin chỉ dùng để gọi bạn khi đến lượt.</div></div>'+
-     '<div class="card"><h2>Đã lấy số rồi?</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="Nhập SĐT đã dùng"><button class="b2" style="flex:0 0 auto;width:auto" onclick="timVe()">Xem lại số</button></div><div class="err" id="err2"></div></div>'+
+  h+='</div><div id="anhQ"></div><label>'+T('2. Tên của bạn','2. Your name')+'</label><input id="ten" autocomplete="name" maxlength="40" placeholder="'+T('VD: Minh Anh','e.g. Alex')+'" value="'+esc(ls('bs_ten')||'')+'">'+
+     '<label>'+T('Số điện thoại','Phone number')+'</label><input id="sdt" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" placeholder="09xxxxxxxx" value="'+esc(ls('bs_sdt')||'')+'">'+
+     '<label>'+T('3. Mã quầy (4 số, xem tại quầy)','3. Counter code (4 digits, shown at the counter)')+'</label><input id="k" class="code" inputmode="numeric" maxlength="6" value="'+esc(K)+'" placeholder="····">'+
+     '<div class="err" id="err"></div><button class="b1" id="btn" onclick="laySo()">'+T('Lấy số thứ tự','Get a queue number')+'</button>'+
+     '<div class="note">'+T('Muốn chụp nhiều phòng: lấy số xong bấm “Lấy số phòng khác”. Thông tin chỉ dùng để gọi bạn khi đến lượt.','Want more than one room? After getting a number, tap “Get a number for another room”. Your details are only used to call you when it’s your turn.')+'</div></div>'+
+     '<div class="card"><h2>'+T('Đã lấy số rồi?','Already have a number?')+'</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="'+T('Nhập SĐT đã dùng','Phone number you used')+'"><button class="b2" style="flex:0 0 auto;width:auto" onclick="timVe()">'+T('Xem lại số','Find my number')+'</button></div><div class="err" id="err2"></div></div>'+
      '<div id="bang"></div>';
   $('app').innerHTML=h;taiBang();
 }
@@ -241,28 +252,28 @@ function taiBang(){
 function chonPhong(p){PHONG=p;[].forEach.call(document.querySelectorAll('.room'),function(e){e.classList.toggle('on',+e.dataset.p===p)});veAnh('anhQ',p)}
 function laySo(){
   $('err').textContent='';
-  if(!PHONG){$('err').textContent='Vui lòng chọn phòng';return}
-  $('btn').disabled=true;$('btn').textContent='Đang lấy số…';
+  if(!PHONG){$('err').textContent=''+T('Vui lòng chọn phòng','Please choose a room')+'';return}
+  $('btn').disabled=true;$('btn').textContent=''+T('Đang lấy số…','Getting your number…')+'';
   K=$('k').value.trim();var ten=$('ten').value,sdt=$('sdt').value;
   var DV=ls('bs_dev');if(!DV){DV=Date.now().toString(36)+Math.random().toString(36).slice(2,10);ls('bs_dev',DV)}
   api('bsLaySo',[CN,K,PHONG,ten,sdt,DV],function(r){
     if(MAS.indexOf(r.ma)<0)MAS.push(r.ma);luuMa();ls('bs_k_'+CN+'_'+hom(),K);ls('bs_ten',ten);ls('bs_sdt',sdt);
     xemVe();
-  },function(e){$('err').textContent=e.message||e;$('btn').disabled=false;$('btn').textContent='Lấy số thứ tự'});
+  },function(e){$('err').textContent=e.message||e;$('btn').disabled=false;$('btn').textContent=''+T('Lấy số thứ tự','Get a queue number')+''});
 }
 function timVe(){
   $('err2').textContent='';
   api('bsTimVe',[CN,$('sdt2').value],function(ma){
-    if(!ma){$('err2').textContent='Không thấy số đang chờ với SĐT này hôm nay';try{$('err2').scrollIntoView({block:'center',behavior:'smooth'})}catch(e){}return}
+    if(!ma){$('err2').textContent=''+T('Không thấy số đang chờ với SĐT này hôm nay','No active queue number found for this phone number today')+'';try{$('err2').scrollIntoView({block:'center',behavior:'smooth'})}catch(e){}return}
     String(ma).split(',').forEach(function(m){if(m&&MAS.indexOf(m)<0)MAS.push(m)});luuMa();xemVe();
   },function(e){$('err2').textContent=e.message||e});
 }
 function xemVe(){
   if(!$('ve'))$('app').innerHTML=LOGO+'<div id="sub"></div><div id="ve"><div class="card tk"><div class="big">…</div></div></div>'+
-    '<button class="b2" id="am" onclick="batAm()"'+(AM?' disabled':'')+'>'+(AM?'🔔 Đã bật âm báo':'🔔 Bật âm báo khi đến lượt')+'</button>'+
-    '<button class="b2" style="margin-top:10px" onclick="moForm()">+ Lấy số phòng khác</button>'+
-    '<div class="note">Giữ trang này mở. Nếu lỡ đóng, mở lại trang và tra bằng số điện thoại.</div><div id="hoi"></div><div id="bang" style="margin-top:16px"></div>';
-  api('bsBang',[CN,MAS],veVe,function(){var x=$('sub');if(x)x.textContent='Mất kết nối – đang thử lại…'});
+    '<button class="b2" id="am" onclick="batAm()"'+(AM?' disabled':'')+'>'+(AM?''+T('🔔 Đã bật âm báo','🔔 Sound alert on')+'':''+T('🔔 Bật âm báo khi đến lượt','🔔 Turn on sound alert for my turn')+'')+'</button>'+
+    '<button class="b2" style="margin-top:10px" onclick="moForm()">'+T('+ Lấy số phòng khác','+ Get a number for another room')+'</button>'+
+    '<div class="note">'+T('Giữ trang này mở. Nếu lỡ đóng, mở lại trang và tra bằng số điện thoại.','Keep this page open. If you close it, reopen the page and look up your number by phone.')+'</div><div id="hoi"></div><div id="bang" style="margin-top:16px"></div>';
+  api('bsBang',[CN,MAS],veVe,function(){var x=$('sub');if(x)x.textContent=''+T('Mất kết nối – đang thử lại…','Connection lost – retrying…')+''});
   clearTimeout(TIMER);TIMER=setTimeout(function(){if($('ve'))xemVe()},8000);
 }
 function veVe(d){
@@ -270,35 +281,35 @@ function veVe(d){
   var con=d.ve.filter(function(v){return v.tt!=='khong'});
   MAS=con.map(function(v){return v.ma});luuMa();
   if(!con.length){moForm();return}
-  $('sub').innerHTML=dau('Số thứ tự · '+esc(con[0].ten),d.ten);
+  $('sub').innerHTML=dau(''+T('Số thứ tự · ','Queue number · ')+''+esc(con[0].ten),d.ten);
   var h='',den='',sap='',hd=false;
   con.forEach(function(v){
     var cls='',st='',ct='',eta='',nut='';
     if(v.tt==='cho'){
-      hd=true;st=v.truoc===0?'Bạn là người tiếp theo!':'Còn '+v.truoc+' người trước bạn';
-      ct=v.dangGoi?'Đang gọi số '+esc(v.dangGoi):'Chưa gọi số nào';
-      if(v.eta)eta='Dự kiến tới lượt khoảng <b>'+esc(v.eta)+'</b>';
+      hd=true;st=v.truoc===0?''+T('Bạn là người tiếp theo!','You’re next!')+'':T('Còn '+v.truoc+' người trước bạn',v.truoc+(v.truoc===1?' person':' people')+' ahead of you');
+      ct=v.dangGoi?''+T('Đang gọi số ','Now serving ')+''+esc(v.dangGoi):''+T('Chưa gọi số nào','No number called yet')+'';
+      if(v.eta)eta=''+T('Dự kiến tới lượt khoảng <b>','Estimated turn around <b>')+''+esc(v.eta)+'</b>';
       if(v.truoc<=1){cls=' sap';sap+=v.ma+v.truoc}
-      nut='<button class="b3" style="color:#a3241b;width:auto;padding:6px 10px" onclick="hoiRoi(\''+v.ma+'\',\''+esc(v.nhan)+'\')">Rời hàng chờ</button>';
+      nut='<button class="b3" style="color:#a3241b;width:auto;padding:6px 10px" onclick="hoiRoi(\''+v.ma+'\',\''+esc(v.nhan)+'\')"'+T('>Rời hàng chờ</button>','>Leave the queue</button>')+'';
     }else if(v.tt==='goi'){
-      hd=true;st='ĐẾN LƯỢT BẠN – mời vào phòng';ct=esc(v.phong);cls=' den';den+=v.ma;
+      hd=true;st=''+T('ĐẾN LƯỢT BẠN – mời vào phòng','IT’S YOUR TURN – please come to the room')+'';ct=esc(v.phong);cls=' den';den+=v.ma;
     }else{
       if(v.tt==='boqua')hd=true;
-      st={xong:'Cảm ơn bạn đã chụp tại Mirafilm 💛',boqua:'Bạn đã bị bỏ qua – vui lòng báo nhân viên tại quầy',huy:'Bạn đã rời hàng chờ'}[v.tt]||v.tt;
-      if(v.tt!=='boqua')nut='<button class="b3" style="color:#a3241b;width:auto;padding:6px 10px" onclick="boVe(\''+v.ma+'\')">Ẩn số này</button>';
+      st={xong:''+T('Cảm ơn bạn đã chụp tại Mirafilm 💛','Thank you for shooting at Mirafilm 💛')+'',boqua:''+T('Bạn đã bị bỏ qua – vui lòng báo nhân viên tại quầy','Your number was skipped – please tell the staff at the counter')+'',huy:''+T('Bạn đã rời hàng chờ','You have left the queue')+''}[v.tt]||v.tt;
+      if(v.tt!=='boqua')nut='<button class="b3" style="color:#a3241b;width:auto;padding:6px 10px" onclick="boVe(\''+v.ma+'\')">'+T('Ẩn số này','Hide this number')+'</button>';
     }
     h+='<div class="card tk'+cls+'"><div class="lbl">'+esc(v.phong)+'</div><div class="big">'+esc(v.nhan)+'</div><div class="state">'+esc(st)+'</div><div class="lbl">'+ct+'</div><div class="eta">'+eta+'</div>'+(nut?'<div style="margin-top:8px">'+nut+'</div>':'')+'</div>';
   });
   $('ve').innerHTML=h;$('bang').innerHTML=veBang(d);
-  if(den){bao('den'+den,[500,200,500,200,500]);document.title='🔔 ĐẾN LƯỢT BẠN'}
+  if(den){bao('den'+den,[500,200,500,200,500]);document.title=''+T('🔔 ĐẾN LƯỢT BẠN','🔔 YOUR TURN')+''}
   else{document.title='Mirafilm';if(sap)bao('sap'+sap,[200,100,200])}
   if(!hd)clearTimeout(TIMER);
 }
 function boVe(ma){MAS=MAS.filter(function(m){return m!==ma});luuMa();if(MAS.length)xemVe();else moForm()}
-function hoiRoi(ma,nhan){setTimeout(function(){try{$('hoi').scrollIntoView({block:'center',behavior:'smooth'})}catch(e){}},30);$('hoi').innerHTML='<div class="card" style="margin-top:10px;text-align:center"><b>Rời hàng chờ số '+esc(nhan||'')+'?</b><p class="lbl">Số này sẽ bị huỷ và không lấy lại được.</p><div class="row"><button class="b2" onclick="$(\'hoi\').innerHTML=\'\'">Ở lại</button><button class="b1" onclick="roi(\''+ma+'\')">Rời hàng</button></div></div>'}
+function hoiRoi(ma,nhan){setTimeout(function(){try{$('hoi').scrollIntoView({block:'center',behavior:'smooth'})}catch(e){}},30);$('hoi').innerHTML='<div class="card" style="margin-top:10px;text-align:center"><b>'+T('Rời hàng chờ số ','Leave the queue for number ')+''+esc(nhan||'')+'?</b><p class="lbl">'+T('Số này sẽ bị huỷ và không lấy lại được.','This number will be cancelled and cannot be restored.')+'</p><div class="row"><button class="b2" onclick="$(\'hoi\').innerHTML=\'\'"'+T('>Ở lại</button>','>Stay</button>')+'<button class="b1" onclick="roi(\''+ma+'\')"'+T('>Rời hàng</button>','>Leave</button>')+'</div></div>'}
 function roi(ma){$('hoi').innerHTML='';api('bsRoiHang',[ma],function(){boVe(ma)})}
 var AC=null;
-function batAm(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();beep();AM=true;$('am').textContent='🔔 Đã bật âm báo';$('am').disabled=true}catch(e){}}
+function batAm(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();beep();AM=true;$('am').textContent=''+T('🔔 Đã bật âm báo','🔔 Sound alert on')+'';$('am').disabled=true}catch(e){}}
 function beep(){if(!AC)return;[0,0.35,0.7].forEach(function(t){var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=880;o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.25,AC.currentTime+t);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+.2)})}
 function bao(loai,rung){if(DA_BAO===loai)return;DA_BAO=loai;try{navigator.vibrate&&navigator.vibrate(rung)}catch(e){}if(AM)beep()}
 
@@ -311,9 +322,9 @@ function datVao(){
 }
 function datBatDau(){clearTimeout(TIMER);if(BOOT&&BOOT.dat&&BOOT.cn===(P.cn||'')){var b=BOOT.dat;BOOT=null;return P.cn?datForm(b):veCN(b)}if(!P.cn)api('dlChiNhanh',[],veCN);else api('dlThongTin',[CN],datForm)}
 function veCN(ds){
-  var h=LOGO+'<div class="tit solo">Đặt lịch chụp online</div><div class="card"><h2>Chọn chi nhánh</h2><div style="display:grid;gap:10px">';
-  ds.forEach(function(c){h+='<div class="room" style="text-align:left'+(c.mo?'':';opacity:.55;cursor:default')+'"'+(c.mo?' onclick="chonCN(\''+c.cn+'\')"':'')+'>'+esc(c.ten)+(c.mo?'':'<small>Sắp mở đặt online</small>')+'</div>'});
-  h+='</div></div><div class="card"><h2>Đã đặt lịch?</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="Nhập SĐT đã đặt"><button class="b2" style="flex:0 0 auto;width:auto" onclick="datTim()">Tra cứu</button></div><div class="err" id="err2"></div><div id="kq2"></div></div>';
+  var h=LOGO+'<div class="tit solo">'+T('Đặt lịch chụp online','Book a session online')+'</div><div class="card">'+T('<h2>Chọn chi nhánh</h2>','<h2>Choose a branch</h2>')+'<div style="display:grid;gap:10px">';
+  ds.forEach(function(c){h+='<div class="room" style="text-align:left'+(c.mo?'':';opacity:.55;cursor:default')+'"'+(c.mo?' onclick="chonCN(\''+c.cn+'\')"':'')+'>'+esc(c.ten)+(c.mo?'':'<small>'+T('Sắp mở đặt online','Online booking coming soon')+'</small>')+'</div>'});
+  h+='</div></div><div class="card"><h2>'+T('Đã đặt lịch?','Already booked?')+'</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="'+T('Nhập SĐT đã đặt','Phone number used to book')+'"><button class="b2" style="flex:0 0 auto;width:auto" onclick="datTim()">'+T('Tra cứu','Look up')+'</button></div><div class="err" id="err2"></div><div id="kq2"></div></div>';
   $('app').innerHTML=h;
 }
 function chonCN(c){CN=c;api('dlThongTin',[CN],datForm)}
@@ -321,10 +332,10 @@ var ANH=null;
 function taiAnh(){ANH=null;try{api('bsAnh',[CN],function(a){ANH=a},function(){})}catch(e){}}
 function anhUrl(id,w){return 'anh/'+id+(w<=480?'_s':'')+'.jpg'}
 function anhLoi(img,id,w){img.onerror=null;img.src='https://lh3.googleusercontent.com/d/'+id+'=w'+w}
-function veAnh(id,p){var x=$(id);if(!x)return;var a=(ANH&&ANH[p-1])||[];if(!a.length){x.innerHTML='';return}var h='<div class="anh">';a.forEach(function(z,i){h+='<img loading="lazy" alt="Ảnh mẫu" src="'+anhUrl(z,400)+'" onerror="anhLoi(this,\''+z+'\',400)" onclick="moAnh('+p+','+i+')">'});x.innerHTML=h+'</div><div class="note" style="text-align:left;margin-top:4px">Nhấn vào từng ảnh để phóng to</div>'}
+function veAnh(id,p){var x=$(id);if(!x)return;var a=(ANH&&ANH[p-1])||[];if(!a.length){x.innerHTML='';return}var h='<div class="anh">';a.forEach(function(z,i){h+='<img loading="lazy" alt="'+T('Ảnh mẫu','Sample photo')+'" src="'+anhUrl(z,400)+'" onerror="anhLoi(this,\''+z+'\',400)" onclick="moAnh('+p+','+i+')">'});x.innerHTML=h+'</div><div class="note" style="text-align:left;margin-top:4px">'+T('Nhấn vào từng ảnh để phóng to','Tap a photo to enlarge')+'</div>'}
 function dongAnh(){var d=$('anhM');if(d)d.innerHTML=''}
 function moAnh(p,i){var a=ANH[p-1],n=a.length,k=((i%n)+n)%n,d=$('anhM');if(!d){d=document.createElement('div');d.id='anhM';document.body.appendChild(d)}
-  d.innerHTML='<div class="modal" style="touch-action:none" onclick="if(event.target===this)dongAnh()"><div style="max-width:560px;width:100%"><div style="overflow:hidden;border-radius:12px;background:#000;touch-action:none"><img class="zimg" src="'+anhUrl(a[k],1600)+'" onerror="anhLoi(this,\''+a[k]+'\',1600)" style="width:100%;max-height:72vh;object-fit:contain;display:block;touch-action:none;transform-origin:center center;transition:transform .05s"></div><div class="row" style="margin-top:8px">'+(n>1?'<button class="b2" onclick="moAnh('+p+','+(k-1)+')">‹ Trước</button><button class="b2" onclick="moAnh('+p+','+(k+1)+')">Sau ›</button>':'')+'<button class="b1" onclick="dongAnh()">Đóng</button></div><div class="lbl" style="color:#e6d3c3;margin-top:6px">'+(k+1)+' / '+n+'</div></div></div>';
+  d.innerHTML='<div class="modal" style="touch-action:none" onclick="if(event.target===this)dongAnh()"><div style="max-width:560px;width:100%"><div style="overflow:hidden;border-radius:12px;background:#000;touch-action:none"><img class="zimg" src="'+anhUrl(a[k],1600)+'" onerror="anhLoi(this,\''+a[k]+'\',1600)" style="width:100%;max-height:72vh;object-fit:contain;display:block;touch-action:none;transform-origin:center center;transition:transform .05s"></div><div class="row" style="margin-top:8px">'+(n>1?'<button class="b2" onclick="moAnh('+p+','+(k-1)+')">'+T('‹ Trước','‹ Prev')+'</button><button class="b2" onclick="moAnh('+p+','+(k+1)+')">'+T('Sau ›','Next ›')+'</button>':'')+'<button class="b1" onclick="dongAnh()"'+T('>Đóng</button>','>Close</button>')+'</div><div class="lbl" style="color:#e6d3c3;margin-top:6px">'+(k+1)+' / '+n+'</div></div></div>';
   var m=d.querySelector('.modal');['gesturestart','gesturechange','gestureend'].forEach(function(t){m.addEventListener(t,function(e){e.preventDefault()},{passive:false})});
   m.addEventListener('touchmove',function(e){if(e.touches.length>1)e.preventDefault()},{passive:false});
   zoomAnh(d.querySelector('.zimg'))}
@@ -338,10 +349,10 @@ function zoomAnh(img){var s=1,x=0,y=0,d0=0,s0=1,px=0,py=0,lt=0;
 function datForm(info){
   if(info.loi){$('app').innerHTML=LOGO+'<div class="card"><div class="state">'+esc(info.loi)+'</div></div>';return}
   taiAnh();DI=info;D={p:0,phut:0,ngay:info.ngay[0]?info.ngay[0].d:'',gio:''};
-  var h=LOGO+dau('Đặt lịch chụp online',info.ten)+(P.cn?'':'<div style="text-align:center;margin:-8px 0 10px"><button class="b3" style="width:auto;padding:4px" onclick="datBatDau()">← Đổi chi nhánh</button></div>')+'<div class="card"><h2>1. Chọn phòng</h2><div class="rooms">';
-  info.phong.forEach(function(p){h+='<div class="room" data-p="'+p.i+'" onclick="dChonPhong('+p.i+')">'+esc(p.ten)+'<small>từ '+tien(Math.min.apply(null,p.goi.map(function(g){return g[1]})))+'</small></div>'});
+  var h=LOGO+dau(''+T('Đặt lịch chụp online','Book a session online')+'',info.ten)+(P.cn?'':'<div style="text-align:center;margin:-8px 0 10px"><button class="b3" style="width:auto;padding:4px" onclick="datBatDau()">'+T('← Đổi chi nhánh','← Change branch')+'</button></div>')+'<div class="card">'+T('<h2>1. Chọn phòng</h2>','<h2>1. Choose a room</h2>')+'<div class="rooms">';
+  info.phong.forEach(function(p){h+='<div class="room" data-p="'+p.i+'" onclick="dChonPhong('+p.i+')">'+esc(p.ten)+''+T('<small>từ ','<small>from ')+''+tien(Math.min.apply(null,p.goi.map(function(g){return g[1]})))+'</small></div>'});
   h+='</div><div id="anhD"></div><div id="dGoi"></div><div id="dNgay"></div><div id="dGio"></div><div id="dTT"></div></div>'+
-     '<div class="card"><h2>Đã đặt lịch?</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="Nhập SĐT đã đặt"><button class="b2" style="flex:0 0 auto;width:auto" onclick="datTim()">Tra cứu</button></div><div class="err" id="err2"></div><div id="kq2"></div></div>';
+     '<div class="card"><h2>'+T('Đã đặt lịch?','Already booked?')+'</h2><div class="row"><input id="sdt2" type="tel" inputmode="numeric" maxlength="11" placeholder="'+T('Nhập SĐT đã đặt','Phone number used to book')+'"><button class="b2" style="flex:0 0 auto;width:auto" onclick="datTim()">'+T('Tra cứu','Look up')+'</button></div><div class="err" id="err2"></div><div id="kq2"></div></div>';
   $('app').innerHTML=h;
 }
 function phongDI(i){return DI.phong.filter(function(x){return x.i===i})[0]}
@@ -351,13 +362,13 @@ function dChonPhong(i){
   [].forEach.call(document.querySelectorAll('.room'),function(e){e.classList.toggle('on',+e.dataset.p===i)});veAnh('anhD',i);
   var P=phongDI(i),sb=/self-booth/i.test(P.ten||''),h;
   if(sb){
-    h='<h3>2. Chọn gói</h3><div class="coc">Cọc giữ lịch: '+tien(cocP(i))+' (mọi gói)<small>Tới tiệm vẫn đổi gói, in thêm được – phần còn lại trả tại quầy</small></div><div class="chips sb">';
-    P.goi.forEach(function(g,k){h+='<div class="chip" data-v="'+k+'" onclick="dChonGoi('+k+')">'+(g[2]?esc(g[2]):g[0]+' phút')+' · '+tien(g[1])+'</div>'});
+    h='<h3>'+T('2. Chọn gói','2. Choose a package')+'</h3><div class="coc">'+T('Cọc giữ lịch: ','Deposit to hold your slot: ')+''+tien(cocP(i))+''+T(' (mọi gói)',' (any package)')+'<small>'+T('Tới tiệm vẫn đổi gói, in thêm được – phần còn lại trả tại quầy','You can still change package or add prints in store – the balance is paid at the counter')+'</small></div><div class="chips sb">';
+    P.goi.forEach(function(g,k){h+='<div class="chip" data-v="'+k+'" onclick="dChonGoi('+k+')">'+(g[2]?esc(dich(g[2])):g[0]+T(' phút',' min'))+' · '+tien(g[1])+'</div>'});
     h+='</div>';
   }else{
-    h='<h3>2. Bảng giá</h3><div class="coc">Cọc giữ lịch: '+tien(cocP(i))+'<small>Chọn ảnh, in thêm tại tiệm – phần còn lại trả tại quầy</small></div><table class="gia">';
-    P.goi.forEach(function(g){h+='<tr><td>'+esc(String(g[2]||(g[0]+' phút')).replace(/\s*\(.*\)/,''))+'</td><td>'+tien(g[1])+'</td></tr>'});
-    h+='<tr><td>In thêm (2 ảnh nhỏ hoặc 1 ảnh lớn)</td><td>'+tien(40000)+'</td></tr></table>';
+    h='<h3>'+T('2. Bảng giá','2. Prices')+'</h3><div class="coc">'+T('Cọc giữ lịch: ','Deposit to hold your slot: ')+''+tien(cocP(i))+'<small>'+T('Chọn ảnh, in thêm tại tiệm – phần còn lại trả tại quầy','Choose photos and extra prints in store – the balance is paid at the counter')+'</small></div><table class="gia">';
+    P.goi.forEach(function(g){h+='<tr><td>'+esc(dich(String(g[2]||(g[0]+' phút')).replace(/\s*\(.*\)/,'')))+'</td><td>'+tien(g[1])+'</td></tr>'});
+    h+='<tr><td>'+T('In thêm (2 ảnh nhỏ hoặc 1 ảnh lớn)','Extra prints (2 small or 1 large)')+'</td><td>'+tien(40000)+'</td></tr></table>';
   }
   $('dGoi').innerHTML=h;$('dNgay').innerHTML='';$('dGio').innerHTML='';$('dTT').innerHTML='';
   if(!sb)dChonGoi(0);
@@ -365,20 +376,20 @@ function dChonPhong(i){
 function dChonGoi(v){
   D.goi=v;D.phut=phongDI(D.p).goi[v][0];D.gio='';
   [].forEach.call(document.querySelectorAll('#dGoi .chip'),function(e){e.classList.toggle('on',+e.dataset.v===v)});
-  var h='<h3>3. Chọn ngày</h3><div class="chips">';
-  DI.ngay.forEach(function(n){h+='<div class="chip" data-v="'+n.d+'" onclick="dChonNgay(\''+n.d+'\')">'+esc(n.nhan)+'</div>'});
-  $('dNgay').innerHTML=h+'</div><div class="note" style="text-align:left">Nhận đặt trong tuần này, trước giờ chụp ít nhất '+(DI.dong/60)+' tiếng.</div>';
+  var h='<h3>'+T('3. Chọn ngày','3. Choose a date')+'</h3><div class="chips">';
+  DI.ngay.forEach(function(n){h+='<div class="chip" data-v="'+n.d+'" onclick="dChonNgay(\''+n.d+'\')">'+esc(dich(n.nhan))+'</div>'});
+  $('dNgay').innerHTML=h+'</div><div class="note" style="text-align:left">'+T('Nhận đặt trong tuần này, trước giờ chụp ít nhất ','Bookings are open for this week, at least ')+''+(DI.dong/60)+''+T(' tiếng.',' hours before the session.')+'</div>';
   dChonNgay(D.ngay);
 }
 function dChonNgay(d){
   D.ngay=d;D.gio='';
   [].forEach.call(document.querySelectorAll('#dNgay .chip'),function(e){e.classList.toggle('on',e.dataset.v===d)});
-  $('dGio').innerHTML='<h3>4. Chọn giờ bắt đầu</h3><div class="lbl" style="text-align:left">Đang tải giờ trống…</div>';
-  api('dlSlots',[CN,d,D.p,D.phut,''],function(s){veSlots('dGio',s,'dChonGio','4. Chọn giờ bắt đầu')});
+  $('dGio').innerHTML='<h3>'+T('4. Chọn giờ bắt đầu','4. Choose a start time')+'</h3><div class="lbl" style="text-align:left">'+T('Đang tải giờ trống…','Loading available times…')+'</div>';
+  api('dlSlots',[CN,d,D.p,D.phut,''],function(s){veSlots('dGio',s,'dChonGio',''+T('4. Chọn giờ bắt đầu','4. Choose a start time')+'')});
 }
 function veSlots(id,s,fn,tieu){
   var h='<h3>'+tieu+'</h3>';
-  if(!s.length)h+='<div class="lbl" style="text-align:left">Ngày này đã kín lịch đặt trước. Bạn vẫn có thể đến tiệm và lấy số chờ.</div>';
+  if(!s.length)h+='<div class="lbl" style="text-align:left">'+T('Ngày này đã kín lịch đặt trước. Bạn vẫn có thể đến tiệm và lấy số chờ.','This day is fully booked online. You can still walk in and get a queue number.')+'</div>';
   else{h+='<div class="slots">';s.forEach(function(g){h+='<div class="slot" data-v="'+g+'" onclick="'+fn+'(\''+g+'\')">'+g+'</div>'});h+='</div>'}
   $(id).innerHTML=h;
 }
@@ -386,54 +397,54 @@ function dChonGio(g){
   D.gio=g;
   [].forEach.call(document.querySelectorAll('#dGio .slot'),function(e){e.classList.toggle('on',e.dataset.v===g)});
   if($('dTen'))return;
-  $('dTT').innerHTML='<h3>5. Thông tin của bạn</h3><label>Họ và tên</label><input id="dTen" autocomplete="name" maxlength="40" placeholder="VD: Nguyễn Minh Anh">'+
-    '<label>Số điện thoại</label><input id="dSdt" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" placeholder="09xxxxxxxx">'+
-    '<ul class="pol"><li>Đặt cọc <b>'+(D.p?tien(cocP(D.p)):'80.000đ (photobooth) / 150.000đ (self-booth)')+'</b> bằng chuyển khoản để giữ lịch. Lịch được giữ '+DI.giu+' phút chờ chuyển khoản; nếu đặt ngoài giờ làm việc, tiệm xác nhận sau khi mở cửa.</li><li>Tới tiệm bạn vẫn có thể đổi gói, thêm người, in thêm – phần còn lại thanh toán tại quầy.</li><li>Được dời lịch tối đa '+DI.doiMax+' lần, trước giờ chụp ít nhất '+(DI.dong/60)+' tiếng.</li><li>Vui lòng có mặt trước giờ hẹn 5–10 phút.</li></ul>'+
-    '<div class="khoan"><b>⚠️ TIỀN CỌC KHÔNG HOÀN LẠI KHI HUỶ LỊCH</b><span>Bạn có việc bận đột xuất? Bạn có thể dời lịch trên web (tối đa 3 lần) để giữ nguyên tiền cọc nhé</span></div>'+
-    '<label class="chk chk2"><input type="checkbox" id="dOk"> <b>Tôi đã hiểu và đồng ý: tiền cọc không được hoàn lại</b></label>'+
-    '<div class="err" id="err"></div><button class="b1" id="btn" onclick="datGui()">Đặt lịch & đặt cọc</button>';
+  $('dTT').innerHTML='<h3>'+T('5. Thông tin của bạn','5. Your details')+'</h3><label>'+T('Họ và tên','Full name')+'</label><input id="dTen" autocomplete="name" maxlength="40" placeholder="'+T('VD: Nguyễn Minh Anh','e.g. Alex Smith')+'">'+
+    '<label>'+T('Số điện thoại','Phone number')+'</label><input id="dSdt" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" placeholder="09xxxxxxxx">'+
+    '<ul class="pol"><li>'+T('Đặt cọc <b>','Pay a deposit of <b>')+''+(D.p?tien(cocP(D.p)):''+T('80.000đ (photobooth) / 150.000đ (self-booth)','80,000 VND (photobooth) / 150,000 VND (self-booth)')+'')+''+T('</b> bằng chuyển khoản để giữ lịch. Lịch được giữ ','</b> by bank transfer to hold your booking. The slot is held for ')+''+DI.giu+''+T(' phút chờ chuyển khoản; nếu đặt ngoài giờ làm việc, tiệm xác nhận sau khi mở cửa.',' minutes while we wait for your transfer; bookings made outside opening hours are confirmed after we open.')+'</li><li>'+T('Tới tiệm bạn vẫn có thể đổi gói, thêm người, in thêm – phần còn lại thanh toán tại quầy.','In store you can still change package, add people or add prints – the balance is paid at the counter.')+'</li><li>'+T('Được dời lịch tối đa ','You can reschedule up to ')+''+DI.doiMax+''+T(' lần, trước giờ chụp ít nhất ',' times, at least ')+''+(DI.dong/60)+''+T(' tiếng.',' hours before the session.')+'</li><li>'+T('Vui lòng có mặt trước giờ hẹn 5–10 phút.','Please arrive 5–10 minutes before your slot.')+'</li></ul>'+
+    '<div class="khoan"><b>'+T('⚠️ TIỀN CỌC KHÔNG HOÀN LẠI KHI HUỶ LỊCH','⚠️ THE DEPOSIT IS NON-REFUNDABLE IF YOU CANCEL')+'</b><span>'+T('Bạn có việc bận đột xuất? Bạn có thể dời lịch trên web (tối đa 3 lần) để giữ nguyên tiền cọc nhé','Something came up? You can reschedule on this page (up to 3 times) and keep your deposit')+'</span></div>'+
+    '<label class="chk chk2"><input type="checkbox" id="dOk"> <b>'+T('Tôi đã hiểu và đồng ý: tiền cọc không được hoàn lại','I understand and agree: the deposit is non-refundable')+'</b></label>'+
+    '<div class="err" id="err"></div><button class="b1" id="btn" onclick="datGui()">'+T('Đặt lịch & đặt cọc','Book & pay deposit')+'</button>';
 }
 function datGui(){
   $('err').textContent='';
-  if(!D.gio){$('err').textContent='Vui lòng chọn giờ';return}
-  $('btn').disabled=true;$('btn').textContent='Đang giữ chỗ…';
+  if(!D.gio){$('err').textContent=''+T('Vui lòng chọn giờ','Please choose a time')+'';return}
+  $('btn').disabled=true;$('btn').textContent=''+T('Đang giữ chỗ…','Holding your slot…')+'';
   api('dlDat',[CN,D.ngay,D.p,D.gio,D.goi,$('dTen').value,$('dSdt').value,$('dOk').checked],function(r){
     TOK=r.tok;ls('dl_tok_'+CN,TOK);try{google.script.history.replace(null,{view:'dat',cn:CN,t:TOK})}catch(e){}
     datXem();
-  },function(e){$('err').textContent=e.message||e;$('btn').disabled=false;$('btn').textContent='Đặt lịch & đặt cọc';if(String(e.message||e).indexOf('vừa có người')>=0)dChonNgay(D.ngay)});
+  },function(e){$('err').textContent=e.message||e;$('btn').disabled=false;$('btn').textContent=''+T('Đặt lịch & đặt cọc','Book & pay deposit')+'';if(String(e.goc||e.message||e).indexOf('vừa có người')>=0)dChonNgay(D.ngay)});
 }
 function datTim(){
   $('err2').textContent='';
   $('kq2').innerHTML='';
   api('dlTim',[P.cn?CN:'',$('sdt2').value],function(ds){
-    if(!ds||!ds.length){$('err2').textContent='Không thấy lịch sắp tới với SĐT này';return}
-    $('kq2').innerHTML='<div class="list" style="max-height:none">'+ds.map(function(v){return '<div class="li"><span><b>'+esc(v.gio+' · '+v.ngayNhan)+'</b><br><small style="color:var(--mo)">'+esc(v.phong+' · '+v.tenCN)+'</small></span><span class="tag '+v.tt+'">'+esc(v.ttNhan)+'</span></div>'}).join('')+'</div><div class="lbl" style="text-align:left;margin-top:8px">Muốn dời hoặc huỷ lịch: mở lại trang đặt lịch trên điện thoại đã dùng để đặt (trang tự lưu lịch của bạn), hoặc nhắn fanpage Mirafilm.</div>';
+    if(!ds||!ds.length){$('err2').textContent=''+T('Không thấy lịch sắp tới với SĐT này','No upcoming booking found for this phone number')+'';return}
+    $('kq2').innerHTML='<div class="list" style="max-height:none">'+ds.map(function(v){return '<div class="li"><span><b>'+esc(v.gio+' · '+dich(v.ngayNhan))+'</b><br><small style="color:var(--mo)">'+esc(v.phong+' · '+v.tenCN)+'</small></span><span class="tag '+v.tt+'">'+esc(ttN(v))+'</span></div>'}).join('')+'</div><div class="lbl" style="text-align:left;margin-top:8px">'+T('Muốn dời hoặc huỷ lịch: mở lại trang đặt lịch trên điện thoại đã dùng để đặt (trang tự lưu lịch của bạn), hoặc nhắn fanpage Mirafilm.','To reschedule or cancel: reopen the booking page on the phone you booked with (it remembers your booking), or message the Mirafilm fanpage.')+'</div>';
   },function(e){$('err2').textContent=e.message||e});
 }
-function datXem(){api('dlXem',[TOK],veDat,function(e){$('app').innerHTML=LOGO+'<div class="card"><div class="state">Mất kết nối</div><button class="b2" onclick="datXem()">Thử lại</button></div>'})}
+function datXem(){api('dlXem',[TOK],veDat,function(e){$('app').innerHTML=LOGO+'<div class="card">'+T('<div class="state">Mất kết nối</div>','<div class="state">Connection lost</div>')+'<button class="b2" onclick="datXem()"'+T('>Thử lại</button>','>Try again</button>')+'</div>'})}
 var TT0='';
 function veDat(v){
   clearTimeout(TIMER);
   var moiXN=(TT0==='cho_ck'||TT0==='het_han')&&v.tt==='da_xn';TT0=v.tt;if(moiXN){try{navigator.vibrate&&navigator.vibrate([150,80,150])}catch(e){}}
   if(v.tt==='khong'){ls('dl_tok_'+CN,null);TOK='';datBatDau();return}CN=v.cn||CN;
-  var h=LOGO+dau('Lịch đặt của bạn',v.tenCN)+'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-size:15px">'+esc(v.ma)+'</b><span class="tag '+v.tt+'">'+esc(v.ttNhan)+'</span></div>'+
-    '<div class="kv"><span>Phòng</span><b>'+esc(v.phong)+'</b><span>Thời gian</span><b>'+esc(v.gio)+' · '+esc(v.ngayNhan)+' · '+v.phut+' phút</b><span>Khách</span><b>'+esc(v.ten)+' · '+esc(v.sdt)+'</b>'+(v.goi?'<span>Gói</span><b>'+esc(v.goi)+'</b>':'')+'<span>Tiền cọc</span><b>'+tien(v.tien)+'</b>'+(v.gia?'<span>Giá gói</span><b>'+esc(v.gia)+'</b>':'')+'<span>Tại quầy</span><b>Phần còn lại + phụ thu (nếu có)</b><span></span><b style="color:#a50e0e">Tiền cọc không hoàn lại</b>'+(v.doi?'<span>Đã dời</span><b>'+v.doi+'/'+v.doiMax+' lần</b>':'')+'</div>';
+  var h=LOGO+dau(''+T('Lịch đặt của bạn','Your booking')+'',v.tenCN)+'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-size:15px">'+esc(v.ma)+'</b><span class="tag '+v.tt+'">'+esc(ttN(v))+'</span></div>'+
+    '<div class="kv">'+T('<span>Phòng</span>','<span>Room</span>')+'<b>'+esc(v.phong)+'</b>'+T('<span>Thời gian</span>','<span>Time</span>')+'<b>'+esc(v.gio)+' · '+esc(dich(v.ngayNhan))+' · '+v.phut+T(' phút',' min')+'</b>'+T('<span>Khách</span>','<span>Guest</span>')+'<b>'+esc(v.ten)+' · '+esc(v.sdt)+'</b>'+(v.goi?''+T('<span>Gói</span>','<span>Package</span>')+'<b>'+esc(dich(v.goi))+'</b>':'')+''+T('<span>Tiền cọc</span>','<span>Deposit</span>')+'<b>'+tien(v.tien)+'</b>'+(v.gia?''+T('<span>Giá gói</span>','<span>Package price</span>')+'<b>'+esc(dich(v.gia))+'</b>':'')+''+T('<span>Tại quầy</span>','<span>At the counter</span>')+'<b>'+T('Phần còn lại + phụ thu (nếu có)','Balance + surcharges (if any)')+'</b><span></span><b style="color:#a50e0e">'+T('Tiền cọc không hoàn lại','Deposit is non-refundable')+'</b>'+(v.doi?''+T('<span>Đã dời</span>','<span>Rescheduled</span>')+'<b>'+v.doi+'/'+v.doiMax+''+T(' lần</b>',' times</b>')+'':'')+'</div>';
   if(v.tt==='cho_ck'){
-    h+='<div class="ck"><b>Chuyển khoản cọc '+tien(v.tien)+'</b><div class="lbl" style="margin:4px 0 10px">'+(v.ngoaiGio?'Tiệm đang ngoài giờ làm việc. Bạn cứ chuyển khoản, nhân viên sẽ xác nhận sau khi tiệm mở cửa lúc <b>'+esc(v.moLuc)+'</b>. Chỗ được giữ đến <b>'+esc(v.hanGiu)+'</b>.':'Giữ chỗ đến <b>'+esc(v.hanGiu)+'</b>. Chuyển khoản xong, lịch <b>tự xác nhận trong khoảng 1–2 phút</b> – trang tự cập nhật, bạn không cần tải lại.')+'</div>'+
-      (v.qrData?'<div id="qrck" style="display:inline-block;background:#fff;padding:10px;border-radius:10px"></div><div class="lbl" style="margin-top:6px">Quét bằng app ngân hàng – số tiền và nội dung đã điền sẵn</div>':v.qr?'<img src="'+esc(v.qr)+'" alt="Mã QR chuyển khoản">':'<div class="lbl">Mã QR chuyển khoản đang được cập nhật – vui lòng liên hệ fanpage Mirafilm.</div>')+
-      '<div class="lbl" style="margin-top:10px">Nội dung chuyển khoản</div><div class="copy"><code id="nd">'+esc(v.noiDung)+'</code><button class="b2 mini" onclick="sao($(\'nd\').textContent,this)">Chép</button></div></div>';
+    h+='<div class="ck"><b>'+T('Chuyển khoản cọc ','Transfer the deposit of ')+''+tien(v.tien)+'</b><div class="lbl" style="margin:4px 0 10px">'+(v.ngoaiGio?''+T('Tiệm đang ngoài giờ làm việc. Bạn cứ chuyển khoản, nhân viên sẽ xác nhận sau khi tiệm mở cửa lúc <b>','We are currently closed. Go ahead and transfer; staff will confirm after we open at <b>')+''+esc(v.moLuc)+''+T('</b>. Chỗ được giữ đến <b>','</b>. Your slot is held until <b>')+''+esc(v.hanGiu)+'</b>.':''+T('Giữ chỗ đến <b>','Slot held until <b>')+''+esc(v.hanGiu)+''+T('</b>. Chuyển khoản xong, lịch <b>tự xác nhận trong khoảng 1–2 phút</b> – trang tự cập nhật, bạn không cần tải lại.','</b>. After you transfer, the booking <b>confirms automatically within 1–2 minutes</b> – this page updates itself, no need to reload.')+'')+'</div>'+
+      (v.qrData?'<div id="qrck" style="display:inline-block;background:#fff;padding:10px;border-radius:10px"></div><div class="lbl" style="margin-top:6px">'+T('Quét bằng app ngân hàng – số tiền và nội dung đã điền sẵn','Scan with a Vietnamese banking app – amount and reference are pre-filled')+'</div>':v.qr?'<img src="'+esc(v.qr)+'" alt="'+T('Mã QR chuyển khoản','Transfer QR code')+'">':'<div class="lbl">'+T('Mã QR chuyển khoản đang được cập nhật – vui lòng liên hệ fanpage Mirafilm.','The transfer QR code is being updated – please contact the Mirafilm fanpage.')+'</div>')+
+      '<div class="lbl" style="margin-top:10px">'+T('Nội dung chuyển khoản','Transfer reference')+'</div><div class="copy"><code id="nd">'+esc(v.noiDung)+'</code><button class="b2 mini" onclick="sao($(\'nd\').textContent,this)"'+T('>Chép</button>','>Copy</button>')+'</div></div>';
     TIMER=setTimeout(datXem,10000);
   }else if(v.tt==='da_xn'){
-    h+='<div class="ck" style="background:#eef8f1;border-color:var(--xanh)">'+(moiXN?'<div style="font-size:30px;line-height:1.2">🎉</div><b style="color:var(--xanh)">Đã nhận tiền cọc!</b><br>':'')+'<b>Lịch đã được xác nhận ✓</b><div class="lbl" style="margin-top:4px">Đến tiệm, báo nhân viên mã <b>'+esc(v.ma)+'</b> hoặc số điện thoại.</div></div>';
+    h+='<div class="ck" style="background:#eef8f1;border-color:var(--xanh)">'+(moiXN?'<div style="font-size:30px;line-height:1.2">🎉</div><b style="color:var(--xanh)">'+T('Đã nhận tiền cọc!','Deposit received!')+'</b><br>':'')+'<b>'+T('Lịch đã được xác nhận ✓','Booking confirmed ✓')+'</b><div class="lbl" style="margin-top:4px">'+T('Đến tiệm, báo nhân viên mã <b>','At the studio, tell the staff your code <b>')+''+esc(v.ma)+''+T('</b> hoặc số điện thoại.','</b> or phone number.')+'</div></div>';
   }else if(v.tt==='het_han'){
-    h+='<div class="ck"><b>Đã hết thời gian giữ chỗ</b><div class="lbl" style="margin-top:4px">Nếu bạn đã chuyển khoản, đừng lo – nhân viên sẽ đối soát và xác nhận lại.</div></div>';
+    h+='<div class="ck"><b>'+T('Đã hết thời gian giữ chỗ','The hold on your slot has expired')+'</b><div class="lbl" style="margin-top:4px">'+T('Nếu bạn đã chuyển khoản, đừng lo – nhân viên sẽ đối soát và xác nhận lại.','If you have already transferred, don’t worry – staff will check and confirm it.')+'</div></div>';
     TIMER=setTimeout(datXem,30000);
   }
   h+='<div class="err" id="err"></div>';
-  if(v.duocDoi)h+='<button class="b2" onclick="doiMo()">Dời lịch (còn '+(v.doiMax-v.doi)+' lần)</button><div id="doi"></div>';
-  if(v.tt==='cho_ck')h+='<div style="margin-top:10px"><button class="b2" style="background:#fff;color:#a50e0e;border:2px solid #a50e0e;font-weight:700" onclick="hai(this,datHuy)">Huỷ giữ chỗ</button></div>';
-  if(['huy','het_han','xong','khong_den'].indexOf(v.tt)>=0)h+='<button class="b1" style="margin-top:10px" onclick="datMoi()">Đặt lịch mới</button>';
-  else h+='<div class="lbl" style="margin-top:14px"><a href="#" style="color:var(--mo)" onclick="hai(this,datMoi);return false">Không phải lịch của bạn? Về trang đặt lịch</a></div>';
+  if(v.duocDoi)h+='<button class="b2" onclick="doiMo()">'+T('Dời lịch (còn ','Reschedule (')+''+(v.doiMax-v.doi)+''+T(' lần)</button>',' left)</button>')+'<div id="doi"></div>';
+  if(v.tt==='cho_ck')h+='<div style="margin-top:10px"><button class="b2" style="background:#fff;color:#a50e0e;border:2px solid #a50e0e;font-weight:700" onclick="hai(this,datHuy)">'+T('Huỷ giữ chỗ','Cancel this hold')+'</button></div>';
+  if(['huy','het_han','xong','khong_den'].indexOf(v.tt)>=0)h+='<button class="b1" style="margin-top:10px" onclick="datMoi()">'+T('Đặt lịch mới','New booking')+'</button>';
+  else h+='<div class="lbl" style="margin-top:14px"><a href="#" style="color:var(--mo)" onclick="hai(this,datMoi);return false">'+T('Không phải lịch của bạn? Về trang đặt lịch','Not your booking? Back to the booking page')+'</a></div>';
   h+='</div>';
   $('app').innerHTML=h;DOI=v;if(v.qrData&&$('qrck'))new QRCode($('qrck'),{text:v.qrData,width:220,height:220,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
 }
@@ -443,8 +454,8 @@ var DOIN={ngay:'',gio:''};
 function doiMo(){
   clearTimeout(TIMER);
   api('dlNgayDoi',[TOK],function(info){
-    var h='<h3>Chọn ngày mới <span style="font-weight:400;font-size:13px;color:#888">(tới 7 ngày sau ngày đã đặt)</span></h3><div class="chips">';
-    info.ngay.forEach(function(n){h+='<div class="chip" data-v="'+n.d+'" onclick="doiNgay(\''+n.d+'\')">'+esc(n.nhan)+'</div>'});
+    var h='<h3>'+T('Chọn ngày mới ','Choose a new date ')+'<span style="font-weight:400;font-size:13px;color:#888">'+T('(tới 7 ngày sau ngày đã đặt)','(up to 7 days after the original date)')+'</span></h3><div class="chips">';
+    info.ngay.forEach(function(n){h+='<div class="chip" data-v="'+n.d+'" onclick="doiNgay(\''+n.d+'\')">'+esc(dich(n.nhan))+'</div>'});
     $('doi').innerHTML=h+'</div><div id="doiGio"></div><div id="doiOk"></div>';
     doiNgay(DOI.ngay);
   });
@@ -452,13 +463,13 @@ function doiMo(){
 function doiNgay(d){
   DOIN={ngay:d,gio:''};
   [].forEach.call(document.querySelectorAll('#doi .chip'),function(e){e.classList.toggle('on',e.dataset.v===d)});
-  $('doiGio').innerHTML='<div class="lbl">Đang tải…</div>';$('doiOk').innerHTML='';
-  api('dlSlots',[CN,d,DOI.phongSo,DOI.phut,DOI.ma],function(s){veSlots('doiGio',s,'doiGioChon','Chọn giờ mới')});
+  $('doiGio').innerHTML='<div class="lbl">'+T('Đang tải…','Loading…')+'</div>';$('doiOk').innerHTML='';
+  api('dlSlots',[CN,d,DOI.phongSo,DOI.phut,DOI.ma],function(s){veSlots('doiGio',s,'doiGioChon',''+T('Chọn giờ mới','Choose a new time')+'')});
 }
 function doiGioChon(g){
   DOIN.gio=g;
   [].forEach.call(document.querySelectorAll('#doiGio .slot'),function(e){e.classList.toggle('on',e.dataset.v===g)});
-  $('doiOk').innerHTML='<button class="b1" style="margin-top:12px" id="btnDoi" onclick="doiGui()">Xác nhận dời sang '+g+'</button>';
+  $('doiOk').innerHTML='<button class="b1" style="margin-top:12px" id="btnDoi" onclick="doiGui()">'+T('Xác nhận dời sang ','Confirm move to ')+''+g+'</button>';
 }
 function doiGui(){$('btnDoi').disabled=true;api('dlDoi',[TOK,DOIN.ngay,DOIN.gio],function(){datXem()},function(e){$('err').textContent=e.message||e;$('btnDoi').disabled=false})}
 
